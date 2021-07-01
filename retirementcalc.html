@@ -5,18 +5,17 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>compound interest line graph</title>
+    <title>Retirement</title>
     <script src="http://d3js.org/d3.v3.min.js"> </script>
     <script src="https://unpkg.com/d3-simple-slider"></script>
 
     <h1>Retirement Calculator</h1>
-    How old are you?: <input type="number" name="curr_age" id="curr_age" onkeyup="income_adjusted()"><br>
-    At what age do you plan to retire?: <input type="number" name="ret_age" id="ret_age"
-        onkeyup="income_adjusted()"><br>
-    How much money do you need per year: <input type="number" name="money" id="money" onkeyup="income_adjusted()"><br>
-    Life expectancy?: <input type="number" name="life" id="life" onkeyup="income_adjusted()"><br>
-    r1 in percent:<input type="number" name="r1" id="r1" onkeyup="income_adjusted()"><br>
-    r2 in percent:<input type="number" name="r2" id="r2" onkeyup="income_adjusted()"><br>
+    How old are you?: <input type="number" name="curr_age" id="curr_age" onkeyup="result()"><br>
+    At what age do you plan to retire?: <input type="number" name="ret_age" id="ret_age" onkeyup="result()"><br>
+    How much money do you need per year: <input type="number" name="money" id="money" onkeyup="result()"><br>
+    Life expectancy?: <input type="number" name="life" id="life" onkeyup="result()"><br>
+    r1 in percent:<input type="number" name="r1" id="r1" onkeyup="result()"><br>
+    r2 in percent:<input type="number" name="r2" id="r2" onkeyup="result()"><br>
 
     <!--<button onclick="result()">Calculate
     </button>-->
@@ -57,15 +56,13 @@
     <div id="graph2" class="aGraph2"></div>
 
     <script type="text/javascript">
-        //document.getElementById("graph").style.border = "thick solid #0000FF";
         var curr_year = 2021;
         var time = []
         var money_over_time = []
         var goal
         var wealth = []
 
-        //income adjusted for inflation
-        function income_adjusted() {
+        function result() {
 
             var currentWidth = parseInt(d3.select('#graph').style('width'), 10)
             if (currentWidth > 1000) {
@@ -73,52 +70,51 @@
             }
 
             var money = document.getElementById('money').value;
-            var age = document.getElementById('curr_age').value;
-            var life = document.getElementById('life').value;
-            var r1 = document.getElementById('r1').value;
-            var r2 = document.getElementById('r2').value;
-            //inflation rate
-            var inf_rate = 0.03;
-            var years = document.getElementById('life').value - document.getElementById('curr_age').value;
-            var accum_years = document.getElementById('ret_age').value - document.getElementById('curr_age').value;
-            var distr_years = document.getElementById('life').value - document.getElementById('ret_age').value;
+            var age = document.getElementById('curr_age').value; //current age
+            var life = document.getElementById('life').value; //life expectancy
+            var r1 = document.getElementById('r1').value; //r1
+            var r2 = document.getElementById('r2').value; //r2
+            var inf_rate = 0.03; //inflation rate
+            var years = document.getElementById('life').value - document.getElementById('curr_age').value; //years left in life
+            var accum_years = document.getElementById('ret_age').value - document.getElementById('curr_age').value; //accumulation years
+            var distr_years = document.getElementById('life').value - document.getElementById('ret_age').value; //distribution years
 
             d3.selectAll("svg").remove();
-            money_over_time = []
+            money_over_time = [] //inflation adjusted M per year
             time = []
-            wealth = []
+            wealth = [] //wealth per year
 
+            //inflation adjusted M per year
             for (let i = 1; i <= years; i++) {
                 var adjusted_money = money * Math.pow(1 + inf_rate, i - 1)
                 money_over_time.push(adjusted_money)
                 time.push(i)
             }
 
+            //goal money before retirement
             goal = money_over_time[accum_years + 1] * ((1 / (parseFloat(r2) - inf_rate)) - (Math.pow((1 + inf_rate), distr_years) / ((parseFloat(r2) - inf_rate) * Math.pow((1 + parseFloat(r2)), distr_years))))
             wealth.push(0);
-            time.push(1);
-
 
             var goal2 = ((goal / Math.pow((1 + parseFloat(r1)), accum_years)) - 0) / ((1 / parseFloat(r1)) - ((1 / parseFloat(r1)) / Math.pow((1 + parseFloat(r1)), accum_years)))
             wealth.push(goal2)
-            time.push(2);
 
+            //wealth per year in accumulation years
             for (let i = 3; i <= accum_years + 1; i++) {
                 var total_wealth = (wealth[i - 2] * (1 + parseFloat(r1))) + wealth[1];
                 wealth.push(total_wealth)
-                time.push(i)
             }
 
+            //wealth per year in distribution years
             for (let i = accum_years + 2; i <= life; i++) {
                 var total_wealth = (wealth[i - 2] * (1 + parseFloat(r2))) - money_over_time[i - 1];
                 wealth.push(total_wealth)
-                time.push(i)
             }
 
             var m = [80, 100, 100, 100]; // margins
             var w = currentWidth - m[1] - m[3]; // width
             var h = 400 - m[0] - m[2]; // height
 
+            //graph for inflation adjusted M
             var graph = d3.select("#graph")
                 .append("svg")
                 .attr("width", w + m[1] + m[3])
@@ -176,7 +172,7 @@
                 .style("stroke-width", 2)
                 .style("fill", "none")
 
-            //retirement year
+            //highlight retirement year in graph 1 (inflation adjusted M)
             if (document.getElementById("curr_age").value.length != 0 && document.getElementById("ret_age").value.length != 0) {
                 graph
                     .append("circle")
@@ -187,7 +183,7 @@
             }
 
 
-            /*********/
+            //graph for wealth per year
             var graph2 = d3.select("#graph2")
                 .append("svg")
                 .attr("width", w + m[1] + m[3])
@@ -241,8 +237,8 @@
                 .attr("d", line2)
                 .style("stroke-width", 2)
                 .style("fill", "none")
-            /*******/
 
+            //circle moving along line for graph 1 (inflation adjusted M)
             var focus = graph
                 .append('g')
                 .append('circle')
@@ -274,21 +270,14 @@
             }
 
             function mousemove() {
-                // recover coordinate we need
                 var x0 = x.invert(d3.mouse(this)[0]);
-                //console.log(x0)
                 var i = d3.bisect(time, x0);
-                //console.log(i)
                 selectedData = money_over_time[i - 1]
                 focus
                     .attr("cx", x(i))
                     .attr("cy", y(selectedData))
-                //console.log(x(i+1))
                 focusText
-                    // text content
                     .html("Year:" + (curr_year + i - 1) + "  ,  " + "M:" + parseInt(selectedData))
-
-                    // text positioning
                     .attr("x", x(i) + 15)
                     .attr("y", y(selectedData) - 35)
             }
@@ -297,8 +286,7 @@
                 focusText.style("opacity", 0)
             }
 
-            /*********/
-
+            //circle moving along line for graph 2 (wealth vs year)
             var focus2 = graph2
                 .append('g')
                 .append('circle')
@@ -330,21 +318,14 @@
             }
 
             function mousemove2() {
-                // recover coordinate we need
                 var x0 = x.invert(d3.mouse(this)[0]);
-                //console.log(x0)
                 var i = d3.bisect(time, x0);
-                //console.log(i)
                 selectedData = wealth[i - 1]
                 focus2
                     .attr("cx", x(i))
                     .attr("cy", y2(selectedData))
-                //console.log(x(i+1))
                 focusText2
-                    // text content
                     .html("Year:" + (curr_year + i - 1) + "  ,  " + "M:" + parseInt(selectedData))
-
-                    // text positioning
                     .attr("x", x(i) + 15)
                     .attr("y", y2(selectedData) - 35)
             }
@@ -354,8 +335,8 @@
             }
         }
 
-        income_adjusted()
-        window.addEventListener('resize', income_adjusted);
+        result()
+        window.addEventListener('resize', result); //to make graphs responsive
 
     </script>
 
