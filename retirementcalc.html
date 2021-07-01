@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>compound interest line graph</title>
+    <script src="http://d3js.org/d3.v3.min.js"> </script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+
+    <h1>Retirement Calculator</h1>
+    How old are you?: <input type="number" name="curr_age" id="curr_age" onkeyup="income_adjusted()"><br>
+    At what age do you plan to retire?: <input type="number" name="ret_age" id="ret_age"
+        onkeyup="income_adjusted()"><br>
+    How much money do you need per year: <input type="number" name="money" id="money" onkeyup="income_adjusted()"><br>
+    Life expectancy?: <input type="number" name="life" id="life" onkeyup="income_adjusted()"><br>
+    r1 in percent:<input type="number" name="r1" id="r1" onkeyup="income_adjusted()"><br>
+    r2 in percent:<input type="number" name="r2" id="r2" onkeyup="income_adjusted()"><br>
+
+    <!--<button onclick="result()">Calculate
+    </button>-->
+
+    <style>
+        path {
+            stroke: blue;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .axis {
+            shape-rendering: crispEdges;
+        }
+
+        .x.axis line {
+            stroke: lightgrey;
+        }
+
+        .x.axis .minor {
+            stroke-opacity: .5;
+        }
+
+        .x.axis path {
+            display: none;
+        }
+
+        .y.axis line,
+        .y.axis path {
+            fill: none;
+            stroke: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="graph" class="aGraph"></div>
+    <div id="graph2" class="aGraph2"></div>
+
+    <script type="text/javascript">
+        //document.getElementById("graph").style.border = "thick solid #0000FF";
+        var curr_year = 2021;
+        var time = []
+        var money_over_time = []
+        var goal
+        var wealth = []
+
+        //income adjusted for inflation
+        function income_adjusted() {
+
+            var currentWidth = parseInt(d3.select('#graph').style('width'), 10)
+            if (currentWidth > 1000) {
+                currentWidth = 1000;
+            }
+
+            var money = document.getElementById('money').value;
+            var age = document.getElementById('curr_age').value;
+            var life = document.getElementById('life').value;
+            var r1 = document.getElementById('r1').value;
+            var r2 = document.getElementById('r2').value;
+            //inflation rate
+            var inf_rate = 0.03;
+            var years = document.getElementById('life').value - document.getElementById('curr_age').value;
+            var accum_years = document.getElementById('ret_age').value - document.getElementById('curr_age').value;
+            var distr_years = document.getElementById('life').value - document.getElementById('ret_age').value;
+
+            d3.selectAll("svg").remove();
+            money_over_time = []
+            time = []
+            wealth = []
+
+            for (let i = 1; i <= years; i++) {
+                var adjusted_money = money * Math.pow(1 + inf_rate, i - 1)
+                money_over_time.push(adjusted_money)
+                time.push(i)
+            }
+
+            goal = money_over_time[accum_years + 1] * ((1 / (parseFloat(r2) - inf_rate)) - (Math.pow((1 + inf_rate), distr_years) / ((parseFloat(r2) - inf_rate) * Math.pow((1 + parseFloat(r2)), distr_years))))
+            wealth.push(0);
+            time.push(1);
+
+
+            var goal2 = ((goal / Math.pow((1 + parseFloat(r1)), accum_years)) - 0) / ((1 / parseFloat(r1)) - ((1 / parseFloat(r1)) / Math.pow((1 + parseFloat(r1)), accum_years)))
+            wealth.push(goal2)
+            time.push(2);
+
+            for (let i = 3; i <= accum_years + 1; i++) {
+                var total_wealth = (wealth[i - 2] * (1 + parseFloat(r1))) + wealth[1];
+                wealth.push(total_wealth)
+                time.push(i)
+            }
+
+            for (let i = accum_years + 2; i <= life; i++) {
+                var total_wealth = (wealth[i - 2] * (1 + parseFloat(r2))) - money_over_time[i - 1];
+                wealth.push(total_wealth)
+                time.push(i)
+            }
+
+            var m = [80, 100, 100, 100]; // margins
+            var w = currentWidth - m[1] - m[3]; // width
+            var h = 400 - m[0] - m[2]; // height
+
+            var graph = d3.select("#graph")
+                .append("svg")
+                .attr("width", w + m[1] + m[3])
+                .attr("height", h + m[0] + m[2])
+                .append("svg:g")
+                .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+            var x = d3.scale.linear().domain([1, money_over_time.length]).range([0, w]);
+            var y = d3.scale.linear().domain([0, d3.max(money_over_time)]).range([h, 0]);
+
+            var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true).tickFormat(function (d) { return (d + curr_year - 1); });;
+
+            graph.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + h + ")")
+                .call(xAxis);
+
+            graph.append("text")
+                .attr("transform",
+                    "translate(" + (w / 2) + " ," +
+                    (h + m[0]) + ")")
+                .style("text-anchor", "middle")
+                .text("Year");
+
+            var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
+
+            graph.append("g")
+                .attr("class", "y axis")
+                .attr("transform", "translate(-25,0)")
+                .call(yAxisLeft);
+
+            var line = d3.svg.line()
+                .x(function (d, i) {
+                    console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
+                    return x(i + 1);
+                })
+                .y(function (d) {
+                    console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
+                    return y(d);
+                })
+
+            graph
+                .append("text")
+                .attr("x", (w / 2))
+                .attr("y", 0 - (m[0] / 2))
+                .attr("text-anchor", "middle")
+                .style("font-size", "16px")
+                .style("text-decoration", "underline")
+                .text("Inflation adjusted M vs Year")
+
+            graph
+                .datum(money_over_time)
+                .append("path")
+                .attr("d", line)
+                .style("stroke-width", 2)
+                .style("fill", "none")
+
+            //retirement year
+            if (document.getElementById("curr_age").value.length != 0 && document.getElementById("ret_age").value.length != 0) {
+                graph
+                    .append("circle")
+                    .attr("cx", x(accum_years + 1))
+                    .attr("cy", y(money_over_time[accum_years]))
+                    .attr("r", 5)
+                    .attr("fill", "red")
+            }
+
+
+            /*********/
+            var graph2 = d3.select("#graph2")
+                .append("svg")
+                .attr("width", w + m[1] + m[3])
+                .attr("height", h + m[0] + m[2])
+                .append("svg:g")
+                .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+            graph2.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + h + ")")
+                .call(xAxis);
+
+            graph2.append("text")
+                .attr("transform",
+                    "translate(" + (w / 2) + " ," +
+                    (h + m[0]) + ")")
+                .style("text-anchor", "middle")
+                .text("Year");
+
+            var y2 = d3.scale.linear().domain([0, d3.max(wealth)]).range([h, 0]);
+            var yAxisLeft2 = d3.svg.axis().scale(y2).ticks(4).orient("left");
+
+            graph2.append("g")
+                .attr("class", "y axis")
+                .attr("transform", "translate(-25,0)")
+                .call(yAxisLeft2);
+
+            graph2
+                .append("text")
+                .attr("x", (w / 2))
+                .attr("y", 0 - (m[0] / 2))
+                .attr("text-anchor", "middle")
+                .style("font-size", "16px")
+                .style("text-decoration", "underline")
+                .text("Wealth vs Year")
+
+            var line2 = d3.svg.line()
+                .x(function (d, i) {
+                    console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
+                    return x(i + 1);
+                })
+                .y(function (d) {
+                    console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
+                    return y2(d);
+                })
+
+
+            graph2
+                .datum(wealth)
+                .append("path")
+                .attr("d", line2)
+                .style("stroke-width", 2)
+                .style("fill", "none")
+            /*******/
+
+            var focus = graph
+                .append('g')
+                .append('circle')
+                .style("fill", "none")
+                .attr("stroke", "black")
+                .attr('r', 8.5)
+                .style("opacity", 0)
+
+            var focusText = graph
+                .append('g')
+                .append('text')
+                .style("opacity", 0)
+                .attr("text-anchor", "left")
+                .attr("alignment-baseline", "middle")
+
+            graph
+                .append('rect')
+                .style("fill", "none")
+                .style("pointer-events", "all")
+                .attr('width', w)
+                .attr('height', h)
+                .on('mouseover', mouseover)
+                .on('mousemove', mousemove)
+                .on('mouseout', mouseout);
+
+            function mouseover() {
+                focus.style("opacity", 1)
+                focusText.style("opacity", 1)
+            }
+
+            function mousemove() {
+                // recover coordinate we need
+                var x0 = x.invert(d3.mouse(this)[0]);
+                //console.log(x0)
+                var i = d3.bisect(time, x0);
+                //console.log(i)
+                selectedData = money_over_time[i - 1]
+                focus
+                    .attr("cx", x(i))
+                    .attr("cy", y(selectedData))
+                //console.log(x(i+1))
+                focusText
+                    // text content
+                    .html("Year:" + (curr_year + i - 1) + "  ,  " + "M:" + parseInt(selectedData))
+
+                    // text positioning
+                    .attr("x", x(i) + 15)
+                    .attr("y", y(selectedData) - 35)
+            }
+            function mouseout() {
+                focus.style("opacity", 0)
+                focusText.style("opacity", 0)
+            }
+
+            /*********/
+
+            var focus2 = graph2
+                .append('g')
+                .append('circle')
+                .style("fill", "none")
+                .attr("stroke", "black")
+                .attr('r', 8.5)
+                .style("opacity", 0)
+
+            var focusText2 = graph2
+                .append('g')
+                .append('text')
+                .style("opacity", 0)
+                .attr("text-anchor", "left")
+                .attr("alignment-baseline", "middle")
+
+            graph2
+                .append('rect')
+                .style("fill", "none")
+                .style("pointer-events", "all")
+                .attr('width', w)
+                .attr('height', h)
+                .on('mouseover', mouseover2)
+                .on('mousemove', mousemove2)
+                .on('mouseout', mouseout2);
+
+            function mouseover2() {
+                focus2.style("opacity", 1)
+                focusText2.style("opacity", 1)
+            }
+
+            function mousemove2() {
+                // recover coordinate we need
+                var x0 = x.invert(d3.mouse(this)[0]);
+                //console.log(x0)
+                var i = d3.bisect(time, x0);
+                //console.log(i)
+                selectedData = wealth[i - 1]
+                focus2
+                    .attr("cx", x(i))
+                    .attr("cy", y2(selectedData))
+                //console.log(x(i+1))
+                focusText2
+                    // text content
+                    .html("Year:" + (curr_year + i - 1) + "  ,  " + "M:" + parseInt(selectedData))
+
+                    // text positioning
+                    .attr("x", x(i) + 15)
+                    .attr("y", y2(selectedData) - 35)
+            }
+            function mouseout2() {
+                focus2.style("opacity", 0)
+                focusText2.style("opacity", 0)
+            }
+        }
+
+        income_adjusted()
+        window.addEventListener('resize', income_adjusted);
+
+    </script>
+
+</body>
+
+</html>
