@@ -13,9 +13,9 @@
     How old are you?: <input type="number" name="curr_age" id="curr_age" onkeyup="result()"><br>
     At what age do you plan to retire?: <input type="number" name="ret_age" id="ret_age" onkeyup="result()"><br>
     How much money do you need per year: <input type="number" name="money" id="money" onkeyup="result()"><br>
-    Life expectancy? (Typical 100 years): <input type="number" name="life" id="life" onkeyup="result()"><br>
-    Assumed portfolio growth rate during accumulation years:<input type="number" name="r1" id="r1" onkeyup="result()"><br>
-    Assumed portfolio growth rate during distribution years:<input type="number" name="r2" id="r2" onkeyup="result()"><br>
+    Life expectancy?: <input type="number" name="life" id="life" onkeyup="result()"><br>
+    Assumed portfolio growth rate during accumulation years: <input type="number" name="r1" id="r1" onkeyup="result()"><br>
+    Assumed portfolio growth rate during distribution years: <input type="number" name="r2" id="r2" onkeyup="result()"><br>
 
     <!--<button onclick="result()">Calculate
     </button>-->
@@ -78,7 +78,7 @@
             var years = document.getElementById('life').value - document.getElementById('curr_age').value; //years left in life
             var accum_years = document.getElementById('ret_age').value - document.getElementById('curr_age').value; //accumulation years
             var distr_years = document.getElementById('life').value - document.getElementById('ret_age').value; //distribution years
-
+            
             d3.selectAll("svg").remove();
             money_over_time = [] //inflation adjusted M per year
             time = []
@@ -107,8 +107,18 @@
             //wealth per year in distribution years
             for (let i = accum_years + 2; i <= life; i++) {
                 var total_wealth = (wealth[i - 2] * (1 + parseFloat(r2))) - money_over_time[i - 1];
-                wealth.push(total_wealth)
+                if (total_wealth >= 0)
+                {
+                    wealth.push(total_wealth)
+                }
+                else {
+                    wealth.push(0)
+                    break;
+                }
+                    
             }
+
+            
 
             var m = [80, 100, 100, 100]; // margins
             var w = currentWidth - m[1] - m[3]; // width
@@ -148,13 +158,15 @@
 
             var line = d3.svg.line()
                 .x(function (d, i) {
-                    console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
+                    //console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
                     return x(i + 1);
                 })
                 .y(function (d) {
-                    console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
+                    //console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
                     return y(d);
                 })
+
+            
 
             graph
                 .append("text")
@@ -165,12 +177,23 @@
                 .style("text-decoration", "underline")
                 .text("Inflation adjusted M vs Year")
 
+            var area = d3.svg.area()
+                .x(function (d, i) {
+                    return x(i + 1);
+                })
+                .y1(function (d) {
+                    return y(d);
+                })
+                .y0(y(0));
+
             graph
                 .datum(money_over_time)
                 .append("path")
-                .attr("d", line)
+                .attr("d", area)
                 .style("stroke-width", 2)
-                .style("fill", "none")
+                .style("stroke","yellow")
+                .style("fill", "yellow")
+                .style("opacity",.4)
 
             //highlight retirement year in graph 1 (inflation adjusted M)
             if (document.getElementById("curr_age").value.length != 0 && document.getElementById("ret_age").value.length != 0) {
@@ -182,6 +205,8 @@
                     .attr("fill", "red")
             }
 
+            var wealth1 = wealth.slice(0,accum_years + 1)
+            var wealth2 = wealth.slice(accum_years, wealth.length)
 
             //graph for wealth per year
             var graph2 = d3.select("#graph2")
@@ -202,9 +227,19 @@
                     (h + m[0]) + ")")
                 .style("text-anchor", "middle")
                 .text("Year");
-
+        
             var y2 = d3.scale.linear().domain([0, d3.max(wealth)]).range([h, 0]);
             var yAxisLeft2 = d3.svg.axis().scale(y2).ticks(4).orient("left");
+
+            var dotted = d3.svg.line()
+                .x(function (d, i) {
+                    //console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
+                    return x(i + 1);
+                })
+                .y(function (d) {
+                    //console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
+                    return y2(d);
+                })    
 
             graph2.append("g")
                 .attr("class", "y axis")
@@ -220,24 +255,60 @@
                 .style("text-decoration", "underline")
                 .text("Wealth vs Year")
 
-            var line2 = d3.svg.line()
+            // area graphs - y1 sets top, y0 sets the lowest y value
+            var area2 = d3.svg.area()
                 .x(function (d, i) {
-                    console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
+                    //console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
                     return x(i + 1);
                 })
-                .y(function (d) {
-                    console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
+                .y1(function (d) {
+                    //console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
                     return y2(d);
                 })
+                .y0(y2(0));
+
+            var areaRetire = d3.svg.area()
+                .x(function (d, i) {
+                    //console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
+                    return x(i + 1 + accum_years);
+                })
+                .y1(function (d) {
+                    //console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
+                    return y2(d);
+                })
+                .y0(y2(0));
+                //console.log(y2.range()[1])
 
 
-            graph2
-                .datum(wealth)
+            graph2 //before retirement
+                .datum(wealth1)
                 .append("path")
-                .attr("d", line2)
+                .attr("d", area2)
                 .style("stroke-width", 2)
-                .style("fill", "none")
+                .style("fill", "orange")
+                .style("stroke", "orange")
+                .style("opacity", .6)
+                
+            
+            graph2 // after retirement graph
+                .datum(wealth2)
+                .append("path")
+                .attr("d", areaRetire)
+                .style("stroke-width", 2)
+                .style("fill", "blue")
+                .style("stroke", "blue")
+                .style("opacity", .6)
 
+            graph2 // vertical line of apex 
+                .append("line")
+                .attr("x1", x(accum_years+1))
+                .attr("y1", 0)
+                .attr("x2", x(accum_years+1))
+                .attr("y2", h)
+                .style("stroke-dasharray", ("4, 4"))
+                .style("stroke", "red")
+                
+                
             //circle moving along line for graph 1 (inflation adjusted M)
             var focus = graph
                 .append('g')
