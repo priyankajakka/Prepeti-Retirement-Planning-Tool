@@ -12,7 +12,7 @@ ret_login.php:
 
     change LINE 12 --> $mysqli = NEW MySQLi('localhost', 'root', 'jakka_sm', 'Retirement_Tool');
     
-    to --> $mysqli = NEW MySQLi('localhost', 'root', password', 'Retirement_Tool');
+    to --> $mysqli = NEW MySQLi('localhost', 'root', whatever your password is, 'Retirement_Tool');
     
     change LINE 23 --> header("location: http://localhost/~sjakka/RetirementTool/retirement_user.php");
     
