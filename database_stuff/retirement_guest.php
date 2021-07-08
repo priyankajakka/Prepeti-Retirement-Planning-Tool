@@ -30,6 +30,11 @@
       <br>
       20<input type="range" id="ret_age_slider" min="20" max="110" value="60" onkeyup="result()">110
       <br><br>
+      What is your income: <br> <input type="number" name="income" id="income" onkeyup="result()"
+        style="text-align: center">
+      <br>
+      25000<input type="range" id="income_slider" min="25000" max="200000" value="100000" onkeyup="result()">200000
+      <br><br>
       How much money do you need per year: <br> <input type="number" name="money" id="money" onkeyup="result()"
         style="text-align: center">
       <br>
@@ -47,7 +52,7 @@
       10<input type="range" id="life_slider" min="10" max="110" value="90" onkeyup="result()"
         style="text-align: center">110
       <br><br>
-      Assumed portfolio growth rate during accumulation years (in percent): <br><input type="number" name="r1" id="r1"
+      <!--Assumed portfolio growth rate during accumulation years (in percent): <br><input type="number" name="r1" id="r1"
         onkeyup="result()" style="text-align: center">
       <br>
       0<input type="range" id="r1_slider" min="0" max="10" value="7" onkeyup="result()" style="text-align: center">10
@@ -55,7 +60,7 @@
       Assumed portfolio growth rate during distribution years (in percent): <br><input type="number" name="r2" id="r2"
         onkeyup="result()" style="text-align: center">
       <br>
-      0<input type="range" id="r2_slider" min="0" max="10" value="7" onkeyup="result()" style="text-align: center">10
+      0<input type="range" id="r2_slider" min="0" max="10" value="7" onkeyup="result()" style="text-align: center">10-->
       <br><br><br>
       <p id="summary" class="summary"></p>
     </div>
