@@ -1,5 +1,8 @@
 # RetirementCalc
 
+NOTES: ALL NEW CODE INVOLVING DATABASE STUFF IS IN THIS FOLDER ... THE FILES THAT R NOT IN THIS FOLDER (THE HTML FILE) IS OLD CODE SO IGNORE
+
+
 Login information:
 
     database: Retirement_Tool
@@ -11,8 +14,6 @@ Login information:
 ret_login.php: 
 
     change LINE 12 --> $mysqli = NEW MySQLi('localhost', 'root', 'jakka_sm', 'Retirement_Tool');
-    
-    to --> $mysqli = NEW MySQLi('localhost', 'root', whatever your password is, 'Retirement_Tool');
     
     change LINE 23 --> header("location: http://localhost/~sjakka/RetirementTool/retirement_user.php");
     
