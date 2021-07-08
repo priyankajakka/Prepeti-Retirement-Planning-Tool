@@ -1,4 +1,4 @@
-var curr_year = 2021;
+var curr_year = new Date().getFullYear(); //2021
 var time = []
 var money_over_time = []
 var goal
@@ -11,20 +11,24 @@ function result() {
     document.getElementById("money_slider").value = document.getElementById("money").value
     document.getElementById("savings_slider").value = document.getElementById("savings").value
     document.getElementById("life_slider").value = document.getElementById("life").value
-    document.getElementById("r1_slider").value = document.getElementById("r1").value
-    document.getElementById("r2_slider").value = document.getElementById("r2").value
+    document.getElementById("income_slider").value = document.getElementById("income").value
+    //document.getElementById("r1_slider").value = document.getElementById("r1").value
+    //document.getElementById("r2_slider").value = document.getElementById("r2").value
 
     var currentWidth = parseInt(d3.select('#graph').style('width'), 10)
-    if (currentWidth > 1000) {
-        currentWidth = 1000;
+    if (currentWidth > 2000) {
+        currentWidth = 2000;
     }
 
     var money = document.getElementById('money').value;
+    var income = document.getElementById('income').value;
     var savings = document.getElementById('savings').value;
     var age = document.getElementById('curr_age').value; //current age
     var life = document.getElementById('life').value; //life expectancy
-    var r1 = parseFloat(document.getElementById('r1').value) / 100; //r1
-    var r2 = parseFloat(document.getElementById('r2').value) / 100; //r2
+    //var r1 = parseFloat(document.getElementById('r1').value) / 100; //r1
+    //var r2 = parseFloat(document.getElementById('r2').value) / 100; //r2
+    var r1 = 0.04;
+    var r2 = 0.07;
     var inf_rate = 0.03; //inflation rate
     var years = document.getElementById('life').value - document.getElementById('curr_age').value; //years left in life
     var accum_years = document.getElementById('ret_age').value - document.getElementById('curr_age').value; //accumulation years
@@ -372,7 +376,8 @@ function result() {
     var text = "";
     text += "Retirement Year = " + (curr_year + accum_years) + "\n"
     text += "Years in Retirement = " + (distr_years) + "\n"
-    text += "Annual Income = " + (money) + "\n"
+    text += "Annual Income = " + (income) + "\n"
+    text += "Money you need per year = " + (money) + "\n"
     text += "Portfolio Growth Rate (Accumulation Years) = " + parseInt(r1 * 100) + "%\n"
     text += "Portfolio Growth Rate (Distribution Years) = " + parseInt(r2 * 100) + "%\n"
     text += "Savings required each year: $" + parseInt(savings_per_year)
@@ -384,8 +389,9 @@ var ret_age_slider = document.getElementById("ret_age_slider")
 var money_slider = document.getElementById("money_slider")
 var savings_slider = document.getElementById("savings_slider")
 var life_slider = document.getElementById("life_slider")
-var r1_slider = document.getElementById("r1_slider")
-var r2_slider = document.getElementById("r2_slider")
+var income_slider = document.getElementById("income_slider")
+//var r1_slider = document.getElementById("r1_slider")
+//var r2_slider = document.getElementById("r2_slider")
 
 var rangeValue = function () {
     var newAge = age_slider.value;
@@ -393,16 +399,18 @@ var rangeValue = function () {
     var newMoney = money_slider.value;
     var newSavings = savings_slider.value;
     var newLife = life_slider.value;
-    var newR1 = r1_slider.value;
-    var newR2 = r2_slider.value;
+    var newIncome = income_slider.value;
+    //var newR1 = r1_slider.value;
+    //var newR2 = r2_slider.value;
 
     document.getElementById("curr_age").value = newAge;
     document.getElementById("ret_age").value = newRetAge;
     document.getElementById("money").value = newMoney;
     document.getElementById("savings").value = newSavings;
     document.getElementById("life").value = newLife;
-    document.getElementById("r1").value = newR1;
-    document.getElementById("r2").value = newR2;
+    document.getElementById("income").value = newIncome;
+    //document.getElementById("r1").value = newR1;
+    //document.getElementById("r2").value = newR2;
     result()
 }
 
@@ -411,8 +419,9 @@ ret_age_slider.addEventListener("input", rangeValue);
 money_slider.addEventListener("input", rangeValue);
 savings_slider.addEventListener("input", rangeValue);
 life_slider.addEventListener("input", rangeValue);
-r1_slider.addEventListener("input", rangeValue);
-r2_slider.addEventListener("input", rangeValue);
+income_slider.addEventListener("input", rangeValue);
+//r1_slider.addEventListener("input", rangeValue);
+//r2_slider.addEventListener("input", rangeValue);
 
 result()
 
