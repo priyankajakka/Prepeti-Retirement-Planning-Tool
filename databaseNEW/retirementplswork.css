@@ -1,0 +1,95 @@
+#c1 {
+    height: 85%;
+    width: 30%;
+    position: fixed;
+    left: 0;
+    background-color: #8FCACA;
+    max-height: 100%;
+    overflow-y: scroll;
+  }
+
+  #c2 {
+    height: 85%;
+    width: 70%;
+    position: fixed;
+    right: 0;
+    background-color: #D4F0F0;
+    max-height: 100%;
+    overflow-y: scroll;
+  }
+
+  path {
+    stroke: blue;
+    stroke-width: 2;
+    fill: none;
+  }
+
+  .axis {
+    shape-rendering: crispEdges;
+  }
+
+  .x.axis line {
+    stroke: lightgrey;
+  }
+
+  .x.axis .minor {
+    stroke-opacity: .5;
+  }
+
+  .x.axis path {
+    display: none;
+  }
+
+  .y.axis line,
+  .y.axis path {
+    fill: none;
+    stroke: #000;
+  }
+
+  ul {
+    margin: 0px;
+    padding: 0px;
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+ul li {
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    padding: 12px 8px 12px 40px;
+    background: #eee;
+    font-size: 18px;
+    transition: 0.2s;
+    color: black;
+    list-style-type: none;
+    border: 1px solid #ddd;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+nav ul{height:200px;}
+nav ul{overflow:hidden; overflow-y:scroll;}
+
+#searchbar {
+  width: 600px;
+  position: relative;
+  background-repeat: no-repeat;
+  font-size: 18px;
+  padding: 12px 8px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+ul li:hover {
+    background: #ddd;
+}
+
+ul li.checked {
+    background: #888;
+    color: #fff;
+}
