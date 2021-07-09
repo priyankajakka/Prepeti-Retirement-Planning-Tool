@@ -12,3 +12,4 @@ Things that are pending:
 1. Graphs
 2. Assigning portfolios
 3. fixing the change account setting thing
+4. change account setting doesnt include changing password, or full name
