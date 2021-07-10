@@ -17,7 +17,6 @@
 <div>
 </div>
     <h1>Retirement Tool</h1>
-    <div id="c1">
       <br>
       <br>
       <br>
@@ -52,31 +51,19 @@
       10<input type="range" id="life_slider" min="10" max="110" value="90" onkeyup="result()"
         style="text-align: center">110
       <br><br>
-      <!--Assumed portfolio growth rate during accumulation years (in percent): <br><input type="number" name="r1" id="r1"
-        onkeyup="result()" style="text-align: center">
-      <br>
-      0<input type="range" id="r1_slider" min="0" max="10" value="7" onkeyup="result()" style="text-align: center">10
-      <br><br>
-      Assumed portfolio growth rate during distribution years (in percent): <br><input type="number" name="r2" id="r2"
-        onkeyup="result()" style="text-align: center">
-      <br>
-      0<input type="range" id="r2_slider" min="0" max="10" value="7" onkeyup="result()" style="text-align: center">10-->
       <br><br><br>
       <p id="summary" class="summary"></p>
-    </div>
 
 
   </head>
 
-  <body style="background-color: #FCF9F0">
-    <div id="c2">
+  <body>
       <br>
       <br>
       <br>
       <div id="graph" class="aGraph"></div>
       <div id="graph2" class="aGraph2"></div>
       <script src="retirement.js"></script>
-    </div>
   </body>
 </div>
 
