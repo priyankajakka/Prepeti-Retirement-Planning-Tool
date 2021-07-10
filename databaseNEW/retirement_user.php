@@ -1,6 +1,11 @@
 <?php
     session_start();
 
+    if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+      header("location: http://localhost/~sjakka/RetirementTool/retirement_guest.php");
+      exit;
+    }
+
     $date=date('m/d/Y');
     $date_arr=explode('/',$date);
     
@@ -10,20 +15,14 @@
     if(isset($_REQUEST['submitStocks'])) {
       $stocks = explode(",", $_REQUEST['stocks_list']);
       $stocks_blob = "";
-
       $stocks_blob = implode(",",$stocks);
 
       $sql = "UPDATE Login_info SET stocks = '$stocks_blob' WHERE username = '$curr_username'";
       mysqli_query($mysqli, $sql);
-    //}
 
-    //if(isset($_REQUEST['submitStockValues'])) {
       $stocks_values = explode(",", $_REQUEST['stocks_values_list']);
       $stocks_values_blob = "";
-
       $stocks_values_blob = implode(",",$stocks_values);
-
-      //print $stocks_values_blob;
 
       $sql = "UPDATE Login_info SET stock_values = '$stocks_values_blob' WHERE username = '$curr_username'";
       mysqli_query($mysqli, $sql);
@@ -34,14 +33,14 @@
     $result = $stmt->get_result();
     $value = $result->fetch_object();
     $_SESSION['stocks'] = $value->stocks;
-    print $_SESSION['stocks'];
+    //print $_SESSION['stocks'];
 
     $stmt = $mysqli->prepare("SELECT DISTINCT stock_values FROM Login_Info WHERE username = '$curr_username'");
     $stmt->execute();
     $result = $stmt->get_result();
     $value = $result->fetch_object();
     $_SESSION['stock_values'] = $value->stock_values;
-    print $_SESSION['stock_values'];
+    //print $_SESSION['stock_values'];
 
     if(isset($_POST["submit"])){
 
@@ -72,7 +71,7 @@
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <script src="http://d3js.org/d3.v3.min.js"> </script>
+    <script src="http://d3js.org/d3.v4.min.js"> </script>
     <link rel="stylesheet" href="retirementplswork.css">
     <a href="http://localhost/~sjakka/RetirementTool/ret_logout.php" style="margin-left:10; color:white;">
     <button class="tablink" >Logout</button>
@@ -87,7 +86,6 @@
     </div>
 
     <h1>Retirement Tool</h1>
-    <!--<div id="c1">-->
     <br>
     <br>
 
@@ -131,19 +129,10 @@
 
     <br><br>
     <p id="stocks_selection"></p>
-
-    <!--<form name="Form" method="post" onsubmit="return confirmStocks()">
-      <input name='stocks_list' type=hidden>
-      <input name="submitStocks" type="submit"  value="Confirm selection">
-    </form>-->
-
-    <!--<button onclick="confirmStocks()">Confim selection</button>-->
     <br><br>
 
     <div id = "money_in_stocks" ></div>
     <br><br>
-
-    <!--<button onclick="confirmStockValues()">Confim selection</button>-->
 
     <form name="Form" method="post" onsubmit="return confirmStockValues()">
     <input name='stocks_list' type=hidden>
@@ -154,17 +143,18 @@
     <br><br>
 
     <div id="summary" class="summary"></div>
-    <!--</div>-->
-
-  </head>
-
-  <body style="background-color: #7392B7; color: black;" >
-    <!--<div id="c2">-->
-      <br>
+    <br>
       <br>
       <br>
       <div id="graph" class="aGraph"></div>
+      <br>
       <div id="graph2" class="aGraph2"></div>
+      <br>
+      <div id="chart"></div>
+      <br>
+  </head>
+
+  <body>
 
       <script>
         var curr_age = <?php echo $_SESSION["curr_age"]; ?>;
@@ -175,7 +165,6 @@
       </script>
 
       <script src="ret_user.js"></script>
-    <!--</div>-->
   </body>
 </div>
 
