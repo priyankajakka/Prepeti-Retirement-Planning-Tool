@@ -1,25 +1,5 @@
-#c1 {
-    height: 85%;
-    width: 30%;
-    position: fixed;
-    left: 0;
-    background-color: #8FCACA;
-    max-height: 100%;
-    overflow-y: scroll;
-  }
-
-  #c2 {
-    height: 85%;
-    width: 70%;
-    position: fixed;
-    right: 0;
-    background-color: #D4F0F0;
-    max-height: 100%;
-    overflow-y: scroll;
-  }
-
-  path {
-    stroke: blue;
+path {
+    stroke: black;
     stroke-width: 2;
     fill: none;
   }
