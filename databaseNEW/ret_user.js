@@ -1,15 +1,85 @@
-var curr_year = new Date().getFullYear(); //2021
+var curr_year = new Date().getFullYear(); //curr_year = 2021
 var time = []
 var money_over_time = []
 var goal
 var wealth = []
 
 var selected_stock_options = [];
+var stock_selection_values = [];
 
-function reset_stock_list() {
-
+if (existing_stocks != null) {
     selected_stock_options = existing_stocks.split(",");
+}
 
+//bargraph for stocks
+function bargraph() {
+    var dataset1 = existing_stock_values.split(",");
+
+    var currentWidth = parseInt(d3.select('#chart').style('width'), 10)
+
+    var m = [100, 0.1 * currentWidth, 100, 0.1 * currentWidth]; // margins, m[0], m[2] = top/below, m[1] = right, m[3] = left
+    //var w = currentWidth - m[1] - m[3]; // width
+    var w = currentWidth / 3;
+    var h = 600 - m[0] - m[2]; // height
+
+    var g = d3.select("#chart")
+        .append("svg")
+        .attr("width", w + m[1] + m[3])
+        .attr("height", 700)//h + m[0] + m[2]
+        .append("svg:g")
+        .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+    var x = d3.scaleBand()
+        .range([0, w])
+        .domain(selected_stock_options)
+        .padding(0.5);
+
+    var y = d3.scaleLinear()
+        .domain([0, Math.max.apply(Math, dataset1)])
+        .range([h, 0]);
+
+    g.selectAll()
+        .data(dataset1)
+        .enter()
+        .append("rect")
+        .attr("x", function (d, i) { return x(selected_stock_options[i]); })
+        .attr("y", function (d) { return y(d); })
+        .attr("width", x.bandwidth())
+        .attr("height", function (d) { return h - y(d); })
+        .attr("fill", "#4e8791")
+        .style("opacity", .6);
+
+    g.append("g")
+        .attr("transform", "translate(0," + h + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+
+    g.append("g")
+        .call(d3.axisLeft(y));
+
+    //title of graph
+    g.append("text")
+        .attr("x", (w / 2))
+        .attr("y", 0 - (m[0] / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .style("text-decoration", "underline")
+        .text("Stocks")
+
+    //x-axis label
+    g.append("text")
+        .attr("transform",
+            "translate(" + (w / 2) + " ," +
+            (h + m[0]) + ")")
+        .style("text-anchor", "middle")
+        .text("Stock");
+}
+
+//so that when user opens acct, all of their saved data will show
+//everything in this function only happens once (whenever the page is reloaded/opened upon login)
+function reset_stock_list() {
     var ul = document.getElementById("stock_option");
     var li = ul.getElementsByTagName("li");
     var innertext = "You selected: \n"
@@ -17,17 +87,20 @@ function reset_stock_list() {
     for (var i = 0; i < li.length; ++i) {
         for (var j = 0; j < selected_stock_options.length; ++j) {
             if (li[i].textContent === selected_stock_options[j]) {
-                li[i].classList.toggle('checked');
+                li[i].classList.toggle('checked'); //shows list of what stock options user previously selected
                 innertext += selected_stock_options[j] + "\n"
             }
         }
     }
+    //shows list of what stock options user previously selected
     document.getElementById("stocks_selection").innerText = innertext;
 
     var div = document.getElementById('money_in_stocks');
     while (div.firstChild) {
         div.removeChild(div.firstChild);
     }
+
+    //appends appropriate number of input text fields so that user can enter money in each stock
     document.getElementById("money_in_stocks").innerText += "Enter the amount of money you have in each stock: \n"
     for (var i = 0; i < selected_stock_options.length; i++) {
         document.getElementById("money_in_stocks").innerHTML += (selected_stock_options[i] + ": ");
@@ -39,6 +112,7 @@ function reset_stock_list() {
     }
 }
 
+//creates list with possible stock options for user to choose from
 function showAllStockOptions() {
     var stock_options = ['US large cap', 'US mid cap', 'US small cap',
         'International Small Cap', 'International mid', 'International Large'];
@@ -50,18 +124,20 @@ function showAllStockOptions() {
     });
 
     var list = document.querySelector('ul');
-    list.addEventListener('click', function (stock) {
+    list.addEventListener('click', function (stock) { //this means user has clicked on a list element (stock option)
         if (stock.target.tagName === 'LI') {
             stock.target.classList.toggle('checked');
-            showSelection();
+            showSelection(); //update stocks_selection list
         }
-        confirmStocks();
+        confirmStocks(); //updates list of input text fields for user to enter money in each stock
     }, false);
     stock_options = [];
 }
 
+//shows stock optons selected by user
 function showSelection() {
     selected_stock_options = [];
+    stock_selection_values = [];
     var ul = document.getElementById("stock_option");
     var li = ul.getElementsByTagName("li");
     var innertext = "You selected: \n"
@@ -74,15 +150,14 @@ function showSelection() {
     document.getElementById("stocks_selection").innerText = innertext;
 }
 
+//updates number of text fields to take user input (money in each stock)
 function confirmStocks() {
-    var stock = selected_stock_options.join();
-    document.Form.stocks_list.value = stock;
-
     var div = document.getElementById('money_in_stocks');
     while (div.firstChild) {
         div.removeChild(div.firstChild);
     }
     document.getElementById("money_in_stocks").innerText += "Enter the amount of money you have in each stock: \n"
+
     for (var i = 0; i < selected_stock_options.length; i++) {
         document.getElementById("money_in_stocks").innerHTML += (selected_stock_options[i] + ": ");
         var input = document.createElement('input');
@@ -93,16 +168,20 @@ function confirmStocks() {
     }
 }
 
-var stock_selection_values = [];
-
+//called when user confirms the stocks + values (when they click on btn)
+//necessary so that we can save the data in our db
 function confirmStockValues() {
     for (var i = 0; i < selected_stock_options.length; i++) {
         stock_selection_values.push(document.getElementById(selected_stock_options[i]).value);
     }
+    var stock = selected_stock_options.join();
+    document.Form.stocks_list.value = stock;
+
     var stock_values = stock_selection_values.join();
     document.Form.stocks_values_list.value = stock_values;
 }
 
+//to display correct stock options when user types into searchbar
 function SearchThroughStocks() {
     var input, filter, ul, li, a, i, txtValue;
     input = document.getElementById("searchbar");
@@ -118,20 +197,31 @@ function SearchThroughStocks() {
         }
     }
 }
+
+//called first - creates list elements with possible stock options
 showAllStockOptions();
 
-if(existing_stocks != null && existing_stock_values != null){
+//called second - updates list with user's chosen stocks (if they have chosen, else this step is skipped)
+if (existing_stocks != null && existing_stock_values != null) {
     reset_stock_list();
 }
 
+//updates stock value input textfields with previous values user entered (whatever was saved in db)
+function updateStockValuesText() {
+    for (var i = 0; i < selected_stock_options.length; ++i) {
+        if (document.getElementById(selected_stock_options[i]) !== null) {
+            document.getElementById(selected_stock_options[i]).value = existing_stock_values.split(",")[i];
+        }
+    }
+}
 
+updateStockValuesText();
+
+//function for graphs
 function result() {
 
-    //document.getElementById("age_slider").value = document.getElementById("curr_age").value
-    //document.getElementById("ret_age_slider").value = document.getElementById("ret_age").value
     document.getElementById("money_slider").value = document.getElementById("money").value
     document.getElementById("savings_slider").value = document.getElementById("savings").value
-    //document.getElementById("life_slider").value = document.getElementById("life").value
     document.getElementById("income_slider").value = document.getElementById("income").value
 
     var currentWidth = parseInt(d3.select('#graph').style('width'), 10)
@@ -142,8 +232,6 @@ function result() {
     var money = document.getElementById('money').value;
     var income = document.getElementById('income').value;
     var savings = document.getElementById('savings').value;
-    //var age = document.getElementById('curr_age').value; //current age
-    //var life = document.getElementById('life').value; //life expectancy
     var r1 = 0.07;
     var r2 = 0.04;
     var inf_rate = 0.03; //inflation rate
@@ -152,6 +240,7 @@ function result() {
     var distr_years = life - ret_age; //distribution years
 
     d3.selectAll("svg").remove();
+    bargraph(); // barplot showing user's stocks
     money_over_time = [] //inflation adjusted M per year
     time = []
     wealth = [] //wealth per year
@@ -201,10 +290,10 @@ function result() {
         .append("svg:g")
         .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-    var x = d3.scale.linear().domain([1, money_over_time.length]).range([0, w]);
-    var y = d3.scale.linear().domain([0, d3.max(money_over_time)]).range([h, 0]);
+    var x = d3.scaleLinear().domain([1, money_over_time.length]).range([0, w]);
+    var y = d3.scaleLinear().domain([0, d3.max(money_over_time)]).range([h, 0]);
 
-    var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true).tickFormat(function (d) { return (d + curr_year - 1); });;
+    var xAxis = d3.axisBottom(x).tickSize(-h).tickFormat(function (d) { return (d + curr_year - 1); });//.tickSubdivide(true)
 
     graph.append("g")
         .attr("class", "x axis")
@@ -218,20 +307,12 @@ function result() {
         .style("text-anchor", "middle")
         .text("Year");
 
-    var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
+    var yAxisLeft = d3.axisLeft(y).ticks(4)
 
     graph.append("g")
         .attr("class", "y axis")
         .attr("transform", "translate(-25,0)")
         .call(yAxisLeft);
-
-    var line = d3.svg.line()
-        .x(function (d, i) {
-            return x(i + 1);
-        })
-        .y(function (d) {
-            return y(d);
-        })
 
     graph
         .append("text")
@@ -243,7 +324,7 @@ function result() {
         .text("Inflation adjusted M vs Year")
 
     //shading for graph 1 (inflation adjusted M)
-    var area = d3.svg.area()
+    var area = d3.area()
         .x(function (d, i) {
             return x(i + 1);
         })
@@ -263,14 +344,12 @@ function result() {
         .style("opacity", .6)
 
     //highlight retirement year in graph 1 (inflation adjusted M)
-    /*if (document.getElementById("curr_age").value.length != 0 && document.getElementById("ret_age").value.length != 0) {
-        graph
-            .append("circle")
-            .attr("cx", x(accum_years + 1))
-            .attr("cy", y(money_over_time[accum_years]))
-            .attr("r", 5)
-            .attr("fill", "red")
-    }*/
+    graph
+        .append("circle")
+        .attr("cx", x(accum_years + 1))
+        .attr("cy", y(money_over_time[accum_years]))
+        .attr("r", 5)
+        .attr("fill", "red")
 
     //splitting graph 2 into accumulation and distr years
     var wealth1 = wealth.slice(0, accum_years + 1)
@@ -296,16 +375,8 @@ function result() {
         .style("text-anchor", "middle")
         .text("Year");
 
-    var y2 = d3.scale.linear().domain([0, d3.max(wealth)]).range([h, 0]);
-    var yAxisLeft2 = d3.svg.axis().scale(y2).ticks(4).orient("left");
-
-    var dotted = d3.svg.line()
-        .x(function (d, i) {
-            return x(i + 1);
-        })
-        .y(function (d) {
-            return y2(d);
-        })
+    var y2 = d3.scaleLinear().domain([0, d3.max(wealth)]).range([h, 0]);
+    var yAxisLeft2 = d3.axisLeft(y2).ticks(4)
 
     graph2.append("g")
         .attr("class", "y axis")
@@ -321,16 +392,8 @@ function result() {
         .style("text-decoration", "underline")
         .text("Wealth vs Year")
 
-    var line2 = d3.svg.line()
-        .x(function (d, i) {
-            return x(i + 1);
-        })
-        .y(function (d) {
-            return y2(d);
-        })
-
     // area graphs - y1 sets top, y0 sets the lowest y value
-    var area2 = d3.svg.area()
+    var area2 = d3.area()
         .x(function (d, i) {
             return x(i + 1);
         })
@@ -339,7 +402,7 @@ function result() {
         })
         .y0(y2(0));
 
-    var areaRetire = d3.svg.area()
+    var areaRetire = d3.area()
         .x(function (d, i) {
             return x(i + 1 + accum_years);
         })
@@ -357,7 +420,6 @@ function result() {
         .style("fill", "orange")
         .style("stroke", "orange")
         .style("opacity", .6)
-
 
     graph2 // after retirement graph
         .datum(wealth2)
@@ -490,35 +552,23 @@ function result() {
     document.getElementById('summary').innerText = text
 }
 
-//var age_slider = document.getElementById("age_slider")
-//var ret_age_slider = document.getElementById("ret_age_slider")
 var money_slider = document.getElementById("money_slider")
 var savings_slider = document.getElementById("savings_slider")
-//var life_slider = document.getElementById("life_slider")
 var income_slider = document.getElementById("income_slider")
 
 var rangeValue = function () {
-    //var newAge = age_slider.value;
-    //var newRetAge = ret_age_slider.value;
     var newMoney = money_slider.value;
     var newSavings = savings_slider.value;
-    //var newLife = life_slider.value;
     var newIncome = income_slider.value;
 
-    //document.getElementById("curr_age").value = newAge;
-    //document.getElementById("ret_age").value = newRetAge;
     document.getElementById("money").value = newMoney;
     document.getElementById("savings").value = newSavings;
-    //document.getElementById("life").value = newLife;
     document.getElementById("income").value = newIncome;
     result()
 }
 
-//age_slider.addEventListener("input", rangeValue);
-//ret_age_slider.addEventListener("input", rangeValue);
 money_slider.addEventListener("input", rangeValue);
 savings_slider.addEventListener("input", rangeValue);
-//life_slider.addEventListener("input", rangeValue);
 income_slider.addEventListener("input", rangeValue);
 
 result()
