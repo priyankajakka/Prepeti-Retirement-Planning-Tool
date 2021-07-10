@@ -54,17 +54,6 @@
     <title>Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
 <style>
-    * {
-        box-sizing: border-box
-    }
-
-    body,
-    html {
-        height: 100%;
-        margin: 0;
-        font-family: Helvetica;
-    }
-
     fieldset {
         margin-top:10%;
         text-align: center;
@@ -72,7 +61,7 @@
 
 </style>
 </head>
-<body style="background-color:#feffba;">
+<body>
 <fieldset>
 <div style = "font-size:50; color:black"><strong><?php echo "Sign in! <p/>"; ?></strong></div>
     <div style = "color:black"><?php echo date("m/d/Y") . "<br><br><br>"; ?></div>
@@ -96,4 +85,6 @@
 </fieldset>
 </body>
 </html>
+
+
 
