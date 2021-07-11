@@ -13,188 +13,192 @@ if (existing_stocks != null) {
 
 //piechart for portfolios
 function portfolio_chart() {
-    var currentWidth = parseInt(d3.select('#pie-chart').style('width'), 10)
-    var width = currentWidth;
-    height = 450
-    margin = 40
+    if (portfolio != "null") {
+        var currentWidth = parseInt(d3.select('#pie-chart').style('width'), 10)
+        var width = currentWidth;
+        height = 450
+        margin = 40
 
-    var radius;
-    if (width > height) {
-        radius = (height / 2) - 20;
-    } else {
-        radius = width / 2;
+        var radius;
+        if (width > height) {
+            radius = (height / 2) - 20;
+        } else {
+            radius = width / 2;
+        }
+
+        var svg = d3.select("#pie-chart")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        var data = { "Domestic Large": 1, "International Small": 1, "International Large": 1, "Bonds": 1, "Domestic Small": 1 }
+        data['Domestic Large'] = dom_large_percent;
+        data['Domestic Small'] = dom_small_percent;
+        data['International Large'] = int_large_percent;
+        data['International Small'] = int_small_percent;
+        data['Bonds'] = bonds_percent;
+
+        var color = d3.scaleOrdinal()
+            .domain(["Domestic Large", "International Small", "International Large", "Bonds", "Domestic Small"])
+            .range(["#f4c042", "#1a75be", "#709931", "#dc3545", "#fb6340"]);
+
+        var pie = d3.pie()
+            .sort(null) // Do not sort group by size
+            .value(function (d) { return d.value; })
+        var data_ready = pie(d3.entries(data))
+
+        var arc = d3.arc()
+            .innerRadius(radius * 0.4)         // This is the size of the donut hole
+            .outerRadius(radius * 0.8)
+
+        // Another arc that won't be drawn. Just for labels positioning
+        var outerArc = d3.arc()
+            .innerRadius(radius * 1.4)
+            .outerRadius(radius * 0.4)
+
+        svg
+            .selectAll('allPolylines')
+            .data(data_ready)
+            .enter()
+            .append('polyline')
+            .attr("stroke", "black")
+            .style("fill", "none")
+            .attr("stroke-width", 1)
+            .attr('points', function (d) {
+                var posA = arc.centroid(d); // line insertion in the slice
+                var posB = outerArc.centroid(d); // line break: we use the other arc generator that has been built only for that
+                var posC = outerArc.centroid(d); // Label position = almost the same as posB
+                var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2 // we need the angle to see if the X position will be at the extreme right or extreme left
+                posC[0] = radius * 0.95 * (midangle < Math.PI ? 1 : -1); // multiply by 1 or -1 to put it on the right or on the left
+                return [posA, posB, posC]
+            })
+
+        svg
+            .selectAll('allSlices')
+            .data(data_ready)
+            .enter()
+            .append('path')
+            .attr('d', arc)
+            .attr('fill', function (d) { return (color(d.data.key)) })
+            .attr("stroke", "white")
+            .style("stroke-width", "2px")
+
+        svg
+            .selectAll('allLabels')
+            .data(data_ready)
+            .enter()
+            .append('text')
+            .text(function (d) { return d.data.key })
+            .attr('transform', function (d) {
+                var pos = outerArc.centroid(d);
+                var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+                pos[0] = radius * 0.99 * (midangle < Math.PI ? 1 : -1);
+                return 'translate(' + pos + ')';
+            })
+            .style('text-anchor', function (d) {
+                var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+                return (midangle < Math.PI ? 'start' : 'end')
+            })
+
+        svg
+            .selectAll('allSlices')
+            .data(data_ready)
+            .enter()
+            .append('text')
+            .text(function (d) { return d.data.value + '%' })
+            .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")"; })
+            .style("text-anchor", "middle")
+            .style("font-size", 17)
+
+        svg.append("g")
+            .attr("transform", "translate(" + (0) + "," + (-height / 2 + 25) + ")")
+            .append("text")
+            .style("font-size", "16px")
+            .style("text-decoration", "underline")
+            .style("text-anchor", "middle")
+            .text("Recommended Portfolio - " + portfolio.toUpperCase())
     }
-
-    var svg = d3.select("#pie-chart")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-    var data = { "Domestic Large": 1, "International Small": 1, "International Large": 1, "Bonds": 1, "Domestic Small": 1 }
-    data['Domestic Large'] = dom_large_percent;
-    data['Domestic Small'] = dom_small_percent;
-    data['International Large'] = int_large_percent;
-    data['International Small'] = int_small_percent;
-    data['Bonds'] = bonds_percent;
-
-    var color = d3.scaleOrdinal()
-        .domain(["Domestic Large", "International Small", "International Large", "Bonds", "Domestic Small"])
-        .range(["#f4c042", "#1a75be", "#709931", "#dc3545", "#fb6340"]);
-
-    var pie = d3.pie()
-        .sort(null) // Do not sort group by size
-        .value(function (d) { return d.value; })
-    var data_ready = pie(d3.entries(data))
-
-    var arc = d3.arc()
-        .innerRadius(radius * 0.4)         // This is the size of the donut hole
-        .outerRadius(radius * 0.8)
-
-    // Another arc that won't be drawn. Just for labels positioning
-    var outerArc = d3.arc()
-        .innerRadius(radius * 1.4)
-        .outerRadius(radius * 0.4)
-
-    svg
-        .selectAll('allPolylines')
-        .data(data_ready)
-        .enter()
-        .append('polyline')
-        .attr("stroke", "black")
-        .style("fill", "none")
-        .attr("stroke-width", 1)
-        .attr('points', function (d) {
-            var posA = arc.centroid(d); // line insertion in the slice
-            var posB = outerArc.centroid(d); // line break: we use the other arc generator that has been built only for that
-            var posC = outerArc.centroid(d); // Label position = almost the same as posB
-            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2 // we need the angle to see if the X position will be at the extreme right or extreme left
-            posC[0] = radius * 0.95 * (midangle < Math.PI ? 1 : -1); // multiply by 1 or -1 to put it on the right or on the left
-            return [posA, posB, posC]
-        })
-
-    svg
-        .selectAll('allSlices')
-        .data(data_ready)
-        .enter()
-        .append('path')
-        .attr('d', arc)
-        .attr('fill', function (d) { return (color(d.data.key)) })
-        .attr("stroke", "white")
-        .style("stroke-width", "2px")
-
-    svg
-        .selectAll('allLabels')
-        .data(data_ready)
-        .enter()
-        .append('text')
-        .text(function (d) { return d.data.key })
-        .attr('transform', function (d) {
-            var pos = outerArc.centroid(d);
-            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
-            pos[0] = radius * 0.99 * (midangle < Math.PI ? 1 : -1);
-            return 'translate(' + pos + ')';
-        })
-        .style('text-anchor', function (d) {
-            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
-            return (midangle < Math.PI ? 'start' : 'end')
-        })
-
-    svg
-        .selectAll('allSlices')
-        .data(data_ready)
-        .enter()
-        .append('text')
-        .text(function (d) { return d.data.value + '%' })
-        .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")"; })
-        .style("text-anchor", "middle")
-        .style("font-size", 17)
-
-    svg.append("g")
-        .attr("transform", "translate(" + (0) + "," + (-height / 2 + 25) + ")")
-        .append("text")
-        .style("font-size", "16px")
-        .style("text-decoration", "underline")
-        .style("text-anchor", "middle")
-        .text("Recommended Portfolio - " + portfolio.toUpperCase())
 }
 
 //bargraph for stocks
 function bargraph() {
-    var dataset1 = existing_stock_values.split(",");
+    if (existing_stock_values != null) {
+        var dataset1 = existing_stock_values.split(",");
 
-    var currentWidth = parseInt(d3.select('#boxplot').style('width'), 10)
+        var currentWidth = parseInt(d3.select('#boxplot').style('width'), 10)
 
-    var m = [100, 0.1 * currentWidth, 100, 0.1 * currentWidth]; // margins, m[0], m[2] = top/below, m[1] = right, m[3] = left
-    //var w = currentWidth - m[1] - m[3]; // width
-    var w = currentWidth / 3;
-    var h = 600 - m[0] - m[2]; // height
+        var m = [100, 0.1 * currentWidth, 100, 0.1 * currentWidth]; // margins, m[0], m[2] = top/below, m[1] = right, m[3] = left
+        //var w = currentWidth - m[1] - m[3]; // width
+        var w = currentWidth / 3;
+        var h = 600 - m[0] - m[2]; // height
 
-    var g = d3.select("#boxplot")
-        .append("svg")
-        .attr("width", w + m[1] + m[3])
-        .attr("height", 700)//h + m[0] + m[2]
-        .append("svg:g")
-        .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+        var g = d3.select("#boxplot")
+            .append("svg")
+            .attr("width", w + m[1] + m[3])
+            .attr("height", 700)//h + m[0] + m[2]
+            .append("svg:g")
+            .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-    var x = d3.scaleBand()
-        .range([0, w])
-        .domain(selected_stock_options)
-        .padding(0.5);
+        var x = d3.scaleBand()
+            .range([0, w])
+            .domain(selected_stock_options)
+            .padding(0.5);
 
-    var y = d3.scaleLinear()
-        .domain([0, Math.max.apply(Math, dataset1)])
-        .range([h, 0]);
+        var y = d3.scaleLinear()
+            .domain([0, Math.max.apply(Math, dataset1)])
+            .range([h, 0]);
 
-    g.selectAll()
-        .data(dataset1)
-        .enter()
-        .append("rect")
-        .attr("x", function (d, i) { return x(selected_stock_options[i]); })
-        .attr("y", function (d) { return y(d); })
-        .attr("width", x.bandwidth())
-        .attr("height", function (d) { return h - y(d); })
-        .attr("fill", "#4e8791")
-        .style("opacity", .6);
+        g.selectAll()
+            .data(dataset1)
+            .enter()
+            .append("rect")
+            .attr("x", function (d, i) { return x(selected_stock_options[i]); })
+            .attr("y", function (d) { return y(d); })
+            .attr("width", x.bandwidth())
+            .attr("height", function (d) { return h - y(d); })
+            .attr("fill", "#4e8791")
+            .style("opacity", .6);
 
-    g.append("g")
-        .attr("transform", "translate(0," + h + ")")
-        .call(d3.axisBottom(x))
-        .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("font-size", 15)
-        .style("text-anchor", "end");
+        g.append("g")
+            .attr("transform", "translate(0," + h + ")")
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .attr("transform", "translate(-10,0)rotate(-45)")
+            .style("font-size", 15)
+            .style("text-anchor", "end");
 
-    g.append("g")
-        .style("font-size", 15)
-        .call(d3.axisLeft(y));
+        g.append("g")
+            .style("font-size", 15)
+            .call(d3.axisLeft(y));
 
-    //title of graph
-    g.append("text")
-        .attr("x", (w / 2))
-        .attr("y", 0 - (m[0] / 2))
-        .attr("text-anchor", "middle")
-        .style("font-size", "16px")
-        .style("text-decoration", "underline")
-        .text("Stocks")
+        //title of graph
+        g.append("text")
+            .attr("x", (w / 2))
+            .attr("y", 0 - (m[0] / 2))
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("text-decoration", "underline")
+            .text("Stocks")
 
-    //x-axis label
-    g.append("text")
-        .attr("transform",
-            "translate(" + (w / 2) + " ," +
-            (h + m[0]) + ")")
-        .style("text-anchor", "middle")
-        .text("Stock");
+        //x-axis label
+        g.append("text")
+            .attr("transform",
+                "translate(" + (w / 2) + " ," +
+                (h + m[0]) + ")")
+            .style("text-anchor", "middle")
+            .text("Stock");
 
-    // text label for the y axis
-    g.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - m[0])
-        .attr("x", 0 - (h / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("Value");
+        // text label for the y axis
+        g.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - m[0])
+            .attr("x", 0 - (h / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Value");
+    }
 }
 
 //so that when user opens acct, all of their saved data will show
@@ -724,7 +728,7 @@ function updateOverTime() {
 }
 
 function savings_req_over_time() {
-    if (date_arr == null) {
+    if (date_arr == null || date_arr.split(",").length == 1) {
         // console.log("no graph today");
     } else {
         //console.log("yep we r gonna graph this shit");
