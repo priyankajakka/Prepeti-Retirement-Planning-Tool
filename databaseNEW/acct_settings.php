@@ -2,7 +2,7 @@
     session_start();
 
     if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-        header("location: http://localhost/~sjakka/RetirementTool/retirement_guest.php");
+        header("location: http://localhost/~sjakka/RetirementToolwUI/retirement_guest.php");
         exit;
     }
     
@@ -111,7 +111,7 @@
 		<br><br>
 		<div class="container">
 			<h1>Account Settings for <b><?php echo htmlspecialchars($curr_username); ?></b></h1>
-            <a href="http://localhost/~sjakka/RetirementTool/retirement_user.php" style="margin-left:10; color:white;">
+            <a href="http://localhost/~sjakka/RetirementToolwUI/retirement_user.php" style="margin-left:10; color:white;">
 				<button class="tablink">Return</button>
             </a>
             <br><br>
