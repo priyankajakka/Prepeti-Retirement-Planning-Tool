@@ -1,7 +1,17 @@
-path {
+  #graph2 path {
     stroke: black;
     stroke-width: 2;
     fill: none;
+  }
+
+  #graph path {
+    stroke: black;
+    stroke-width: 2;
+    fill: none;
+  }
+
+  #pie-chart .path{
+    stroke: white;
   }
 
   .axis {
@@ -26,7 +36,7 @@ path {
     stroke: #000;
   }
 
-  ul {
+ul.stock_option {
     margin: 0px;
     padding: 0px;
     width: 600px;
@@ -34,7 +44,7 @@ path {
     margin-right: auto;
 }
 
-ul li {
+ul.stock_option li {
     text-align: center;
     cursor: pointer;
     position: relative;
@@ -65,11 +75,34 @@ nav ul{overflow:hidden; overflow-y:scroll;}
   margin-bottom: 12px;
 }
 
-ul li:hover {
+ul.stock_option li:hover {
     background: #ddd;
 }
 
-ul li.checked {
+ul.stock_option li.checked {
     background: #888;
     color: #fff;
+}
+
+path.slice{
+	stroke-width:2px;
+}
+
+polyline{
+	opacity: .3;
+	stroke: black;
+	stroke-width: 2px;
+	fill: none;
+}
+
+.line-7 {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+.line-6 {
+  fill: none;
+  stroke: red;
+  stroke-width: 2px;
 }
