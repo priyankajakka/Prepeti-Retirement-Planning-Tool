@@ -14,3 +14,5 @@ Things that are pending:
 2. fixing the change password in acct settings
 3. Adding legend for the savings req over time
 4. allowing user to fill out stock and other acct info in the create acct process
+5. making graphs responsive
+6. whenever the page reloads, it goes to the first page automatically, so we hav to fix that too
