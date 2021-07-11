@@ -3,6 +3,8 @@ var time = []
 var money_over_time = []
 var goal
 var wealth = []
+var networth = 0;
+var money, income, savings, r1, bad_r1, r2, inf_rate, years, accum_years, distr_years, savings_per_year, bad_savings_per_year;
 
 var selected_stock_options = [];
 var stock_selection_values = [];
@@ -11,10 +13,21 @@ if (existing_stocks != null) {
     selected_stock_options = existing_stocks.split(",");
 }
 
+function netWorth() {
+    networth = parseInt(savings);
+    if (existing_stock_values != null) {
+        var temp_arr_stock = existing_stock_values.split(",");
+        for (var i = 0; i < temp_arr_stock.length; ++i) {
+            networth += parseInt(temp_arr_stock[i]);
+        }
+    }
+}
+
 //piechart for portfolios
 function portfolio_chart() {
     if (portfolio != "null") {
-        var currentWidth = parseInt(d3.select('#pie-chart').style('width'), 10)
+        //var currentWidth = parseInt(d3.select('#pie-chart').style('width'), 10)
+        var currentWidth = 1000;
         var width = currentWidth;
         height = 450
         margin = 40
@@ -110,7 +123,7 @@ function portfolio_chart() {
             .text(function (d) { return d.data.value + '%' })
             .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")"; })
             .style("text-anchor", "middle")
-            .style("font-size", 17)
+            .style("font-size", 14)
 
         svg.append("g")
             .attr("transform", "translate(" + (0) + "," + (-height / 2 + 25) + ")")
@@ -119,6 +132,8 @@ function portfolio_chart() {
             .style("text-decoration", "underline")
             .style("text-anchor", "middle")
             .text("Recommended Portfolio - " + portfolio.toUpperCase())
+    } else {
+        document.getElementById("portfolio_description").innerText = "Looks like you don't have a portfolio yet. Answer the questions in the \'My Savings\' section."
     }
 }
 
@@ -127,14 +142,16 @@ function bargraph() {
     if (existing_stock_values != null) {
         var dataset1 = existing_stock_values.split(",");
 
-        var currentWidth = parseInt(d3.select('#boxplot').style('width'), 10)
+        //var currentWidth = parseInt(d3.select('#boxplot').style('width'), 10)
+        var currentWidth = 1000;
+
 
         var m = [100, 0.1 * currentWidth, 100, 0.1 * currentWidth]; // margins, m[0], m[2] = top/below, m[1] = right, m[3] = left
         //var w = currentWidth - m[1] - m[3]; // width
         var w = currentWidth / 3;
         var h = 600 - m[0] - m[2]; // height
 
-        var g = d3.select("#boxplot")
+        var g = d3.select("#barplot")
             .append("svg")
             .attr("width", w + m[1] + m[3])
             .attr("height", 700)//h + m[0] + m[2]
@@ -166,11 +183,11 @@ function bargraph() {
             .call(d3.axisBottom(x))
             .selectAll("text")
             .attr("transform", "translate(-10,0)rotate(-45)")
-            .style("font-size", 15)
+            .style("font-size", 12)
             .style("text-anchor", "end");
 
         g.append("g")
-            .style("font-size", 15)
+            .style("font-size", 12)
             .call(d3.axisLeft(y));
 
         //title of graph
@@ -205,7 +222,8 @@ function bargraph() {
 //everything in this function only happens once (whenever the page is reloaded/opened upon login)
 function reset_stock_list() {
     var ul = document.getElementById("stock_option");
-    var li = ul.getElementsByTagName("li");
+    //var li = ul.getElementsByTagName("li");
+    var li = ul.getElementsByClassName("li_stock");
     var innertext = "You selected: \n"
 
     for (var i = 0; i < li.length; ++i) {
@@ -241,13 +259,16 @@ function showAllStockOptions() {
     var stock_options = ['US large cap', 'US mid cap', 'US small cap',
         'International Small Cap', 'International mid', 'International Large'];
     var list = document.createElement('ul');
+    list.className = "stock_option";
     stock_options.forEach(function (option) {
         var li = document.createElement('li');
+        li.className = "li_stock";
         li.textContent = option;
         document.getElementById("stock_option").appendChild(li);
     });
 
-    var list = document.querySelector('ul');
+    //var list = document.querySelector('ul');
+    var list = document.getElementById("stock_option")
     list.addEventListener('click', function (stock) { //this means user has clicked on a list element (stock option)
         if (stock.target.tagName === 'LI') {
             stock.target.classList.toggle('checked');
@@ -263,7 +284,8 @@ function showSelection() {
     selected_stock_options = [];
     stock_selection_values = [];
     var ul = document.getElementById("stock_option");
-    var li = ul.getElementsByTagName("li");
+    //var li = ul.getElementsByTagName("li");
+    var li = ul.getElementsByClassName("li_stock");
     var innertext = "You selected: \n"
     for (var i = 0; i < li.length; i++) {
         if (li[i].classList.contains("checked")) {
@@ -295,14 +317,42 @@ function confirmStocks() {
 //called when user confirms the stocks + values (when they click on btn)
 //necessary so that we can save the data in our db
 function confirmStockValues() {
+    networth = parseInt(savings);
     for (var i = 0; i < selected_stock_options.length; i++) {
-        stock_selection_values.push(document.getElementById(selected_stock_options[i]).value);
+        if (document.getElementById(selected_stock_options[i]).value == null) {
+            stock_selection_values.push(0);
+        } else {
+            stock_selection_values.push(document.getElementById(selected_stock_options[i]).value);
+            networth += parseInt(document.getElementById(selected_stock_options[i]).value);
+        }
     }
     var stock = selected_stock_options.join();
     document.Form.stocks_list.value = stock;
 
     var stock_values = stock_selection_values.join();
     document.Form.stocks_values_list.value = stock_values;
+
+    if (date_arr == null) { //first time entering data
+        document.Form.dates_over_time.value = date;
+        document.Form.networth_over_time_stocks.value = parseInt(networth);
+    } else {
+        date_arr = date_arr.split(",");
+        networth_time_arr = networth_time_arr.split(",");
+        var most_recent = date_arr[date_arr.length - 1];
+
+        if (most_recent == date) { //entering data again on same day
+            var dates_over_time = date_arr.join();
+            networth_time_arr[networth_time_arr.length - 1] = parseInt(networth);
+
+        } else { //entering data on a diff day
+            date_arr.push(date);
+            networth_time_arr.push(parseInt(networth));
+            var dates_over_time = date_arr.join();
+        }
+        var networth_over_time = networth_time_arr.join();
+        document.Form.dates_over_time.value = dates_over_time;
+        document.Form.networth_over_time_stocks.value = networth_over_time;
+    }
 }
 
 //to display correct stock options when user types into searchbar
@@ -311,7 +361,8 @@ function SearchThroughStocks() {
     input = document.getElementById("searchbar");
     filter = input.value.toUpperCase();
     ul = document.getElementById("stock_option");
-    li = ul.getElementsByTagName("li");
+    //li = ul.getElementsByTagName("li");
+    li = ul.getElementsByClassName("li_stock");
     for (i = 0; i < li.length; i++) {
         txtValue = li[i].textContent;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -341,34 +392,36 @@ function updateStockValuesText() {
 
 updateStockValuesText();
 
-var money, income, savings, r1, r2, inf_rate, years, accum_years, distr_years, savings_per_year;
-
 //function for graphs
 function result() {
 
-    document.getElementById("money_slider").value = document.getElementById("money").value
-    document.getElementById("savings_slider").value = document.getElementById("savings").value
-    document.getElementById("income_slider").value = document.getElementById("income").value
-
-    var currentWidth = parseInt(d3.select('#graph').style('width'), 10)
-    if (currentWidth > 2000) {
+    //var currentWidth = parseInt(d3.select('#graph').style('width'), 10)
+    /*if (currentWidth > 2000) {
         currentWidth = 2000;
-    }
+    }*/
+    var currentWidth = 1500;
 
     money = document.getElementById('money').value;
     income = document.getElementById('income').value;
     savings = document.getElementById('savings').value;
     r1 = 0.07;
+    bad_r1 = 0.06;
     r2 = 0.04;
     inf_rate = 0.03; //inflation rate
     years = life - curr_age; //years left in life
     accum_years = ret_age - curr_age; //accumulation years
     distr_years = life - ret_age; //distribution years
 
+    netWorth();
+    console.log("networth " + networth);
+    console.log(networth_time_arr);
+
     d3.selectAll("svg").remove();
     bargraph(); // barplot showing user's stocks
     portfolio_chart(); //piechart showing user's portfolio
+
     savings_req_over_time(); //graph showing savings req over time
+    networth_over_time_graph(); //graph showing networth over time
 
     money_over_time = [] //inflation adjusted M per year
     time = []
@@ -388,6 +441,10 @@ function result() {
     var PV_goal = goal / Math.pow((1 + parseFloat(r1)), accum_years)
     var gap = PV_goal - savings
     savings_per_year = gap / ((1 / parseFloat(r1)) - (1 / (parseFloat(r1) * Math.pow(1 + parseFloat(r1), accum_years))))
+
+    bad_savings_per_year = goal / Math.pow((1 + parseFloat(bad_r1)), accum_years);
+    var bad_gap = bad_savings_per_year - savings;
+    bad_savings_per_year = bad_gap / ((1 / parseFloat(bad_r1)) - (1 / (parseFloat(bad_r1) * Math.pow(1 + parseFloat(bad_r1), accum_years))));
 
     //wealth per year in accumulation years
     for (let i = 2; i < accum_years + 1; i++) {
@@ -420,14 +477,15 @@ function result() {
         .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
     var x = d3.scaleLinear().domain([1, money_over_time.length]).range([0, w]);
-    var y = d3.scaleLinear().domain([0, d3.max(money_over_time)]).range([h, 0]);
+    var y = d3.scaleLinear().domain([0, Math.max.apply(Math, money_over_time)]).range([h, 0]);
+    //d3.max(money_over_time)
 
     var xAxis = d3.axisBottom(x).tickSize(-h).tickFormat(function (d) { return (d + curr_year - 1); });//.tickSubdivide(true)
 
     graph.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + h + ")")
-        .style("font-size", 15)
+        .style("font-size", 12)
         .call(xAxis);
 
     graph.append("text")
@@ -451,7 +509,7 @@ function result() {
     graph.append("g")
         .attr("class", "y axis")
         .attr("transform", "translate(-25,0)")
-        .style("font-size", 15)
+        .style("font-size", 12)
         .call(yAxisLeft);
 
     graph
@@ -506,7 +564,7 @@ function result() {
     graph2.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + h + ")")
-        .style("font-size", 15)
+        .style("font-size", 12)
         .call(xAxis);
 
     graph2.append("text")
@@ -524,13 +582,14 @@ function result() {
         .style("text-anchor", "middle")
         .text("Wealth");
 
-    var y2 = d3.scaleLinear().domain([0, d3.max(wealth)]).range([h, 0]);
+    var y2 = d3.scaleLinear().domain([0, Math.max.apply(Math, wealth)]).range([h, 0]);
+    //d3.max(wealth)
     var yAxisLeft2 = d3.axisLeft(y2).ticks(4)
 
     graph2.append("g")
         .attr("class", "y axis")
         .attr("transform", "translate(-25,0)")
-        .style("font-size", 15)
+        .style("font-size", 12)
         .call(yAxisLeft2);
 
     graph2
@@ -707,24 +766,134 @@ function updateOverTime() {
     if (date_arr == null) { //first time entering data
         document.Formnum1.dates_over_time.value = date;
         document.Formnum1.savings_req_over_time.value = parseInt(savings_per_year);
+        document.Formnum1.savings_req_over_time_bad.value = parseInt(bad_savings_per_year);
+
+        netWorth();
+        document.Formnum1.networth_over_time.value = parseInt(networth);
     } else {
         date_arr = date_arr.split(",");
         savings_req_arr = savings_req_arr.split(",");
+        savings_req_arr_bad = savings_req_arr_bad.split(",");
+        networth_time_arr = networth_time_arr.split(",");
         var most_recent = date_arr[date_arr.length - 1];
 
         if (most_recent == date) { //entering data again on same day
             var dates_over_time = date_arr.join();
             savings_req_arr[savings_req_arr.length - 1] = parseInt(savings_per_year);
+            savings_req_arr_bad[savings_req_arr_bad.length - 1] = parseInt(bad_savings_per_year);
+            netWorth();
+            networth_time_arr[networth_time_arr.length - 1] = parseInt(networth);
 
         } else { //entering data on a diff day
             date_arr.push(date);
+            savings_req_arr_bad.push(parseInt(bad_savings_per_year));
             savings_req_arr.push(parseInt(savings_per_year));
+            netWorth();
+            networth_time_arr.push(parseInt(networth));
             var dates_over_time = date_arr.join();
         }
         var savings_over_time = savings_req_arr.join();
+        var savings_over_time_bad = savings_req_arr_bad.join();
+        var networth_over_time = networth_time_arr.join();
         document.Formnum1.dates_over_time.value = dates_over_time;
         document.Formnum1.savings_req_over_time.value = savings_over_time;
+        document.Formnum1.savings_req_over_time_bad.value = savings_over_time_bad;
+        document.Formnum1.networth_over_time.value = networth_over_time;
     }
+}
+
+function networth_over_time_graph() {
+    if (date_arr == null || date_arr.split(",").length == 1) {
+        document.getElementById("trackData_description").innerText = "You don't have any data to show right now."
+        // console.log("no graph today");
+    } else {
+        //console.log("yep we r gonna graph this shit");
+        data_date = date_arr.split(",");
+        data_networth = networth_time_arr.split(",");
+
+        /*var currentWidth = parseInt(d3.select('#savings_req_time').style('width'), 10)
+        if (currentWidth > 2000) {
+            currentWidth = 2000;
+        }*/
+        var currentWidth = 1500;
+        var m = [50, 150, 100, 150]; // margins, m[0], m[2] = top/below, m[1] = right, m[3] = left
+        var w = currentWidth * 0.7; // width
+        var h = 400 - m[0] - m[2]; // height
+
+        //graph for savings req over time
+        var graph = d3.select("#networth_time")
+            .append("svg")
+            .attr("width", w + m[1] + m[3])
+            .attr("height", h + m[0] + m[2])
+            .append("svg:g")
+            .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+
+        var x = d3.scaleTime().rangeRound([0, w]);
+        var xAxis = d3.axisBottom(x).tickSize(-h).tickFormat(d3.timeFormat("%m-%d-%Y"));;
+        var parseTime = d3.timeParse("%m/%d/%Y");
+        x.domain(d3.extent(data_date, function (d, i) { console.log(data_date[i]); return parseTime(data_date[i]); }));
+
+        var y = d3.scaleLinear().domain([0, Math.max.apply(Math, data_networth)]).range([h, 0]);
+
+        graph.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + h + ")")
+            .style("font-size", 12)
+            .call(xAxis)
+
+        graph.append("text")
+            .attr("transform",
+                "translate(" + (w / 2) + " ," +
+                (h + m[0]) + ")")
+            .style("text-anchor", "middle")
+            .text("Date");
+
+        // text label for the y axis
+        graph.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - m[1])
+            .attr("x", 0 - (h / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Networth");
+
+        var yAxisLeft = d3.axisLeft(y).ticks(4)
+
+        graph.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(-25,0)")
+            .style("font-size", 12)
+            .call(yAxisLeft);
+
+        graph
+            .append("text")
+            .attr("x", (w / 2))
+            .attr("y", 0 - (m[0] / 2))
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("text-decoration", "underline")
+            .text("Your networth over time")
+
+        //shading
+        var area = d3.area()
+            .x(function (d, i) { return x(parseTime(data_date[i])); })
+            .y1(function (d) {
+                return y(d);
+            })
+            .y0(y(0))
+
+        //shading
+        graph
+            .datum(data_networth)
+            .append("path")
+            .attr("d", area)
+            .style("stroke-width", 2)
+            .style("fill", "green")
+            .style("stroke", "green")
+            .style("opacity", .6)
+    }
+
 }
 
 function savings_req_over_time() {
@@ -734,11 +903,13 @@ function savings_req_over_time() {
         //console.log("yep we r gonna graph this shit");
         data_date = date_arr.split(",");
         data_savings = savings_req_arr.split(",");
+        data_savings_bad = savings_req_arr_bad.split(",");
 
-        var currentWidth = parseInt(d3.select('#savings_req_time').style('width'), 10)
+        /*var currentWidth = parseInt(d3.select('#savings_req_time').style('width'), 10)
         if (currentWidth > 2000) {
             currentWidth = 2000;
-        }
+        }*/
+        var currentWidth = 1500;
         var m = [50, 150, 100, 150]; // margins, m[0], m[2] = top/below, m[1] = right, m[3] = left
         var w = currentWidth * 0.7; // width
         var h = 400 - m[0] - m[2]; // height
@@ -757,12 +928,12 @@ function savings_req_over_time() {
         var parseTime = d3.timeParse("%m/%d/%Y");
         x.domain(d3.extent(data_date, function (d, i) { console.log(data_date[i]); return parseTime(data_date[i]); }));
 
-        var y = d3.scaleLinear().domain([0, d3.max(data_savings)]).range([h, 0]);
+        var y = d3.scaleLinear().domain([0, Math.max.apply(Math, data_savings)]).range([h, 0]);
 
         graph.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + h + ")")
-            .style("font-size", 15)
+            .style("font-size", 12)
             .call(xAxis)
 
         graph.append("text")
@@ -786,7 +957,7 @@ function savings_req_over_time() {
         graph.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate(-25,0)")
-            .style("font-size", 15)
+            .style("font-size", 12)
             .call(yAxisLeft);
 
         graph
@@ -798,45 +969,27 @@ function savings_req_over_time() {
             .style("text-decoration", "underline")
             .text("Savings required over time")
 
-        //shading
-        var area = d3.area()
+        // define the 1st line
+        var valueline = d3.line()
             .x(function (d, i) { return x(parseTime(data_date[i])); })
-            .y1(function (d) {
-                return y(d);
-            })
-            .y0(y(0))
+            .y(function (d) { return y(d); });
 
-        //shading
-        graph
-            .datum(data_savings)
-            .append("path")
-            .attr("d", area)
-            .style("stroke-width", 2)
-            .style("fill", "green")
-            .style("stroke", "green")
-            .style("opacity", .6)
+        // define the 2nd line
+        var valueline2 = d3.line()
+            .x(function (d, i) { return x(parseTime(data_date[i])); })
+            .y(function (d) { return y(d); });
+
+        graph.append("path")
+            .data([data_savings])
+            .attr("class", "line-7")
+            .attr("d", valueline);
+
+        graph.append("path")
+            .data([data_savings_bad])
+            .attr("class", "line-6")
+            .attr("d", valueline2);
     }
-
 }
-
-var money_slider = document.getElementById("money_slider")
-var savings_slider = document.getElementById("savings_slider")
-var income_slider = document.getElementById("income_slider")
-
-var rangeValue = function () {
-    var newMoney = money_slider.value;
-    var newSavings = savings_slider.value;
-    var newIncome = income_slider.value;
-
-    document.getElementById("money").value = newMoney;
-    document.getElementById("savings").value = newSavings;
-    document.getElementById("income").value = newIncome;
-    result()
-}
-
-money_slider.addEventListener("input", rangeValue);
-savings_slider.addEventListener("input", rangeValue);
-income_slider.addEventListener("input", rangeValue);
 
 result()
 
