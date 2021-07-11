@@ -39,7 +39,7 @@
                 $value = $result->fetch_object();
                 $_SESSION['life'] = $value->life;
                 
-                header("location: http://localhost/~sjakka/RetirementTool/retirement_user.php");
+                header("location: http://localhost/~sjakka/RetirementToolwUI/retirement_user.php");
                 exit;
                 
             }
@@ -75,10 +75,10 @@
     </form>
     <div style = "color:black"><?php echo $output; ?></div>
 <div style = "color:black"><?php echo "Don't have an account yet? Create one! <p/>"; ?></div>
-<a href="http://localhost/~sjakka/RetirementTool/create_acct.php" style="margin-left:10; color:black;">
+<a href="http://localhost/~sjakka/RetirementToolwUI/create_acct.php" style="margin-left:10; color:black;">
 <button class="tablink" >Create Account</button>
 </a>
-<a href="http://localhost/~sjakka/RetirementTool/retirement_guest.php" style="margin-left:10; color:black;">
+<a href="http://localhost/~sjakka/RetirementToolwUI/retirement_guest.php" style="margin-left:10; color:black;">
 <button class="tablink" >Continue as guest.</button>
 </a>
 
