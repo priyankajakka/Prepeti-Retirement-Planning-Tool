@@ -2,6 +2,6 @@
     session_start();
     $_SESSION = array();
     session_destroy();
-    header("location: http://localhost/~sjakka/RetirementTool/ret_login.php");
+    header("location: http://localhost/~sjakka/RetirementToolwUI/ret_login.php");
     exit;
     ?>
