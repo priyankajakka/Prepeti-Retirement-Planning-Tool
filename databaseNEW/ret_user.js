@@ -11,18 +11,127 @@ if (existing_stocks != null) {
     selected_stock_options = existing_stocks.split(",");
 }
 
+//piechart for portfolios
+function portfolio_chart() {
+    var currentWidth = parseInt(d3.select('#pie-chart').style('width'), 10)
+    var width = currentWidth;
+    height = 450
+    margin = 40
+
+    var radius;
+    if (width > height) {
+        radius = (height / 2) - 20;
+    } else {
+        radius = width / 2;
+    }
+
+    var svg = d3.select("#pie-chart")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    var data = { "Domestic Large": 1, "International Small": 1, "International Large": 1, "Bonds": 1, "Domestic Small": 1 }
+    data['Domestic Large'] = dom_large_percent;
+    data['Domestic Small'] = dom_small_percent;
+    data['International Large'] = int_large_percent;
+    data['International Small'] = int_small_percent;
+    data['Bonds'] = bonds_percent;
+
+    var color = d3.scaleOrdinal()
+        .domain(["Domestic Large", "International Small", "International Large", "Bonds", "Domestic Small"])
+        .range(["#f4c042", "#1a75be", "#709931", "#dc3545", "#fb6340"]);
+
+    var pie = d3.pie()
+        .sort(null) // Do not sort group by size
+        .value(function (d) { return d.value; })
+    var data_ready = pie(d3.entries(data))
+
+    var arc = d3.arc()
+        .innerRadius(radius * 0.4)         // This is the size of the donut hole
+        .outerRadius(radius * 0.8)
+
+    // Another arc that won't be drawn. Just for labels positioning
+    var outerArc = d3.arc()
+        .innerRadius(radius * 1.4)
+        .outerRadius(radius * 0.4)
+
+    svg
+        .selectAll('allPolylines')
+        .data(data_ready)
+        .enter()
+        .append('polyline')
+        .attr("stroke", "black")
+        .style("fill", "none")
+        .attr("stroke-width", 1)
+        .attr('points', function (d) {
+            var posA = arc.centroid(d); // line insertion in the slice
+            var posB = outerArc.centroid(d); // line break: we use the other arc generator that has been built only for that
+            var posC = outerArc.centroid(d); // Label position = almost the same as posB
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2 // we need the angle to see if the X position will be at the extreme right or extreme left
+            posC[0] = radius * 0.95 * (midangle < Math.PI ? 1 : -1); // multiply by 1 or -1 to put it on the right or on the left
+            return [posA, posB, posC]
+        })
+
+    svg
+        .selectAll('allSlices')
+        .data(data_ready)
+        .enter()
+        .append('path')
+        .attr('d', arc)
+        .attr('fill', function (d) { return (color(d.data.key)) })
+        .attr("stroke", "white")
+        .style("stroke-width", "2px")
+
+    svg
+        .selectAll('allLabels')
+        .data(data_ready)
+        .enter()
+        .append('text')
+        .text(function (d) { return d.data.key })
+        .attr('transform', function (d) {
+            var pos = outerArc.centroid(d);
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+            pos[0] = radius * 0.99 * (midangle < Math.PI ? 1 : -1);
+            return 'translate(' + pos + ')';
+        })
+        .style('text-anchor', function (d) {
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+            return (midangle < Math.PI ? 'start' : 'end')
+        })
+
+    svg
+        .selectAll('allSlices')
+        .data(data_ready)
+        .enter()
+        .append('text')
+        .text(function (d) { return d.data.value + '%' })
+        .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")"; })
+        .style("text-anchor", "middle")
+        .style("font-size", 17)
+
+    svg.append("g")
+        .attr("transform", "translate(" + (0) + "," + (-height / 2 + 25) + ")")
+        .append("text")
+        .style("font-size", "16px")
+        .style("text-decoration", "underline")
+        .style("text-anchor", "middle")
+        .text("Recommended Portfolio - " + portfolio.toUpperCase())
+}
+
 //bargraph for stocks
 function bargraph() {
     var dataset1 = existing_stock_values.split(",");
 
-    var currentWidth = parseInt(d3.select('#chart').style('width'), 10)
+    var currentWidth = parseInt(d3.select('#boxplot').style('width'), 10)
 
     var m = [100, 0.1 * currentWidth, 100, 0.1 * currentWidth]; // margins, m[0], m[2] = top/below, m[1] = right, m[3] = left
     //var w = currentWidth - m[1] - m[3]; // width
     var w = currentWidth / 3;
     var h = 600 - m[0] - m[2]; // height
 
-    var g = d3.select("#chart")
+    var g = d3.select("#boxplot")
         .append("svg")
         .attr("width", w + m[1] + m[3])
         .attr("height", 700)//h + m[0] + m[2]
@@ -54,9 +163,11 @@ function bargraph() {
         .call(d3.axisBottom(x))
         .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("font-size", 15)
         .style("text-anchor", "end");
 
     g.append("g")
+        .style("font-size", 15)
         .call(d3.axisLeft(y));
 
     //title of graph
@@ -75,6 +186,15 @@ function bargraph() {
             (h + m[0]) + ")")
         .style("text-anchor", "middle")
         .text("Stock");
+
+    // text label for the y axis
+    g.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - m[0])
+        .attr("x", 0 - (h / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Value");
 }
 
 //so that when user opens acct, all of their saved data will show
@@ -217,6 +337,8 @@ function updateStockValuesText() {
 
 updateStockValuesText();
 
+var money, income, savings, r1, r2, inf_rate, years, accum_years, distr_years, savings_per_year;
+
 //function for graphs
 function result() {
 
@@ -229,18 +351,21 @@ function result() {
         currentWidth = 2000;
     }
 
-    var money = document.getElementById('money').value;
-    var income = document.getElementById('income').value;
-    var savings = document.getElementById('savings').value;
-    var r1 = 0.07;
-    var r2 = 0.04;
-    var inf_rate = 0.03; //inflation rate
-    var years = life - curr_age; //years left in life
-    var accum_years = ret_age - curr_age; //accumulation years
-    var distr_years = life - ret_age; //distribution years
+    money = document.getElementById('money').value;
+    income = document.getElementById('income').value;
+    savings = document.getElementById('savings').value;
+    r1 = 0.07;
+    r2 = 0.04;
+    inf_rate = 0.03; //inflation rate
+    years = life - curr_age; //years left in life
+    accum_years = ret_age - curr_age; //accumulation years
+    distr_years = life - ret_age; //distribution years
 
     d3.selectAll("svg").remove();
     bargraph(); // barplot showing user's stocks
+    portfolio_chart(); //piechart showing user's portfolio
+    savings_req_over_time(); //graph showing savings req over time
+
     money_over_time = [] //inflation adjusted M per year
     time = []
     wealth = [] //wealth per year
@@ -258,7 +383,7 @@ function result() {
 
     var PV_goal = goal / Math.pow((1 + parseFloat(r1)), accum_years)
     var gap = PV_goal - savings
-    var savings_per_year = gap / ((1 / parseFloat(r1)) - (1 / (parseFloat(r1) * Math.pow(1 + parseFloat(r1), accum_years))))
+    savings_per_year = gap / ((1 / parseFloat(r1)) - (1 / (parseFloat(r1) * Math.pow(1 + parseFloat(r1), accum_years))))
 
     //wealth per year in accumulation years
     for (let i = 2; i < accum_years + 1; i++) {
@@ -278,8 +403,8 @@ function result() {
         }
     }
 
-    var m = [50, 190, 100, 190]; // margins, m[0], m[2] = top/below, m[1] = right, m[3] = left
-    var w = currentWidth - m[1] - m[3]; // width
+    var m = [50, 150, 100, 150]; // margins, m[0], m[2] = top/below, m[1] = right, m[3] = left
+    var w = currentWidth * 0.7; // width
     var h = 400 - m[0] - m[2]; // height
 
     //graph for inflation adjusted M
@@ -298,6 +423,7 @@ function result() {
     graph.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + h + ")")
+        .style("font-size", 15)
         .call(xAxis);
 
     graph.append("text")
@@ -307,11 +433,21 @@ function result() {
         .style("text-anchor", "middle")
         .text("Year");
 
+    // text label for the y axis
+    graph.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - m[1])
+        .attr("x", 0 - (h / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("M");
+
     var yAxisLeft = d3.axisLeft(y).ticks(4)
 
     graph.append("g")
         .attr("class", "y axis")
         .attr("transform", "translate(-25,0)")
+        .style("font-size", 15)
         .call(yAxisLeft);
 
     graph
@@ -366,6 +502,7 @@ function result() {
     graph2.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + h + ")")
+        .style("font-size", 15)
         .call(xAxis);
 
     graph2.append("text")
@@ -375,12 +512,21 @@ function result() {
         .style("text-anchor", "middle")
         .text("Year");
 
+    graph2.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - m[1])
+        .attr("x", 0 - (h / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Wealth");
+
     var y2 = d3.scaleLinear().domain([0, d3.max(wealth)]).range([h, 0]);
     var yAxisLeft2 = d3.axisLeft(y2).ticks(4)
 
     graph2.append("g")
         .attr("class", "y axis")
         .attr("transform", "translate(-25,0)")
+        .style("font-size", 15)
         .call(yAxisLeft2);
 
     graph2
@@ -550,6 +696,123 @@ function result() {
     }
 
     document.getElementById('summary').innerText = text
+}
+
+//date over time
+function updateOverTime() {
+    if (date_arr == null) { //first time entering data
+        document.Formnum1.dates_over_time.value = date;
+        document.Formnum1.savings_req_over_time.value = parseInt(savings_per_year);
+    } else {
+        date_arr = date_arr.split(",");
+        savings_req_arr = savings_req_arr.split(",");
+        var most_recent = date_arr[date_arr.length - 1];
+
+        if (most_recent == date) { //entering data again on same day
+            var dates_over_time = date_arr.join();
+            savings_req_arr[savings_req_arr.length - 1] = parseInt(savings_per_year);
+
+        } else { //entering data on a diff day
+            date_arr.push(date);
+            savings_req_arr.push(parseInt(savings_per_year));
+            var dates_over_time = date_arr.join();
+        }
+        var savings_over_time = savings_req_arr.join();
+        document.Formnum1.dates_over_time.value = dates_over_time;
+        document.Formnum1.savings_req_over_time.value = savings_over_time;
+    }
+}
+
+function savings_req_over_time() {
+    if (date_arr == null) {
+        // console.log("no graph today");
+    } else {
+        //console.log("yep we r gonna graph this shit");
+        data_date = date_arr.split(",");
+        data_savings = savings_req_arr.split(",");
+
+        var currentWidth = parseInt(d3.select('#savings_req_time').style('width'), 10)
+        if (currentWidth > 2000) {
+            currentWidth = 2000;
+        }
+        var m = [50, 150, 100, 150]; // margins, m[0], m[2] = top/below, m[1] = right, m[3] = left
+        var w = currentWidth * 0.7; // width
+        var h = 400 - m[0] - m[2]; // height
+
+        //graph for savings req over time
+        var graph = d3.select("#savings_req_time")
+            .append("svg")
+            .attr("width", w + m[1] + m[3])
+            .attr("height", h + m[0] + m[2])
+            .append("svg:g")
+            .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+
+        var x = d3.scaleTime().rangeRound([0, w]);
+        var xAxis = d3.axisBottom(x).tickSize(-h).tickFormat(d3.timeFormat("%m-%d-%Y"));;
+        var parseTime = d3.timeParse("%m/%d/%Y");
+        x.domain(d3.extent(data_date, function (d, i) { console.log(data_date[i]); return parseTime(data_date[i]); }));
+
+        var y = d3.scaleLinear().domain([0, d3.max(data_savings)]).range([h, 0]);
+
+        graph.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + h + ")")
+            .style("font-size", 15)
+            .call(xAxis)
+
+        graph.append("text")
+            .attr("transform",
+                "translate(" + (w / 2) + " ," +
+                (h + m[0]) + ")")
+            .style("text-anchor", "middle")
+            .text("Date");
+
+        // text label for the y axis
+        graph.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - m[1])
+            .attr("x", 0 - (h / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Savings Required");
+
+        var yAxisLeft = d3.axisLeft(y).ticks(4)
+
+        graph.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(-25,0)")
+            .style("font-size", 15)
+            .call(yAxisLeft);
+
+        graph
+            .append("text")
+            .attr("x", (w / 2))
+            .attr("y", 0 - (m[0] / 2))
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("text-decoration", "underline")
+            .text("Savings required over time")
+
+        //shading
+        var area = d3.area()
+            .x(function (d, i) { return x(parseTime(data_date[i])); })
+            .y1(function (d) {
+                return y(d);
+            })
+            .y0(y(0))
+
+        //shading
+        graph
+            .datum(data_savings)
+            .append("path")
+            .attr("d", area)
+            .style("stroke-width", 2)
+            .style("fill", "green")
+            .style("stroke", "green")
+            .style("opacity", .6)
+    }
+
 }
 
 var money_slider = document.getElementById("money_slider")
