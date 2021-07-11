@@ -47,7 +47,7 @@
                 $_SESSION['ret_age'] = $ret_age;
                 $_SESSION['life'] = $life;
 
-                header("location: http://localhost/~sjakka/RetirementTool/retirement_user.php");
+                header("location: http://localhost/~sjakka/RetirementToolwUI/retirement_user.php");
                 exit;
             }
         }
@@ -104,13 +104,14 @@
     </form>
     <div style = "color:black"><?php echo $output; ?></div>
 <div style = "color:black"><?php echo "Already have an account? <p/>"; ?></div>
-<a href="http://localhost/~sjakka/RetirementTool/ret_login.php" style="margin-left:10; color:black;">
+<a href="http://localhost/~sjakka/RetirementToolwUI/ret_login.php" style="margin-left:10; color:black;">
 <button class="tablink" >Return to login page</button>
 </a>
-<a href="http://localhost/~sjakka/RetirementTool/retirement_guest.php" style="margin-left:10; color:black;">
+<a href="http://localhost/~sjakka/RetirementToolwUI/retirement_guest.php" style="margin-left:10; color:black;">
 <button class="tablink" >Continue as guest.</button>
 </a>
 
 </fieldset>
 </body>
 </html>
+
