@@ -12,4 +12,3 @@ Changes:
 Things that are pending:
 1. Assigning portfolios
 2. making graphs responsive
-3. whenever the page reloads, it goes to the first page automatically, so we hav to fix that too
