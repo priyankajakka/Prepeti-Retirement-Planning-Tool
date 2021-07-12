@@ -11,4 +11,3 @@ Changes:
 
 Things that are pending:
 1. Assigning portfolios
-2. making graphs responsive
