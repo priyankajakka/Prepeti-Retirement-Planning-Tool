@@ -1,6 +1,8 @@
 <?php
     session_start();
     $output = NULL;
+    //$date=date('m/d/Y');
+    $date= new DateTime("now", new DateTimeZone('America/Los_Angeles') );
     
     if(isset($_POST["submit"])){
         $username = $_POST['username'];
@@ -11,8 +13,19 @@
         $curr_age = (int) $_POST['curr_age'];
         $ret_age = (int) $_POST['ret_age'];
         $life = (int) $_POST['life'];
+
+        $income = (int) $_POST['income'];
+        $money = (int) $_POST['money'];
+        $savings = (int) $_POST['savings'];
+        $savings_req = (int) $_POST['savings_req'];
+        $savings_req_bad = (int) $_POST['savings_req_bad'];
+        $networth = (int) $_POST['networth'];
+        $reg_date = $_POST['reg_date'];
+        //print($reg_date);
         
-        if(empty($username) || empty($password) || empty($full_name) || empty($email)){
+        if(empty($username) || empty($password) || empty($full_name) || empty($email)
+        || empty($curr_age) || empty($ret_age) || empty($life) || empty($income)
+        || empty($money) || empty($savings)){
             $output = "Please enter all fields.";
         }else{
             $mysqli = NEW MySQLi('localhost', 'root', 'jakka_sm', 'Retirement_Tool');
@@ -21,6 +34,7 @@
             $password = $mysqli->real_escape_string($password);
             $full_name = $mysqli->real_escape_string($full_name);
             $email = $mysqli->real_escape_string($email);
+            $reg_date = $mysqli->real_escape_string($reg_date);
             
             $query = $mysqli->query("SELECT id FROM Login_info WHERE email = '$email'");
             $query2 = $mysqli->query("SELECT id FROM Login_info WHERE username = '$username'");
@@ -36,7 +50,14 @@
                 $sql = "UPDATE Login_info SET
                 curr_age=$curr_age,
                 ret_age=$ret_age ,
-                life=$life
+                life=$life,
+                income=$income,
+                money=$money ,
+                savings=$savings,
+                Savings_req_time = $savings_req,
+                Savings_req_time_bad = $savings_req_bad,
+                Date = '$reg_date',
+                Networth_over_time = $networth
                 WHERE username='$username'";
 
                 mysqli_query($mysqli, $sql);
@@ -71,9 +92,9 @@
 <body>
 <fieldset>
 <div style = "font-size:50; color:black"><strong><?php echo "Create an account! <p/>"; ?></strong></div>
-    <div style = "color:black"><?php echo date("m/d/Y") . "<br><br><br>"; ?></div>
+    <?php echo htmlspecialchars($date->format('m/d/Y h:i')); ?><br><br><br>
 
-    <form method = "POST">
+    <form name = "create_acct_form" method = "POST">
         <div style = "color:black">Enter username <input type = "TEXT" name = "username"/></div>
         </p>
         <div style = "color:black">Enter password <input type = "password" name = "password"/></div>
@@ -84,21 +105,41 @@
         </p>
 
         <div id = "curr_age_q">
-            How old are you?: <br><input type="number" name="curr_age" id="curr_age"
+            How old are you?: <br><input type="number" name="curr_age" id="curr_age" onkeyup = "updateSavingsReq()"
             style="text-align: center">
             <br><br>
         </div>
 
         <div id = "ret_age_q">
-            At what age do you plan to retire?: <br><input type="number" name="ret_age" id="ret_age"
+            At what age do you plan to retire?: <br><input type="number" name="ret_age" id="ret_age" onkeyup = "updateSavingsReq()"
             style="text-align: center">
             <br><br>
         </div>
 
         <div id = "life_q">
-            Life expectancy?: <br> <input type="number" name="life" id="life" style="text-align: center">
+            Life expectancy?: <br> <input type="number" name="life" id="life" onkeyup = "updateSavingsReq()" style="text-align: center">
             <br><br>
         </div>
+
+        <div id = "income_q">
+            What is your income?: <br><input type="number" name="income" id="income" onkeyup = "updateSavingsReq()" style="text-align: center">
+            <br><br>
+        </div>
+
+        <div id = "money_q">
+            How much money do you need per year?: <br><input type="number" name="money" id="money" onkeyup = "updateSavingsReq()" style="text-align: center">
+            <br><br>
+        </div>
+
+        <div id = "savings_q">
+            How much money do you have saved?: <br> <input type="number" name="savings" id="savings" onkeyup = "updateSavingsReq()" style="text-align: center">
+            <br><br>
+        </div>
+
+        <input name='savings_req' type=hidden>
+        <input name='savings_req_bad' type=hidden>
+        <input name='networth' type=hidden>
+        <input name='reg_date' type=hidden>
 
         <input style = "color:black" type = "SUBMIT" name = "submit" value = "Create account"/>
     </form>
@@ -113,5 +154,56 @@
 
 </fieldset>
 </body>
+
+<script>
+
+function updateSavingsReq(){
+    var reg_date = <?php echo json_encode($date->format('m/d/Y'));?>;
+    var curr_age = parseInt(document.getElementById("curr_age").value);
+    var ret_age = parseInt(document.getElementById("ret_age").value);
+    var life = parseInt(document.getElementById("life").value);
+    var income = parseInt(document.getElementById("income").value);
+    var money = parseInt(document.getElementById("money").value);
+    var savings = parseInt(document.getElementById("savings").value);
+    var networth = savings;
+
+    console.log(curr_age + " " + ret_age + " " + life + " " + income + " " + money + " " + savings);
+
+    var r1 = 0.07;
+    var bad_r1 = 0.06;
+    var r2 = 0.04;
+    var inf_rate = 0.03; //inflation rate
+    var years = life - curr_age; //years left in life
+    var accum_years = ret_age - curr_age; //accumulation years
+    var distr_years = life - ret_age; //distribution years
+
+    var money_over_time = []
+
+    for (let i = 1; i <= years + 1; i++) {
+        var adjusted_money = money * Math.pow(1 + inf_rate, i - 1)
+        money_over_time.push(adjusted_money)
+    }
+
+    var goal = money_over_time[accum_years + 1] * ((1 / (parseFloat(r2) - inf_rate)) - (Math.pow((1 + inf_rate), distr_years) / ((parseFloat(r2) - inf_rate) * Math.pow((1 + parseFloat(r2)), distr_years))))
+
+    var PV_goal = goal / Math.pow((1 + parseFloat(r1)), accum_years)
+    var gap = PV_goal - savings
+    var savings_per_year = gap / ((1 / parseFloat(r1)) - (1 / (parseFloat(r1) * Math.pow(1 + parseFloat(r1), accum_years))))
+
+    var bad_savings_per_year = goal / Math.pow((1 + parseFloat(bad_r1)), accum_years);
+    var bad_gap = bad_savings_per_year - savings;
+    bad_savings_per_year = bad_gap / ((1 / parseFloat(bad_r1)) - (1 / (parseFloat(bad_r1) * Math.pow(1 + parseFloat(bad_r1), accum_years))));
+
+    console.log(savings_per_year + " " + bad_savings_per_year + " " + reg_date);
+    document.create_acct_form.reg_date.value = reg_date;
+    document.create_acct_form.savings_req.value = parseInt(savings_per_year);
+    document.create_acct_form.savings_req_bad.value = parseInt(bad_savings_per_year);
+    document.create_acct_form.networth.value = parseInt(networth);
+    console.log(document.create_acct_form.savings_req.value + " " + document.create_acct_form.savings_req_bad.value + " " + document.create_acct_form.reg_date.value )
+
+} 
+
+</script>
+    
 </html>
 
