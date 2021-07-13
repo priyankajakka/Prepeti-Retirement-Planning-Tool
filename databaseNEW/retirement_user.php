@@ -6,7 +6,8 @@
       exit;
     }
 
-    $date=date('m/d/Y');
+    //$date=date('m/d/Y');
+    $date= new DateTime("now", new DateTimeZone('America/Los_Angeles') );
     //print $date;
     
     $mysqli = NEW MySQLi('localhost', 'root', 'jakka_sm', 'Retirement_Tool');
@@ -145,20 +146,34 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js">
       </script>
       <link rel="stylesheet" href="http://localhost/~sjakka/RetirementToolwUI/retirementplswork.css">
+
+      <script>
+        $(document).ready(function(){
+          $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+          });
+          var activeTab = localStorage.getItem('activeTab');
+          if(activeTab){
+            $('#myTab a[href="' + activeTab + '"]').tab('show');
+          }
+        });
+      </script>
+
+
       <title>Retirement
       </title>
       <div>
         <h1>Hello <b><?php echo htmlspecialchars($_SESSION["user"]); ?></b>!</h1>
         <p>
           <b>
-            <?php echo htmlspecialchars($date); ?>
+          <?php echo htmlspecialchars($date->format('m/d/Y h:i')); ?>
           </b>
         </p>
       </div>
     </head>
     <body>
       <div class="container">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs" id = "myTab">
           <li id = "portfolio_tab" class="active">
             <a data-toggle="tab" href="#portfolio">My Portfolio
             </a>
@@ -173,6 +188,10 @@
           </li>
           <li>
             <a data-toggle="tab" href="#menu4">Track my Data
+            </a>
+          </li>
+          <li>
+            <a data-toggle="tab" href="#menu5">Contact Us
             </a>
           </li>
           <li>
@@ -288,11 +307,35 @@
             <div id="networth_time">
             </div>
           </div>
+          <div id="menu5" class="tab-pane fade">
+            <div class="container" >
+                <h1>Contact Me</h1>
+                <form target="_blank" action="https://formsubmit.co/priyankajakka@gmail.com" method="POST">
+                  <input type="hidden" name="_next" value="http://localhost/~sjakka/RetirementToolwUI/retirement_user.php">
+                  <input type="hidden" name="_autoresponse" value="Thank you for submitting the contact form! We will get back to you very soon!">
+                  <!-- <input type="hidden" name="_captcha" value="false">   -->
+                  <div class="form-group">
+                        <div class="form-row">
+                            <div id="name" class="col">
+                                <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+                            </div>
+                            <div class="col">
+                                <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Your Message" class="form-control" name="message" rows="10" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-dark btn-block">Submit Form</button>
+                </form>
+            </div>
+          </div>  
         </div>
       </div>
     </body>
     <script>
-      var date = <?php echo json_encode($date);?>;
+      var date = <?php echo json_encode($date->format('m/d/Y'));?>;
       var date_arr = <?php echo json_encode($query["Date"]);?>;
       var savings_req_arr = <?php echo json_encode($query["Savings_req_time"]);?>;
       var savings_req_arr_bad = <?php echo json_encode($query["Savings_req_time_bad"]);?>;
