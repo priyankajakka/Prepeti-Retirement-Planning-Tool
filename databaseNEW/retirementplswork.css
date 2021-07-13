@@ -1,4 +1,4 @@
-  #graph2 path {
+    #graph2 path {
     stroke: black;
     stroke-width: 2;
     fill: none;
@@ -50,7 +50,7 @@ ul.stock_option li {
     position: relative;
     padding: 12px 8px 12px 40px;
     background: #eee;
-    font-size: 18px;
+    font-size: 14px;
     transition: 0.2s;
     color: black;
     list-style-type: none;
@@ -106,3 +106,18 @@ polyline{
   stroke: red;
   stroke-width: 2px;
 }
+
+/*.svg-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  vertical-align: top;
+  overflow: hidden;
+}
+.svg-content {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}*/
