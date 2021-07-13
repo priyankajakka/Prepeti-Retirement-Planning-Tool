@@ -31,17 +31,25 @@
         $old_pwd = $_POST['old_pwd'];
         $new_pwd = $_POST['new_pwd'];
         $confirm_new_pwd = $_POST['confirm_new_pwd'];
-        print $old_pwd;
-        print $new_pwd;
+        //print $old_pwd;
+        //print $new_pwd;
 
-        if ($old_pwd === $new_pwd){
+        $stmt = $mysqli->prepare("SELECT DISTINCT password FROM Login_Info WHERE username = '$curr_username'");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $value = $result->fetch_object();
+        $_SESSION['password'] = $value->password;
+
+        if($old_pwd !== $_SESSION['password']){
+            $pwd_output = "Password is incorrect. Try again.";
+        }else if ($old_pwd === $new_pwd){
             $pwd_output = "Choose a password that hasn't been in use for the past year.";
-        }else if ($new_pwd != $confirm_new_pwd){
+        }else if ($new_pwd !== $confirm_new_pwd){
             $pwd_output = "Passwords do not match. Please re-enter new password.";
         }
         else{
             $sql = "UPDATE Login_info SET
-                password = '$new_pwd',
+                password = '$new_pwd'
             WHERE username='$curr_username'";
 
             if(mysqli_query($mysqli, $sql)){
@@ -104,8 +112,19 @@
             document.getElementById("ret_age_change").value = <?php echo ($query["ret_age"]); ?>;
             document.getElementById("life_change").value = <?php echo ($query["life"]); ?>;
         }
-    </script>
 
+        //so that when page reloads it will go to correct page
+        $(document).ready(function(){
+            $('a[data-toggle="pill"]').on('show.bs.tab', function(e) {
+                localStorage.setItem('activeTab', $(e.target).attr('href'));
+            });
+            var activeTab = localStorage.getItem('activeTab');
+            if(activeTab){
+                $('#v-pills-tab a[href="' + activeTab + '"]').tab('show');
+            }
+        });
+
+    </script>
 
 	<section>
 		<br><br>
@@ -169,7 +188,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Old password</label>
-                                        <input id = "old_pwd" type="password" class="form-control">
+                                        <input id = "old_pwd" name = "old_pwd" type="password" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -177,13 +196,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>New password</label>
-                                        <input id = "new_pwd" type="password" class="form-control">
+                                        <input id = "new_pwd" name = "new_pwd" type="password" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Confirm new password</label>
-                                        <input id = "confirm_new_pwd" type="password" class="form-control">
+                                        <input id = "confirm_new_pwd" name = "confirm_new_pwd" type="password" class="form-control">
                                     </div>
                                 </div>
                             </div>
