@@ -25,34 +25,40 @@ function netWorth() {
 
 //piechart for portfolios
 function portfolio_chart() {
-    if (portfolio != "null") {
-        //var currentWidth = parseInt(d3.select('#pie-chart').style('width'), 10)
-        var currentWidth = 1000;
-        var width = currentWidth;
-        height = 450
-        margin = 40
+    if (portfolio != "null") { //piechart will only show up if the user has been assigned a portfolio
 
-        var radius;
-        if (width > height) {
-            radius = (height / 2) - 20;
+        var width_pie_chart = 1000;
+        var height_pie_chart = 450;
+        var radius_pie_chart;
+
+        if (width_pie_chart > height_pie_chart) {
+            radius_pie_chart = (height_pie_chart / 2) - 20;
         } else {
-            radius = width / 2;
+            radius_pie_chart = width_pie_chart / 2;
         }
 
-        var svg = d3.select("#pie-chart")
+        var svg_pie_chart = d3.select("#pie-chart")
             .append("svg")
-            .attr("width", width)
-            .attr("height", height)
+            .attr("preserveAspectRatio", "xMinYMin meet") //for responsiveness
+            .attr("viewBox", "0 0 " + (width_pie_chart) + " " + (height_pie_chart)) //for responsiveness
+            //.classed("svg-content", true)
+            //.attr("width", width_pie_chart)
+            //.attr("height", height_pie_chart)
+            .attr("width", "80%")
+            .attr("height", "100%")
             .append("g")
-            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+            .attr("transform", "translate(" + width_pie_chart / 2 + "," + height_pie_chart / 2 + ")");
+            
 
-        var data = { "Domestic Large": 1, "International Small": 1, "International Large": 1, "Bonds": 1, "Domestic Small": 1 }
-        data['Domestic Large'] = dom_large_percent;
-        data['Domestic Small'] = dom_small_percent;
-        data['International Large'] = int_large_percent;
-        data['International Small'] = int_small_percent;
-        data['Bonds'] = bonds_percent;
+        //goal percentages for each of the following categories
+        var portfolio_percents = { "Domestic Large": 1, "International Small": 1, "International Large": 1, "Bonds": 1, "Domestic Small": 1 }
+        portfolio_percents['Domestic Large'] = dom_large_percent;
+        portfolio_percents['Domestic Small'] = dom_small_percent;
+        portfolio_percents['International Large'] = int_large_percent;
+        portfolio_percents['International Small'] = int_small_percent;
+        portfolio_percents['Bonds'] = bonds_percent;
 
+        //setting colors for each category
         var color = d3.scaleOrdinal()
             .domain(["Domestic Large", "International Small", "International Large", "Bonds", "Domestic Small"])
             .range(["#f4c042", "#1a75be", "#709931", "#dc3545", "#fb6340"]);
@@ -60,18 +66,18 @@ function portfolio_chart() {
         var pie = d3.pie()
             .sort(null) // Do not sort group by size
             .value(function (d) { return d.value; })
-        var data_ready = pie(d3.entries(data))
+        var data_ready = pie(d3.entries(portfolio_percents))
 
         var arc = d3.arc()
-            .innerRadius(radius * 0.4)         // This is the size of the donut hole
-            .outerRadius(radius * 0.8)
+            .innerRadius(radius_pie_chart * 0.4) // This is the size of the donut hole
+            .outerRadius(radius_pie_chart * 0.8)
 
         // Another arc that won't be drawn. Just for labels positioning
         var outerArc = d3.arc()
-            .innerRadius(radius * 1.4)
-            .outerRadius(radius * 0.4)
+            .innerRadius(radius_pie_chart * 1.4)
+            .outerRadius(radius_pie_chart * 0.4)
 
-        svg
+        svg_pie_chart
             .selectAll('allPolylines')
             .data(data_ready)
             .enter()
@@ -84,11 +90,11 @@ function portfolio_chart() {
                 var posB = outerArc.centroid(d); // line break: we use the other arc generator that has been built only for that
                 var posC = outerArc.centroid(d); // Label position = almost the same as posB
                 var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2 // we need the angle to see if the X position will be at the extreme right or extreme left
-                posC[0] = radius * 0.95 * (midangle < Math.PI ? 1 : -1); // multiply by 1 or -1 to put it on the right or on the left
+                posC[0] = radius_pie_chart * 0.95 * (midangle < Math.PI ? 1 : -1); // multiply by 1 or -1 to put it on the right or on the left
                 return [posA, posB, posC]
             })
 
-        svg
+        svg_pie_chart
             .selectAll('allSlices')
             .data(data_ready)
             .enter()
@@ -98,7 +104,7 @@ function portfolio_chart() {
             .attr("stroke", "white")
             .style("stroke-width", "2px")
 
-        svg
+        svg_pie_chart
             .selectAll('allLabels')
             .data(data_ready)
             .enter()
@@ -107,7 +113,7 @@ function portfolio_chart() {
             .attr('transform', function (d) {
                 var pos = outerArc.centroid(d);
                 var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
-                pos[0] = radius * 0.99 * (midangle < Math.PI ? 1 : -1);
+                pos[0] = radius_pie_chart * 0.99 * (midangle < Math.PI ? 1 : -1);
                 return 'translate(' + pos + ')';
             })
             .style('text-anchor', function (d) {
@@ -115,7 +121,7 @@ function portfolio_chart() {
                 return (midangle < Math.PI ? 'start' : 'end')
             })
 
-        svg
+        svg_pie_chart
             .selectAll('allSlices')
             .data(data_ready)
             .enter()
@@ -125,8 +131,8 @@ function portfolio_chart() {
             .style("text-anchor", "middle")
             .style("font-size", 14)
 
-        svg.append("g")
-            .attr("transform", "translate(" + (0) + "," + (-height / 2 + 25) + ")")
+        svg_pie_chart.append("g")
+            .attr("transform", "translate(" + (0) + "," + (-height_pie_chart / 2 + 25) + ")")
             .append("text")
             .style("font-size", "16px")
             .style("text-decoration", "underline")
@@ -142,19 +148,22 @@ function bargraph() {
     if (existing_stock_values != null) {
         var dataset1 = existing_stock_values.split(",");
 
-        //var currentWidth = parseInt(d3.select('#boxplot').style('width'), 10)
         var currentWidth = 1000;
-
 
         var m = [100, 0.1 * currentWidth, 100, 0.1 * currentWidth]; // margins, m[0], m[2] = top/below, m[1] = right, m[3] = left
         //var w = currentWidth - m[1] - m[3]; // width
         var w = currentWidth / 3;
         var h = 600 - m[0] - m[2]; // height
 
-        var g = d3.select("#barplot")
+        var svg_bar_chart = d3.select("#barplot")
             .append("svg")
-            .attr("width", w + m[1] + m[3])
-            .attr("height", 700)//h + m[0] + m[2]
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (700))
+            //.classed("svg-content", true)
+            //.attr("width", w + m[1] + m[3])
+            //.attr("height", 700)//h + m[0] + m[2]
+            .attr("width", "50%")
+            .attr("height", "50%")
             .append("svg:g")
             .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
@@ -167,7 +176,7 @@ function bargraph() {
             .domain([0, Math.max.apply(Math, dataset1)])
             .range([h, 0]);
 
-        g.selectAll()
+        svg_bar_chart.selectAll()
             .data(dataset1)
             .enter()
             .append("rect")
@@ -178,7 +187,16 @@ function bargraph() {
             .attr("fill", "#4e8791")
             .style("opacity", .6);
 
-        g.append("g")
+        svg_bar_chart.selectAll("text.bar")
+            .data(dataset1)
+            .enter().append("text")
+            .attr("class", "bar")
+            .attr("text-anchor", "middle")
+            .attr("x", function (d, i) { return x(selected_stock_options[i]) + x.bandwidth() / 2; })
+            .attr("y", function (d) { return y(d) - 5; })
+            .text(function (d) { return d; });
+
+        svg_bar_chart.append("g")
             .attr("transform", "translate(0," + h + ")")
             .call(d3.axisBottom(x))
             .selectAll("text")
@@ -186,12 +204,12 @@ function bargraph() {
             .style("font-size", 12)
             .style("text-anchor", "end");
 
-        g.append("g")
+        svg_bar_chart.append("g")
             .style("font-size", 12)
             .call(d3.axisLeft(y));
 
         //title of graph
-        g.append("text")
+        svg_bar_chart.append("text")
             .attr("x", (w / 2))
             .attr("y", 0 - (m[0] / 2))
             .attr("text-anchor", "middle")
@@ -200,7 +218,7 @@ function bargraph() {
             .text("Stocks")
 
         //x-axis label
-        g.append("text")
+        svg_bar_chart.append("text")
             .attr("transform",
                 "translate(" + (w / 2) + " ," +
                 (h + m[0]) + ")")
@@ -208,7 +226,7 @@ function bargraph() {
             .text("Stock");
 
         // text label for the y axis
-        g.append("text")
+        svg_bar_chart.append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 0 - m[0])
             .attr("x", 0 - (h / 2))
@@ -471,8 +489,13 @@ function result() {
     //graph for inflation adjusted M
     var graph = d3.select("#graph")
         .append("svg")
-        .attr("width", w + m[1] + m[3])
-        .attr("height", h + m[0] + m[2])
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (h + m[0] + m[2]))
+        //.classed("svg-content", true)
+        //.attr("width", w + m[1] + m[3])
+        //.attr("height", h + m[0] + m[2])
+        .attr("width", "100%")
+        .attr("height", "100%")
         .append("svg:g")
         .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
@@ -549,6 +572,16 @@ function result() {
         .attr("r", 5)
         .attr("fill", "red")
 
+    graph
+        .append("text")
+        .attr("x", x(years))
+        .attr("y", y(money_over_time[money_over_time.length - 1]))
+        .attr("dx", ".71em")
+        .attr("dy", ".35em")
+        .style("font-size", 14)
+        .text((years + curr_year) + " - $" + parseInt(money_over_time[money_over_time.length - 1]))
+
+
     //splitting graph 2 into accumulation and distr years
     var wealth1 = wealth.slice(0, accum_years + 1)
     var wealth2 = wealth.slice(accum_years, wealth.length)
@@ -556,10 +589,16 @@ function result() {
     //graph for wealth per year
     var graph2 = d3.select("#graph2")
         .append("svg")
-        .attr("width", w + m[1] + m[3])
-        .attr("height", h + m[0] + m[2])
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (h + m[0] + m[2]))
+        //.classed("svg-content", true)
+        //.attr("width", w + m[1] + m[3])
+        //.attr("height", h + m[0] + m[2])
+        .attr("width", "100%")
+        .attr("height", "100%")
         .append("svg:g")
         .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
 
     graph2.append("g")
         .attr("class", "x axis")
@@ -647,6 +686,15 @@ function result() {
         .attr("y2", h)
         .style("stroke-dasharray", ("4, 4"))
         .style("stroke", "red")
+
+    graph2
+        .append("text")
+        .attr("x", x(accum_years + 1))
+        .attr("y", y2(wealth2[0]))
+        .attr("dx", ".71em")
+        .attr("dy", ".35em")
+        .style("font-size", 14)
+        .text((accum_years + curr_year) + " - $" + parseInt(wealth2[0]))
 
     //circle moving along line for graph 1 (inflation adjusted M)
     var focus = graph
@@ -763,6 +811,7 @@ function result() {
 
 //date over time
 function updateOverTime() {
+    console.log(date_arr);
     if (date_arr == null) { //first time entering data
         document.Formnum1.dates_over_time.value = date;
         document.Formnum1.savings_req_over_time.value = parseInt(savings_per_year);
@@ -804,7 +853,7 @@ function updateOverTime() {
 
 function networth_over_time_graph() {
     if (date_arr == null || date_arr.split(",").length == 1) {
-        document.getElementById("trackData_description").innerText = "You don't have any data to show right now."
+        document.getElementById("trackData_description").innerText = "You don't have enough data to show right now."
         // console.log("no graph today");
     } else {
         //console.log("yep we r gonna graph this shit");
@@ -820,11 +869,16 @@ function networth_over_time_graph() {
         var w = currentWidth * 0.7; // width
         var h = 400 - m[0] - m[2]; // height
 
-        //graph for savings req over time
+        //graph for networth over time
         var graph = d3.select("#networth_time")
             .append("svg")
-            .attr("width", w + m[1] + m[3])
-            .attr("height", h + m[0] + m[2])
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (h + m[0] + m[2]))
+            //.classed("svg-content", true)
+            //.attr("width", w + m[1] + m[3])
+            //.attr("height", h + m[0] + m[2] + 150)
+            .attr("width", "100%")
+            .attr("height", "100%")
             .append("svg:g")
             .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
@@ -840,12 +894,19 @@ function networth_over_time_graph() {
             .attr("class", "x axis")
             .attr("transform", "translate(0," + h + ")")
             .style("font-size", 12)
-            .call(xAxis)
+            .call(xAxis);
+
+        graph.select('.x.axis')
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-45)");
 
         graph.append("text")
             .attr("transform",
                 "translate(" + (w / 2) + " ," +
-                (h + m[0]) + ")")
+                (h + m[0] + 50) + ")")
             .style("text-anchor", "middle")
             .text("Date");
 
@@ -892,6 +953,24 @@ function networth_over_time_graph() {
             .style("fill", "green")
             .style("stroke", "green")
             .style("opacity", .6)
+
+        graph.selectAll("myCircles")
+            .data(data_networth)
+            .enter().append("circle")
+            .attr("fill", "black")
+            .attr("stroke", "none")
+            .attr("cx", function (d, i) { return x(parseTime(data_date[i])); })
+            .attr("cy", function (d) { return y(d); })
+            .attr("r", 3.5);
+
+        graph
+            .append("text")
+            .attr("x", x(parseTime(data_date[data_date.length - 1])))
+            .attr("y", y(data_networth[data_networth.length - 1]))
+            .attr("dx", ".71em")
+            .attr("dy", ".35em")
+            .style("font-size", 14)
+            .text(data_date[data_date.length - 1] + " - $" + data_networth[data_networth.length - 1])
     }
 
 }
@@ -917,18 +996,22 @@ function savings_req_over_time() {
         //graph for savings req over time
         var graph = d3.select("#savings_req_time")
             .append("svg")
-            .attr("width", w + m[1] + m[3])
-            .attr("height", h + m[0] + m[2])
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (h + m[0] + m[2] + 150))
+            //.classed("svg-content", true)
+            //.attr("width", w + m[1] + m[3])
+            //.attr("height", h + m[0] + m[2] + 150)
+            .attr("width", "100%")
+            .attr("height", "100%")
             .append("svg:g")
             .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-
         var x = d3.scaleTime().rangeRound([0, w]);
-        var xAxis = d3.axisBottom(x).tickSize(-h).tickFormat(d3.timeFormat("%m-%d-%Y"));;
+        var xAxis = d3.axisBottom(x).tickSize(-h).tickFormat(d3.timeFormat("%m-%d-%Y"));
         var parseTime = d3.timeParse("%m/%d/%Y");
         x.domain(d3.extent(data_date, function (d, i) { console.log(data_date[i]); return parseTime(data_date[i]); }));
 
-        var y = d3.scaleLinear().domain([0, Math.max.apply(Math, data_savings)]).range([h, 0]);
+        var y = d3.scaleLinear().domain([0, Math.max.apply(Math, data_savings_bad)]).range([h, 0]);
 
         graph.append("g")
             .attr("class", "x axis")
@@ -936,10 +1019,22 @@ function savings_req_over_time() {
             .style("font-size", 12)
             .call(xAxis)
 
+        graph.append("circle").attr("cx", w / 2 - 50).attr("cy", h + m[0] + 80).attr("r", 6).style("fill", "red")
+        graph.append("circle").attr("cx", w / 2 - 50).attr("cy", h + m[0] + 100).attr("r", 6).style("fill", "steelblue")
+        graph.append("text").attr("x", w / 2 - 30).attr("y", h + m[0] + 80).text("most u can save").style("font-size", "15px").attr("alignment-baseline", "middle")
+        graph.append("text").attr("x", w / 2 - 30).attr("y", h + m[0] + 100).text("least u can save").style("font-size", "15px").attr("alignment-baseline", "middle")
+
+        graph.select('.x.axis')
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-45)");
+
         graph.append("text")
             .attr("transform",
                 "translate(" + (w / 2) + " ," +
-                (h + m[0]) + ")")
+                (h + m[0] + 50) + ")")
             .style("text-anchor", "middle")
             .text("Date");
 
@@ -988,6 +1083,42 @@ function savings_req_over_time() {
             .data([data_savings_bad])
             .attr("class", "line-6")
             .attr("d", valueline2);
+
+        graph.selectAll("myCircles")
+            .data(data_savings)
+            .enter().append("circle")
+            .attr("fill", "black")
+            .attr("stroke", "none")
+            .attr("cx", function (d, i) { return x(parseTime(data_date[i])); })
+            .attr("cy", function (d) { return y(d); })
+            .attr("r", 3.5);
+
+        graph.selectAll("myCircles")
+            .data(data_savings_bad)
+            .enter().append("circle")
+            .attr("fill", "black")
+            .attr("stroke", "none")
+            .attr("cx", function (d, i) { return x(parseTime(data_date[i])); })
+            .attr("cy", function (d) { return y(d); })
+            .attr("r", 3.5);
+
+        graph
+            .append("text")
+            .attr("x", x(parseTime(data_date[data_date.length - 1])))
+            .attr("y", y(data_savings[data_savings.length - 1]))
+            .attr("dx", ".71em")
+            .attr("dy", ".35em")
+            .style("font-size", 14)
+            .text(data_date[data_date.length - 1] + " - $" + data_savings[data_savings.length - 1])
+
+        graph
+            .append("text")
+            .attr("x", x(parseTime(data_date[data_date.length - 1])))
+            .attr("y", y(data_savings_bad[data_savings_bad.length - 1]))
+            .attr("dx", ".71em")
+            .attr("dy", ".35em")
+            .style("font-size", 14)
+            .text(data_date[data_date.length - 1] + " - $" + data_savings_bad[data_savings_bad.length - 1])
     }
 }
 
