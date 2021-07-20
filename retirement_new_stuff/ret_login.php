@@ -51,7 +51,7 @@
                 $value = $result->fetch_object();
                 $_SESSION['life'] = $value->life;
                 
-                header("location: http://localhost/~sjakka/RetirementToolwUI/retirement_user.php");
+                header("location: http://localhost/~sjakka/RetirementToolwUI/updateInfo.php");
                 exit;
                 
             }
