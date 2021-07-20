@@ -577,7 +577,7 @@ select.form-control:focus {
   background: transparent;
 }
 
-input[id="US large cap"],
+input[id="S and P 500 Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
@@ -587,14 +587,14 @@ select.form-control {
   border-radius: 0;
 }
 
-input[id="US large cap"]:focus,
+input[id="S and P 500 Index Fund"]:focus,
 select.form-control:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
   background: transparent;
 }
 
-input[id="US mid cap"],
+input[id="Large Cap Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
@@ -604,14 +604,14 @@ select.form-control {
   border-radius: 0;
 }
 
-input[id="US mid cap"]:focus,
+input[id="Large Cap Index Fund"]:focus,
 select.form-control:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
   background: transparent;
 }
 
-input[id="US small cap"],
+input[id="Total Stock Market Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
@@ -621,14 +621,14 @@ select.form-control {
   border-radius: 0;
 }
 
-input[id="US small cap"]:focus,
+input[id="Total Stock Market Index Fund"]:focus,
 select.form-control:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
   background: transparent;
 }
 
-input[id="International Small Cap"],
+input[id="Extended Market Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
@@ -638,14 +638,14 @@ select.form-control {
   border-radius: 0;
 }
 
-input[id="International Small Cap"]:focus,
+input[id="Extended Market Index Fund"]:focus,
 select.form-control:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
   background: transparent;
 }
 
-input[id="International mid"],
+input[id="Small Cap Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
@@ -655,14 +655,14 @@ select.form-control {
   border-radius: 0;
 }
 
-input[id="International mid"]:focus,
+input[id="Small Cap Index Fund"]:focus,
 select.form-control:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
   background: transparent;
 }
 
-input[id="International Large"],
+input[id="All-World ex-US Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
@@ -672,7 +672,75 @@ select.form-control {
   border-radius: 0;
 }
 
-input[id="International Large"]:focus,
+input[id="All-World ex-US Index Fund"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="Total International Stock Index Fund"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08e86e;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="Total International Stock Index Fund"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="All-World ex-US Small Cap Index Fund"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08e86e;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="All-World ex-US Small Cap Index Fund"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="Intermediate Term Treasury Bond Index"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08e86e;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="Intermediate Term Treasury Bond Index"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="Total Bond Market Index"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08e86e;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="Total Bond Market Index"]:focus,
 select.form-control:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
