@@ -277,7 +277,7 @@ $query3 = $query2->fetch_assoc();
                                     <h5 class="card-header">
                                         <a class="collapsed" data-toggle="collapse" href="#collapse-collapsed" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
                                             <i class="fa fa-chevron-down pull-right"></i>
-                                            <h3 class="fw-bold" style="color:white">$X Equivalent Income<br />in Retirement</h3>
+                                            <h3 class="fw-bold" style="color:white">$<?php echo strval($query["money"]); ?> Equivalent Income<br />in Retirement</h3>
                                         </a>
                                     </h5>
                                     <div id="collapse-collapsed" class="collapse" aria-labelledby="heading-collapsed">
@@ -413,6 +413,77 @@ $query3 = $query2->fetch_assoc();
                             </div>
                         </div>
                     </div>
+                    <br><br>
+
+                    <div class="row flex-center">
+                        <div class="col-md-12">
+                            <div data-aos="fade-up" class="m-b-15">
+                                <div style="margin:0; padding:0;">
+                                    <div class="">
+                                        <br><br>
+                                        <div class="card h-100 mb-3 noBorder bg-transparent rounded-3">
+                                            <h3 class="fw-bold" style="color: white;">Recommended Changes to your Investments</h3>
+                                            <div class="help-tip">
+                                                <p>We can write stuff in here about this table and yeah.</p>
+                                            </div>
+                                            <br>
+                                            <table class="table table2Width" style="font-size: 11px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="font-weight: normal;" scope="col">Investment</th>
+                                                        <th style="font-weight: normal;" scope="col">401(k) (%)</th>
+                                                        <th style="font-weight: normal;" scope="col">401(k) ($)</th>
+                                                        <th style="font-weight: normal;" scope="col">ETF (%)</th>
+                                                        <th style="font-weight: normal;" scope="col">ETF ($)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="font-size: 10px">
+                                                    <tr>
+                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">US small cap</th>
+                                                        <td id="us_small_401K_percent"></td>
+                                                        <td id="us_small_401K_money"></td>
+                                                        <td id="us_small_etf_percent"></td>
+                                                        <td id="us_small_etf_money"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">US large cap</th>
+                                                        <td id="us_large_401K_percent"></td>
+                                                        <td id="us_large_401K_money"></td>
+                                                        <td id="us_large_etf_percent"></td>
+                                                        <td id="us_large_etf_money"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">Intl small cap</th>
+                                                        <td id="int_small_401K_percent"></td>
+                                                        <td id="int_small_401K_money"></td>
+                                                        <td id="int_small_etf_percent"></td>
+                                                        <td id="int_small_etf_money"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">Intl large cap</th>
+                                                        <td id="int_large_401K_percent"></td>
+                                                        <td id="int_large_401K_money"></td>
+                                                        <td id="int_large_etf_percent"></td>
+                                                        <td id="int_large_etf_money"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">Bonds</th>
+                                                        <td id="bonds_401K_percent"></td>
+                                                        <td id="bonds_401K_money"></td>
+                                                        <td id="bonds_etf_percent"></td>
+                                                        <td id="bonds_etf_money"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <br><br>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <br><br>
                     <div class="row flex-center">
                         <div class="col-md-7">
@@ -612,7 +683,7 @@ $query3 = $query2->fetch_assoc();
                     <div style="margin:0; padding:0;">
                         <div class="card mb-3 bg-dark rounded-3">
                             <br>
-                            <h3 class="fw-bold">$X Equivalent Income<br />in Retirement</h3>
+                            <h3 class="fw-bold">$<?php echo strval($query["money"]); ?> Equivalent Income<br />in Retirement</h3>
                             <div id="graph" class="aGraph"></div>
                         </div>
                     </div>
@@ -796,7 +867,8 @@ $query3 = $query2->fetch_assoc();
                         </ol>
                     </nav>
                     <br><br>
-                    <h1>Contact Us!</h1>
+                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSew5odxQJDAIO9a4Saikkic7gTS21GWJfmxdVtQxEnGzVz6iw/viewform?embedded=true" width="900" height="2257" frameborder="0" marginheight="2" marginwidth="0" style="display:block;">Loading…</iframe>
+                    <!--<h1>Contact Us!</h1>
                     <form target="_blank" action="https://formsubmit.co/priyankajakka@gmail.com" method="POST">
                         <input type="hidden" name="_next" value="http://localhost/~sjakka/RetirementToolwUI/retirement_user.php"></input>
                         <input type="hidden" name="_autoresponse" value="Thank you for submitting the contact form! We will get back to you very soon!"></input>
@@ -814,7 +886,7 @@ $query3 = $query2->fetch_assoc();
                             <textarea placeholder="Your Message" class="form-control" name="message" rows="10" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-lg btn-dark btn-block">Submit Form</button>
-                    </form>
+                    </form>-->
                 </div>
             </div>
         </div>
