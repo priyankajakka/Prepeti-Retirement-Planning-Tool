@@ -13,6 +13,10 @@ if (existing_stocks != null) {
     selected_stock_options = existing_stocks.split(",");
 }
 
+function inside401Kversusoutside() {
+
+}
+
 function netWorth() {
     networth = parseInt(savings);
     if (existing_stock_values != null) {
@@ -428,20 +432,35 @@ function reset_stock_list() {
 
 //creates list with possible stock options for user to choose from
 function showAllStockOptions() {
+    var counter = 0;
     var stock_options = ['S and P 500 Index Fund', 'Large Cap Index Fund', 'Total Stock Market Index Fund',
         'Extended Market Index Fund', 'Small Cap Index Fund',
         'All-World ex-US Index Fund', 'Total International Stock Index Fund',
         'All-World ex-US Small Cap Index Fund',
-        'Intermediate Term Treasury Bond Index', 'Total Bond Market Index'];
+        'Intermediate Term Treasury Bond Index', 'Total Bond Market Index',
+        'VTI', 'VOO', 'VV',
+        'VXF', 'VB',
+        'VEU', 'VXUS', 'IXUS',
+        'VSS',
+        'BND', 'BIV'];
 
     var list = document.createElement('ul');
     list.className = "stock_option";
     stock_options.forEach(function (option) {
         var li = document.createElement('li');
-        li.className = "li_stock";
+
+        if (counter < 10) {
+            li.className = "li_stock bg-light-green";
+        } else {
+            li.className = "li_stock bg-light-purple";
+        }
+
         li.textContent = option;
         document.getElementById("stock_option").appendChild(li);
+        ++counter;
     });
+
+    console.log("COUNTER : " + counter);
 
     //var list = document.querySelector('ul');
     var list = document.getElementById("stock_option")
@@ -612,11 +631,24 @@ function updateStockValuesText() {
             var int_large_cap_percent = 0;
             var bonds_percent_temp = 0;
 
+            var us_small_only401K = 0;
+            var us_large_only401K = 0;
+            var int_small_only401K = 0;
+            var int_large_only401K = 0;
+            var bonds_only401K = 0;
+
+            var us_small_etf = 0;
+            var us_large_etf = 0;
+            var int_small_etf = 0;
+            var int_large_etf = 0;
+            var bonds_etf = 0;
+
+
             for (var i = 0; i < selected_stock_options.length; ++i) {
                 if (document.getElementById(selected_stock_options[i]) !== null) {
                     document.getElementById(selected_stock_options[i]).value = existing_stock_values.split(",")[i];
 
-                    if (selected_stock_options[i] === "Extended Market Index Fund" || selected_stock_options[i] === "Small Cap Index Fund") {
+                    if (selected_stock_options[i] === "Extended Market Index Fund" || selected_stock_options[i] === "Small Cap Index Fund" || selected_stock_options[i] === "VXF" || selected_stock_options[i] === "VB") {
                         us_small_cap_percent += parseFloat(existing_stock_values.split(",")[i]);
                         var your_percent = (100 * (us_small_cap_percent / parseFloat(sum_stock_values))).toFixed(2);
                         document.getElementById("your_us_small").innerHTML = your_percent + '%';
@@ -628,17 +660,35 @@ function updateStockValuesText() {
                             document.getElementById("diff_us_small_money").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + "$" + (parseFloat((dom_small_percent - your_percent) * sum_stock_values) / 100).toFixed(2);
                             document.getElementById("copy_diff_us_small_money").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + "$" + (parseFloat((dom_small_percent - your_percent) * sum_stock_values) / 100).toFixed(2);
 
-                        } else {
+                        } else if (parseFloat(your_percent) > parseFloat(dom_small_percent)) {
                             document.getElementById("diff_us_small").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>";
                             document.getElementById("copy_diff_us_small").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>";
                             document.getElementById("diff_us_small_money").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>" + "$" + (parseFloat((your_percent - dom_small_percent) * sum_stock_values) / 100).toFixed(2);
                             document.getElementById("copy_diff_us_small_money").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>" + "$" + (parseFloat((your_percent - dom_small_percent) * sum_stock_values) / 100).toFixed(2);
 
+                        } else {
+                            document.getElementById("diff_us_small").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>";
+                            document.getElementById("copy_diff_us_small").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>";
+                            document.getElementById("diff_us_small_money").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>" + "$" + (parseFloat((your_percent - dom_small_percent) * sum_stock_values) / 100).toFixed(2);
+                            document.getElementById("copy_diff_us_small_money").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>" + "$" + (parseFloat((your_percent - dom_small_percent) * sum_stock_values) / 100).toFixed(2);
+
                         }
                         document.getElementById("diff_us_small").innerHTML += Math.abs(dom_small_percent - your_percent).toFixed(2) + '%';
                         document.getElementById("copy_diff_us_small").innerHTML += Math.abs(dom_small_percent - your_percent).toFixed(2) + '%';
 
-                    } else if (selected_stock_options[i] === "S and P 500 Index Fund" || selected_stock_options[i] === "Large Cap Index Fund" || selected_stock_options[i] === "Total Stock Market Index Fund") {
+                        if (selected_stock_options[i] === "Extended Market Index Fund" || selected_stock_options[i] === "Small Cap Index Fund") {
+                            us_small_only401K += parseFloat(existing_stock_values.split(",")[i]);
+                            var your_percent = (100 * (us_small_only401K / parseFloat(sum_stock_values))).toFixed(2);
+                            document.getElementById("us_small_401K_percent").innerHTML = your_percent + '%';
+                            document.getElementById("us_small_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
+                        } else {
+                            us_small_etf += parseFloat(existing_stock_values.split(",")[i]);
+                            var your_percent = (100 * (us_small_etf / parseFloat(sum_stock_values))).toFixed(2);
+                            document.getElementById("us_small_etf_percent").innerHTML = your_percent + '%';
+                            document.getElementById("us_small_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
+                        }
+
+                    } else if (selected_stock_options[i] === "S and P 500 Index Fund" || selected_stock_options[i] === "Large Cap Index Fund" || selected_stock_options[i] === "Total Stock Market Index Fund" || selected_stock_options[i] === "VTI" || selected_stock_options[i] === "VOO" || selected_stock_options[i] === "VV") {
                         us_large_cap_percent += parseFloat(existing_stock_values.split(",")[i]);
                         var your_percent = (100 * (us_large_cap_percent / parseFloat(sum_stock_values))).toFixed(2);
                         document.getElementById("your_us_large").innerHTML = your_percent + '%';
@@ -650,17 +700,35 @@ function updateStockValuesText() {
                             document.getElementById("diff_us_large_money").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + "$" + (parseFloat((dom_large_percent - your_percent) * sum_stock_values) / 100).toFixed(2);
                             document.getElementById("copy_diff_us_large_money").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + "$" + (parseFloat((dom_large_percent - your_percent) * sum_stock_values) / 100).toFixed(2);
 
-                        } else {
+                        } else if (parseFloat(your_percent) > parseFloat(dom_large_percent)) {
                             document.getElementById("diff_us_large").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>";
                             document.getElementById("copy_diff_us_large").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>";
                             document.getElementById("diff_us_large_money").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>" + "$" + (parseFloat((your_percent - dom_large_percent) * sum_stock_values) / 100).toFixed(2);
                             document.getElementById("copy_diff_us_large_money").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>" + "$" + (parseFloat((your_percent - dom_large_percent) * sum_stock_values) / 100).toFixed(2);
 
+                        } else {
+                            document.getElementById("diff_us_large").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>";
+                            document.getElementById("copy_diff_us_large").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>";
+                            document.getElementById("diff_us_large_money").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>" + "$" + (parseFloat((your_percent - dom_large_percent) * sum_stock_values) / 100).toFixed(2);
+                            document.getElementById("copy_diff_us_large_money").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>" + "$" + (parseFloat((your_percent - dom_large_percent) * sum_stock_values) / 100).toFixed(2);
+
                         }
                         document.getElementById("diff_us_large").innerHTML += Math.abs(dom_large_percent - your_percent).toFixed(2) + '%';
                         document.getElementById("copy_diff_us_large").innerHTML += Math.abs(dom_large_percent - your_percent).toFixed(2) + '%';
 
-                    } else if (selected_stock_options[i] === "All-World ex-US Small Cap Index Fund") {
+                        if (selected_stock_options[i] === "S and P 500 Index Fund" || selected_stock_options[i] === "Large Cap Index Fund" || selected_stock_options[i] === "Total Stock Market Index Fund") {
+                            us_large_only401K += parseFloat(existing_stock_values.split(",")[i]);
+                            var your_percent = (100 * (us_large_only401K / parseFloat(sum_stock_values))).toFixed(2);
+                            document.getElementById("us_large_401K_percent").innerHTML = your_percent + '%';
+                            document.getElementById("us_large_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
+                        } else {
+                            us_large_etf += parseFloat(existing_stock_values.split(",")[i]);
+                            var your_percent = (100 * (us_large_etf / parseFloat(sum_stock_values))).toFixed(2);
+                            document.getElementById("us_large_etf_percent").innerHTML = your_percent + '%';
+                            document.getElementById("us_large_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
+                        }
+
+                    } else if (selected_stock_options[i] === "All-World ex-US Small Cap Index Fund" || selected_stock_options[i] === "VSS") {
                         int_small_cap_percent += parseFloat(existing_stock_values.split(",")[i]);
                         var your_percent = (100 * (int_small_cap_percent / parseFloat(sum_stock_values))).toFixed(2);
                         document.getElementById("your_itl_small").innerHTML = your_percent + '%';
@@ -674,17 +742,34 @@ function updateStockValuesText() {
                             document.getElementById("diff_itl_small_money").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + "$" + (parseFloat((int_small_percent - your_percent) * sum_stock_values) / 100).toFixed(2);
                             document.getElementById("copy_diff_itl_small_money").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + "$" + (parseFloat((int_small_percent - your_percent) * sum_stock_values) / 100).toFixed(2);
 
-                        } else {
+                        } else if (parseFloat(your_percent) > parseFloat(int_small_percent)) {
                             document.getElementById("diff_itl_small").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>";
                             document.getElementById("copy_diff_itl_small").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>";
                             document.getElementById("diff_itl_small_money").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>" + "$" + (parseFloat((your_percent - int_small_percent) * sum_stock_values) / 100).toFixed(2);
                             document.getElementById("copy_diff_itl_small_money").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>" + "$" + (parseFloat((your_percent - int_small_percent) * sum_stock_values) / 100).toFixed(2);
 
+                        } else {
+                            document.getElementById("diff_itl_small").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>";
+                            document.getElementById("copy_diff_itl_small").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>";
+                            document.getElementById("diff_itl_small_money").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>" + "$" + (parseFloat((your_percent - int_small_percent) * sum_stock_values) / 100).toFixed(2);
+                            document.getElementById("copy_diff_itl_small_money").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>" + "$" + (parseFloat((your_percent - int_small_percent) * sum_stock_values) / 100).toFixed(2);
                         }
                         document.getElementById("diff_itl_small").innerHTML += Math.abs(int_small_percent - your_percent).toFixed(2) + '%';
                         document.getElementById("copy_diff_itl_small").innerHTML += Math.abs(int_small_percent - your_percent).toFixed(2) + '%';
 
-                    } else if (selected_stock_options[i] === "All-World ex-US Index Fund" || selected_stock_options[i] === "Total International Stock Index Fund") {
+                        if (selected_stock_options[i] === "All-World ex-US Small Cap Index Fund") {
+                            int_small_only401K += parseFloat(existing_stock_values.split(",")[i]);
+                            var your_percent = (100 * (int_small_only401K / parseFloat(sum_stock_values))).toFixed(2);
+                            document.getElementById("int_small_401K_percent").innerHTML = your_percent + '%';
+                            document.getElementById("int_small_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
+                        } else {
+                            int_small_etf += parseFloat(existing_stock_values.split(",")[i]);
+                            var your_percent = (100 * (int_small_etf / parseFloat(sum_stock_values))).toFixed(2);
+                            document.getElementById("int_small_etf_percent").innerHTML = your_percent + '%';
+                            document.getElementById("int_small_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
+                        }
+
+                    } else if (selected_stock_options[i] === "All-World ex-US Index Fund" || selected_stock_options[i] === "Total International Stock Index Fund" || selected_stock_options[i] === "VEU" || selected_stock_options[i] === "VXUS" || selected_stock_options[i] === "IXUS") {
                         int_large_cap_percent += parseFloat(existing_stock_values.split(",")[i]);
                         var your_percent = (100 * (int_large_cap_percent / parseFloat(sum_stock_values))).toFixed(2);
                         document.getElementById("your_itl_large").innerHTML = your_percent + '%';
@@ -696,16 +781,35 @@ function updateStockValuesText() {
                             document.getElementById("diff_itl_large_money").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + "$" + (parseFloat((int_large_percent - your_percent) * sum_stock_values) / 100).toFixed(2);
                             document.getElementById("copy_diff_itl_large_money").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + "$" + (parseFloat((int_large_percent - your_percent) * sum_stock_values) / 100).toFixed(2);
 
-                        } else {
+                        } else if (parseFloat(your_percent) > parseFloat(int_large_percent)) {
                             document.getElementById("diff_itl_large").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>";
                             document.getElementById("copy_diff_itl_large").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>";
                             document.getElementById("diff_itl_large_money").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>" + "$" + (parseFloat((your_percent - int_large_percent) * sum_stock_values) / 100).toFixed(2);
                             document.getElementById("copy_diff_itl_large_money").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>" + "$" + (parseFloat((your_percent - int_large_percent) * sum_stock_values) / 100).toFixed(2);
+
+                        } else {
+                            document.getElementById("diff_itl_large").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>";
+                            document.getElementById("copy_diff_itl_large").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>";
+                            document.getElementById("diff_itl_large_money").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>" + "$" + (parseFloat((your_percent - int_large_percent) * sum_stock_values) / 100).toFixed(2);
+                            document.getElementById("copy_diff_itl_large_money").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>" + "$" + (parseFloat((your_percent - int_large_percent) * sum_stock_values) / 100).toFixed(2);
+
                         }
                         document.getElementById("diff_itl_large").innerHTML += Math.abs(int_large_percent - your_percent).toFixed(2) + '%';
                         document.getElementById("copy_diff_itl_large").innerHTML += Math.abs(int_large_percent - your_percent).toFixed(2) + '%';
 
-                    } else if (selected_stock_options[i] === "Intermediate Term Treasury Bond Index" || selected_stock_options[i] === "Total Bond Market Index") {
+                        if (selected_stock_options[i] === "All-World ex-US Index Fund" || selected_stock_options[i] === "Total International Stock Index Fund") {
+                            int_large_only401K += parseFloat(existing_stock_values.split(",")[i]);
+                            var your_percent = (100 * (int_large_only401K / parseFloat(sum_stock_values))).toFixed(2);
+                            document.getElementById("int_large_401K_percent").innerHTML = your_percent + '%';
+                            document.getElementById("int_large_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
+                        } else {
+                            int_large_etf += parseFloat(existing_stock_values.split(",")[i]);
+                            var your_percent = (100 * (int_large_etf / parseFloat(sum_stock_values))).toFixed(2);
+                            document.getElementById("int_large_etf_percent").innerHTML = your_percent + '%';
+                            document.getElementById("int_large_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
+                        }
+
+                    } else if (selected_stock_options[i] === "Intermediate Term Treasury Bond Index" || selected_stock_options[i] === "Total Bond Market Index" || selected_stock_options[i] === "BND" || selected_stock_options[i] === "BIV") {
                         bonds_percent_temp += parseFloat(existing_stock_values.split(",")[i]);
                         var your_percent = (100 * (bonds_percent_temp / parseFloat(sum_stock_values))).toFixed(2);
                         document.getElementById("your_bonds").innerHTML = your_percent + '%';
@@ -717,14 +821,33 @@ function updateStockValuesText() {
                             document.getElementById("diff_bonds_money").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + "$" + (parseFloat((bonds_percent - your_percent) * sum_stock_values) / 100).toFixed(2);
                             document.getElementById("copy_diff_bonds_money").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + "$" + (parseFloat((bonds_percent - your_percent) * sum_stock_values) / 100).toFixed(2);
 
-                        } else {
+                        } else if (parseFloat(your_percent) > parseFloat(bonds_percent)) {
                             document.getElementById("diff_bonds").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>";
                             document.getElementById("copy_diff_bonds").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>";
                             document.getElementById("diff_bonds_money").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>" + "$" + (parseFloat((your_percent - bonds_percent) * sum_stock_values) / 100).toFixed(2);
                             document.getElementById("copy_diff_bonds_money").innerHTML = "<span class='glyphicon glyphicon-chevron-up' style='color:green'></span>" + "$" + (parseFloat((your_percent - bonds_percent) * sum_stock_values) / 100).toFixed(2);
+
+                        } else {
+                            document.getElementById("diff_bonds").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>";
+                            document.getElementById("copy_diff_bonds").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>";
+                            document.getElementById("diff_bonds_money").innerHTML = "<span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>" + "$" + (parseFloat((your_percent - bonds_percent) * sum_stock_values) / 100).toFixed(2);
+                            document.getElementById("copy_diff_bonds_money").innerHTML = "span class='glyphicon glyphicon-menu-hamburger' style='color:#D3D3D3'></span>" + "$" + (parseFloat((your_percent - bonds_percent) * sum_stock_values) / 100).toFixed(2);
+
                         }
                         document.getElementById("diff_bonds").innerHTML += Math.abs(bonds_percent - your_percent).toFixed(2) + '%';
                         document.getElementById("copy_diff_bonds").innerHTML += Math.abs(bonds_percent - your_percent).toFixed(2) + '%';
+
+                        if (selected_stock_options[i] === "Intermediate Term Treasury Bond Index" || selected_stock_options[i] === "Total Bond Market Index") {
+                            bonds_only401K += parseFloat(existing_stock_values.split(",")[i]);
+                            var your_percent = (100 * (bonds_only401K / parseFloat(sum_stock_values))).toFixed(2);
+                            document.getElementById("bonds_401K_percent").innerHTML = your_percent + '%';
+                            document.getElementById("bonds_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
+                        } else {
+                            bonds_etf += parseFloat(existing_stock_values.split(",")[i]);
+                            var your_percent = (100 * (bonds_etf / parseFloat(sum_stock_values))).toFixed(2);
+                            document.getElementById("bonds_etf_percent").innerHTML = your_percent + '%';
+                            document.getElementById("bonds_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
+                        }
                     }
                 }
             }
@@ -733,6 +856,46 @@ function updateStockValuesText() {
 }
 
 function checkOverviewTable() {
+    if (document.getElementById("us_small_401K_percent").innerHTML === "") {
+        document.getElementById("us_small_401K_percent").innerHTML = "0%";
+        document.getElementById("us_small_401K_money").innerHTML = "0%";
+    }
+    if (document.getElementById("us_small_etf_percent").innerHTML === "") {
+        document.getElementById("us_small_etf_percent").innerHTML = "0%";
+        document.getElementById("us_small_etf_money").innerHTML = "0%";
+    }
+    if (document.getElementById("us_large_401K_percent").innerHTML === "") {
+        document.getElementById("us_large_401K_percent").innerHTML = "0%";
+        document.getElementById("us_large_401K_money").innerHTML = "0%";
+    }
+    if (document.getElementById("us_large_etf_percent").innerHTML === "") {
+        document.getElementById("us_large_etf_percent").innerHTML = "0%";
+        document.getElementById("us_large_etf_money").innerHTML = "0%";
+    }
+    if (document.getElementById("int_small_401K_percent").innerHTML === "") {
+        document.getElementById("int_small_401K_percent").innerHTML = "0%";
+        document.getElementById("int_small_401K_money").innerHTML = "0%";
+    }
+    if (document.getElementById("int_small_etf_percent").innerHTML === "") {
+        document.getElementById("int_small_etf_percent").innerHTML = "0%";
+        document.getElementById("int_small_etf_money").innerHTML = "0%";
+    }
+    if (document.getElementById("int_large_401K_percent").innerHTML === "") {
+        document.getElementById("int_large_401K_percent").innerHTML = "0%";
+        document.getElementById("int_large_401K_money").innerHTML = "0%";
+    }
+    if (document.getElementById("int_large_etf_percent").innerHTML === "") {
+        document.getElementById("int_large_etf_percent").innerHTML = "0%";
+        document.getElementById("int_large_etf_money").innerHTML = "0%";
+    }
+    if (document.getElementById("bonds_401K_percent").innerHTML === "") {
+        document.getElementById("bonds_401K_percent").innerHTML = "0%";
+        document.getElementById("bonds_401K_money").innerHTML = "0%";
+    }
+    if (document.getElementById("bonds_etf_percent").innerHTML === "") {
+        document.getElementById("bonds_etf_percent").innerHTML = "0%";
+        document.getElementById("bonds_etf_money").innerHTML = "0%";
+    }
     if (document.getElementById("copy_your_us_small").innerHTML === "") {
         document.getElementById("copy_your_us_small").innerHTML = "0%";
         document.getElementById("your_us_small").innerHTML = "0%";
