@@ -61,6 +61,7 @@ body{
   line-height: 17px;
   cursor: default;
   box-shadow: 0 0 7px #BF00FF, 0 0 20px #BF00FF, 0 0 7px #BF00FF;
+
 }
 
 .help-tip:before{
@@ -72,6 +73,7 @@ body{
 
 .help-tip:hover p{
   display:block;
+  z-index: 900;
   transform-origin: 100% 0%;
 
   -webkit-animation: fadeIn 0.3s ease-in-out;
@@ -280,7 +282,7 @@ ul.stock_option li {
     user-select: none;
 }
 
-nav ul.stock_option{height:120px;}
+nav ul.stock_option{height:240px;}
 nav ul.stock_option{overflow:hidden; overflow-y:scroll;}
 
 #searchbar {
@@ -302,8 +304,21 @@ ul.stock_option li:hover {
 }
 
 ul.stock_option li.checked {
-    background: #59BB9C;/*08e86e*/
+    background: #383d41!important;/*59BB9C*/
     color: #fff;
+}
+
+ul.stock_option li.checked::before {
+  content: '';
+  position: absolute;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  top: 10px;
+  left: 16px;
+  transform: rotate(45deg);
+  height: 15px;
+  width: 7px;
 }
 
 path.slice{
@@ -406,11 +421,11 @@ polyline{
 }
 
 .bg-light-green {
-  background-color: #e8f4ea!important;
+  background-color: #c2e3f7!important;
 }
 
 .bg-light-purple {
-  background-color: #ece6ff !important;
+  background-color: #ebdff7!important;
 }
 
 .bg-light-blue {
@@ -581,7 +596,7 @@ input[id="S and P 500 Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
-  border-bottom: 1px solid #08e86e;
+  border-bottom: 1px solid #08E8DE;
   -webkit-box-shadow: none;
   box-shadow: none;
   border-radius: 0;
@@ -598,7 +613,7 @@ input[id="Large Cap Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
-  border-bottom: 1px solid #08e86e;
+  border-bottom: 1px solid #08E8DE;
   -webkit-box-shadow: none;
   box-shadow: none;
   border-radius: 0;
@@ -615,7 +630,7 @@ input[id="Total Stock Market Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
-  border-bottom: 1px solid #08e86e;
+  border-bottom: 1px solid #08E8DE;
   -webkit-box-shadow: none;
   box-shadow: none;
   border-radius: 0;
@@ -632,7 +647,7 @@ input[id="Extended Market Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
-  border-bottom: 1px solid #08e86e;
+  border-bottom: 1px solid #08E8DE;
   -webkit-box-shadow: none;
   box-shadow: none;
   border-radius: 0;
@@ -649,7 +664,7 @@ input[id="Small Cap Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
-  border-bottom: 1px solid #08e86e;
+  border-bottom: 1px solid #08E8DE;
   -webkit-box-shadow: none;
   box-shadow: none;
   border-radius: 0;
@@ -666,7 +681,7 @@ input[id="All-World ex-US Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
-  border-bottom: 1px solid #08e86e;
+  border-bottom: 1px solid #08E8DE;
   -webkit-box-shadow: none;
   box-shadow: none;
   border-radius: 0;
@@ -683,7 +698,7 @@ input[id="Total International Stock Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
-  border-bottom: 1px solid #08e86e;
+  border-bottom: 1px solid #08E8DE;
   -webkit-box-shadow: none;
   box-shadow: none;
   border-radius: 0;
@@ -700,7 +715,7 @@ input[id="All-World ex-US Small Cap Index Fund"],
 select.form-control {
   background: transparent;
   border: none;
-  border-bottom: 1px solid #08e86e;
+  border-bottom: 1px solid #08E8DE;
   -webkit-box-shadow: none;
   box-shadow: none;
   border-radius: 0;
@@ -717,7 +732,7 @@ input[id="Intermediate Term Treasury Bond Index"],
 select.form-control {
   background: transparent;
   border: none;
-  border-bottom: 1px solid #08e86e;
+  border-bottom: 1px solid #08E8DE;
   -webkit-box-shadow: none;
   box-shadow: none;
   border-radius: 0;
@@ -734,13 +749,200 @@ input[id="Total Bond Market Index"],
 select.form-control {
   background: transparent;
   border: none;
-  border-bottom: 1px solid #08e86e;
+  border-bottom: 1px solid #08E8DE;
   -webkit-box-shadow: none;
   box-shadow: none;
   border-radius: 0;
 }
 
 input[id="Total Bond Market Index"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="VTI"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="VTI"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="VOO"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="VOO"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="VV"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="VV"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="VXF"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="VXF"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="VB"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="VB"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="VEU"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="VEU"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="VXUS"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="VXUS"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="IXUS"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="IXUS"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="VSS"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="VSS"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="BND"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="BND"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="BIV"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="BIV"]:focus,
 select.form-control:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
