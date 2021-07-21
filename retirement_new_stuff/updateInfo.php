@@ -9,7 +9,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 $mysqli = new MySQLi('localhost', 'root', 'jakka_sm', 'Retirement_Tool');
 $curr_username = $_SESSION['user'];
 
-if (isset($_REQUEST['submitStocks'])) {
+if (isset($_REQUEST['submitPopupInfo'])) {
     $money = (int) $_POST['money'];
     $savings = (int) $_POST['savings'];
     $income = (int) $_POST['income'];
@@ -115,12 +115,11 @@ $query = $query1->fetch_assoc();
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="retirementplswork.css">
     <style>
         fieldset {
-            margin-top: 10%;
             text-align: center;
         }
 
@@ -133,87 +132,109 @@ $query = $query1->fetch_assoc();
             width: auto;
             display: inline;
         }
+
+        .modal-backdrop {
+            background-color: #188bc0;
+        }
+
+        .modal-lg {
+            max-width: 60% !important;
+        }
     </style>
 </head>
 
 <body>
-    <form name="Form" method="post" onsubmit="return confirmStockValues()">
-        <div id="updateInfoPlease" style="width: 80%;margin:auto;">
-            <fieldset>
-                <div class="">
-                    <h2 class="fs-title">Update your information</h2>
-                    <br><br>
-                    <div class="">
-                        <div class="">
-                            <label for="income" class="control-label">What is your income?</label>
-                            <input class="form-control form-control-inline" style="color: white;" type="number" name="income" id="income" value=<?php echo strval($query["income"]); ?> style="text-align: center"></input>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="">
-                        <div class="">
-                            <label for="money" class="control-label">How much money do you need per year?</label>
-                            <input class="form-control form-control-inline" style="color: white;" type="number" name="money" id="money" value=<?php echo strval($query["money"]); ?> style="text-align: center"></input>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="">
-                        <div class="">
-                            <label for="savings" class="control-label">How much money do you have saved?</label>
-                            <input class="form-control form-control-inline" style="color: white;" type="number" name="savings" id="savings" value=<?php echo strval($query["savings"]); ?> style="text-align: center"></input>
-                        </div>
-                    </div>
-                </div>
-                <input type="button" name="next" class="next action-button ButtonNeon" value="Next" />
-                <p id="output_finances"></p>
-            </fieldset>
-            <fieldset>
-                <div class="">
-                    <h2 class="fs-title">Almost there</h2>
 
-                    <div class="row flex-center">
-                        <div class="col-md-12">
-                            <div data-aos="fade-up" class="m-b-15">
-                                <div style="margin:0; padding:0;">
-                                    <div class="card h-100 mb-3 blueBorder bg-transparent rounded-3">
-                                        <br>
-                                        <h3 class="fw-bold" id="stock_options_header" style="margin:5px">Select your stock options</h3>
-                                        <br>
-                                        <input type="text" id="searchbar" placeholder="Search for stock options.."></input>
-                                        <nav>
-                                            <div id="stock_option_div">
-                                                <ul class="stock_option" id="stock_option"></ul>
-                                            </div>
-                                        </nav>
-                                        <br>
+    <!-- Modal -->
+    <div class="modal fade" id="updateInfoModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="background-color:black;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Welcome back!</h5>
+                </div>
+                <div class="modal-body">
+                    <form name="Form" method="post" onsubmit="return confirmStockValues()">
+                        <div id="updateInfoPlease" style="width: 80%;margin:auto;">
+                            <fieldset>
+                                <div class="">
+                                    <h2 class="fs-title">Update your information</h2>
+                                    <br><br>
+                                    <div class="">
+                                        <div class="">
+                                            <label for="income" class="control-label">What is your income?</label>
+                                            <input class="form-control form-control-inline" style="color: white;" type="number" name="income" id="income" value=<?php echo strval($query["income"]); ?> style="text-align: center"></input>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="">
+                                        <div class="">
+                                            <label for="money" class="control-label">How much money do you need per year?</label>
+                                            <input class="form-control form-control-inline" style="color: white;" type="number" name="money" id="money" value=<?php echo strval($query["money"]); ?> style="text-align: center"></input>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="">
+                                        <div class="">
+                                            <label for="savings" class="control-label">How much money do you have saved?</label>
+                                            <input class="form-control form-control-inline" style="color: white;" type="number" name="savings" id="savings" value=<?php echo strval($query["savings"]); ?> style="text-align: center"></input>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                                <br><br>
+                                <input type="button" name="next" class="next action-button ButtonNeon" value="Next" />
+                                <p id="output_finances"></p>
+                            </fieldset>
+                            <fieldset>
+                                <div class="">
+                                    <h2 class="fs-title">Almost there</h2>
+
+                                    <div class="row flex-center">
+                                        <div class="col-md-12">
+                                            <div data-aos="fade-up" class="m-b-15">
+                                                <div style="margin:0; padding:0;">
+                                                    <div class="">
+                                                        <br>
+                                                        <h5 class="fw-bold" id="stock_options_header" style="margin:5px">Select your stock options</h5>
+                                                        <input type="text" id="searchbar" placeholder="Search for stock options.."></input>
+                                                        <nav>
+                                                            <div id="stock_option_div">
+                                                                <ul class="stock_option" id="stock_option"></ul>
+                                                            </div>
+                                                        </nav>
+                                                        <br>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br><br>
+                                    </div>
+
+                                    <p id="stocks_selection"></p>
+                                    <br>
+                                    <br>
+                                    <div id="money_in_stocks"></div>
+                                    <br>
+                                    <!--<form name="Form" method="post" onsubmit="return confirmStockValues()">-->
+                                    <input id='stocks_list' name='stocks_list' type="hidden"></input>
+                                    <input id='stocks_values_list' name='stocks_values_list' type="hidden"></input>
+                                    <input id='networth_over_time_stocks' name='networth_over_time_stocks' type="hidden"></input>
+                                    <input id='dates_networth_over_time' name='dates_networth_over_time' type="hidden"></input>
+                                    <input id='savings_req_over_time' name='savings_req_over_time' type=hidden></input>
+                                    <input id='savings_req_over_time_bad' name='savings_req_over_time_bad' type=hidden></input>
+                                    <input id='dates_over_time' name='dates_over_time' type=hidden></input>
+
+                                    <!--</form>-->
+                                </div>
+                                <input type="button" name="previous" class="previous action-button-previous ButtonNeon" value="Previous" />
+                                <input class="ButtonNeon" name="submitPopupInfo" type="submit" value="Take me to my plan"></input>
+                            </fieldset>
                         </div>
-                        <br><br>
-                    </div>
+                    </form>
 
-                    <p id="stocks_selection"></p>
-                    <br>
-                    <br>
-                    <div id="money_in_stocks"></div>
-                    <br>
-                    <!--<form name="Form" method="post" onsubmit="return confirmStockValues()">-->
-                    <input id='stocks_list' name='stocks_list' type="hidden"></input>
-                    <input id='stocks_values_list' name='stocks_values_list' type="hidden"></input>
-                    <input id='networth_over_time_stocks' name='networth_over_time_stocks' type="hidden"></input>
-                    <input id='dates_networth_over_time' name='dates_networth_over_time' type="hidden"></input>
-                    <input id='savings_req_over_time' name='savings_req_over_time' type=hidden></input>
-                    <input id='savings_req_over_time_bad' name='savings_req_over_time_bad' type=hidden></input>
-                    <input id='dates_over_time' name='dates_over_time' type=hidden></input>
-
-                    <!--</form>-->
                 </div>
-                <input type="button" name="previous" class="previous action-button-previous ButtonNeon" value="Previous" />
-                <input class="ButtonNeon" name="submitStocks" type="submit" value="Take me to my plan"></input>
-            </fieldset>
+            </div>
         </div>
-    </form>
+    </div>
 </body>
 
 
@@ -284,24 +305,22 @@ $query = $query1->fetch_assoc();
                 duration: 600
             });
         });
-
-        $('.radio-group .radio').click(function() {
-            $(this).parent().find('.radio').removeClass('selected');
-            $(this).addClass('selected');
-        });
-
-        $(".submit").click(function() {
-            return false;
-        })
-
     });
 </script>
 
 <script>
-    var existing_stocks = <?php echo json_encode($_SESSION['stocks']); ?>;
-    var existing_stock_values = <?php echo json_encode($_SESSION['stock_values']); ?>;
     var date = <?php echo json_encode($date->format('m/d/Y')); ?>;
     var date_networth_arr = <?php echo json_encode($query["Date_networth"]); ?>;
+
+
+    $('#updateInfoModal').modal({
+        backdrop: 'static',
+        keyboard: false
+    })
+
+    $('#updateInfoModal').modal('show');
+    var existing_stocks = <?php echo json_encode($_SESSION['stocks']); ?>;
+    var existing_stock_values = <?php echo json_encode($_SESSION['stock_values']); ?>;
     var networth_time_arr = <?php echo json_encode($query["Networth_over_time"]); ?>;
     var selected_stock_options = [];
     var stock_selection_values = [];
@@ -365,6 +384,7 @@ $query = $query1->fetch_assoc();
             input.id = selected_stock_options[i];
             input.classList.add("form-control");
             input.style["color"] = "white";
+
             input.value = 0;
             //my changes
             var newlabel = document.createElement("Label");
@@ -379,22 +399,38 @@ $query = $query1->fetch_assoc();
     }
 
     function showAllStockOptions() {
+        var counter = 0;
         var stock_options = ['S and P 500 Index Fund', 'Large Cap Index Fund', 'Total Stock Market Index Fund',
             'Extended Market Index Fund', 'Small Cap Index Fund',
             'All-World ex-US Index Fund', 'Total International Stock Index Fund',
             'All-World ex-US Small Cap Index Fund',
-            'Intermediate Term Treasury Bond Index', 'Total Bond Market Index'
+            'Intermediate Term Treasury Bond Index', 'Total Bond Market Index',
+            'VTI', 'VOO', 'VV',
+            'VXF', 'VB',
+            'VEU', 'VXUS', 'IXUS',
+            'VSS',
+            'BND', 'BIV'
         ];
 
         var list = document.createElement('ul');
         list.className = "stock_option";
         stock_options.forEach(function(option) {
             var li = document.createElement('li');
-            li.className = "li_stock";
+
+            if (counter < 10) {
+                li.className = "li_stock bg-light-green";
+            } else {
+                li.className = "li_stock bg-light-purple";
+            }
+
             li.textContent = option;
             document.getElementById("stock_option").appendChild(li);
+            ++counter;
         });
 
+        console.log("COUNTER : " + counter);
+
+        //var list = document.querySelector('ul');
         var list = document.getElementById("stock_option")
         list.addEventListener('click', function(stock) { //this means user has clicked on a list element (stock option)
             if (stock.target.tagName === 'LI') {
@@ -403,6 +439,7 @@ $query = $query1->fetch_assoc();
             }
             confirmStocks(); //updates list of input text fields for user to enter money in each stock
         }, false);
+        //stock_options = [];
     }
 
     function showSelection() {
@@ -438,6 +475,7 @@ $query = $query1->fetch_assoc();
             //my changes
             var newlabel = document.createElement("Label");
             newlabel.setAttribute("for", input.id);
+            newlabel.style["display"] = "inline-block";
             newlabel.classList.add("control-label");
             newlabel.innerHTML = selected_stock_options[i];
             //
