@@ -6,6 +6,14 @@ var wealth = []
 var networth = 0;
 var money, income, savings, r1, bad_r1, r2, inf_rate, years, accum_years, distr_years, savings_per_year, bad_savings_per_year;
 
+var segmented_401k_percent_dom = 0;
+var segmented_401k_percent_int = 0;
+var segmented_401k_percent_bonds = 0;
+
+var segmented_brok_percent_dom = 0;
+var segmented_brok_percent_int = 0;
+var segmented_brok_percent_bonds = 0;
+
 var selected_stock_options = [];
 var stock_selection_values = [];
 
@@ -15,6 +23,103 @@ if (existing_stocks != null) {
 
 function inside401Kversusoutside() {
 
+    if (existing_stock_values != null) {
+
+        var currentWidth = 900;
+
+        var margin = { top: 0.1 * currentWidth, right: 100, bottom: 0.1 * currentWidth, left: 100 },
+            width = currentWidth / 3,
+            height = 550 - margin.top - margin.bottom;
+
+        var svg = d3.select("#segmentedBarGraph")
+            .append("svg")
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 " + (width + margin.right + margin.left) + " " + (500))
+            .attr("width", "100%")
+            .append("g")
+            .attr("transform",
+                "translate(" + (margin.left + 35) + "," + (margin.top - 50) + ")");
+
+        var subgroups = ['domestic', 'international', 'bonds'];
+
+        var data = [{ group: "401K", domestic: segmented_401k_percent_dom, international: segmented_401k_percent_int, bonds: segmented_401k_percent_bonds },
+        { group: "Brokerage", domestic: segmented_brok_percent_dom, international: segmented_brok_percent_int, bonds: segmented_brok_percent_bonds }]
+
+        var groups = d3.map(data, function (d) { return (d.group) }).keys()
+
+        // Add X axis
+        var x = d3.scaleBand()
+            .domain(groups)
+            .range([0, width])
+            .padding([0.5])
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .attr("class", "axisWhite")
+            .call(d3.axisBottom(x).tickSizeOuter(0));
+
+        // Add Y axis
+        var y = d3.scaleLinear()
+            .domain([0, 100])
+            .range([height, 0]);
+        svg.append("g")
+            .attr("class", "axisWhite")
+            .call(d3.axisLeft(y));
+
+
+        var color = d3.scaleOrdinal()
+            .domain(subgroups)
+            .range(['#ff3459', '#7be0b0', '#ffc700'])
+
+        //stack the data? --> stack per subgroup
+        var stackedData = d3.stack()
+            .keys(subgroups)
+            (data)
+
+        // Show the bars
+        svg.append("g")
+            .selectAll("g")
+            // Enter in the stack data = loop key per key = group per group
+            .data(stackedData)
+            .enter().append("g")
+            .attr("fill", function (d) { return color(d.key); })
+            .selectAll("rect")
+            // enter a second time = loop subgroup per subgroup to add all rectangles
+            .data(function (d) { return d; })
+            .enter().append("rect")
+            .attr("x", function (d) { return x(d.data.group); })
+            .attr("y", function (d) { return y(d[1]); })
+            .attr("height", function (d) { return y(d[0]) - y(d[1]); })
+            .attr("width", x.bandwidth())
+
+        svg.append("text")
+            .style("font-size", 12)
+            .attr("transform",
+                "translate(" + (width / 2) + " ," +
+                (height + margin.top - 10) + ")")
+            .style("text-anchor", "middle")
+            .style("fill", "white")
+            .text("Account");
+
+        svg.append("circle").attr("cx", (width / 2) - 100).attr("cy", height + margin.top - 60).attr("r", 6).style("fill", "#ff3459")
+        svg.append("circle").attr("cx", (width / 2)).attr("cy", height + margin.top - 60).attr("r", 6).style("fill", "#7be0b0")
+        svg.append("circle").attr("cx", (width / 2) + 100).attr("cy", height + margin.top - 60).attr("r", 6).style("fill", "#ffc700")
+
+        svg.append("text").attr("x", (width / 2) - 130).attr("y", height + margin.top - 40).text("Domestic").style("font-size", 11).style("fill", "white").attr("alignment-baseline", "middle")
+        svg.append("text").attr("x", (width / 2) - 30).attr("y", height + margin.top - 40).text("International").style("font-size", 11).style("fill", "white").attr("alignment-baseline", "middle")
+        svg.append("text").attr("x", (width / 2) + 84).attr("y", height + margin.top - 40).text("Bonds").style("font-size", 11).style("fill", "white").attr("alignment-baseline", "middle")
+
+
+        // text label for the y axis
+        svg.append("text")
+            .style("font-size", 12)
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.top)
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .style("fill", "white")
+            .text("Percent");
+    }
 }
 
 function netWorth() {
@@ -192,7 +297,7 @@ function portfolio_chart() {
             .data(data_ready)
             .enter()
             .append('text')
-            .style("font-size", 34)
+            .style("font-size", 20)
             .style("fill", "white")
             .text(function (d) { return d.data.key })
             .attr('transform', function (d) {
@@ -214,7 +319,7 @@ function portfolio_chart() {
             .text(function (d) { return d.data.value + '%' })
             .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")"; })
             .style("text-anchor", "middle")
-            .style("font-size", 40)
+            .style("font-size", 20)
             .style("fill", "white");
     } else {
         document.getElementById("portfolio_description").innerText = "Looks like you don't have a portfolio yet. Answer the questions in the \'My Savings\' section."
@@ -236,7 +341,7 @@ function bargraph() {
         var svg_bar_chart = d3.select("#barplot")
             .append("svg")
             .attr("preserveAspectRatio", "xMinYMin meet")
-            .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (650))
+            .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (560))
             //.classed("svg-content", true)
             //.attr("width", w + m[1] + m[3])
             //.attr("height", 700)//h + m[0] + m[2]
@@ -299,14 +404,14 @@ function bargraph() {
             .text("Stocks")*/
 
         //x-axis label
-        svg_bar_chart.append("text")
+        /*svg_bar_chart.append("text")
             .style("font-size", 16)
             .attr("transform",
                 "translate(" + (w / 2) + " ," +
                 (h + m[0] + 80) + ")")
             .style("text-anchor", "middle")
             .style("fill", "white")
-            .text("Stock");
+            .text("Stock");*/
 
         // text label for the y axis
         svg_bar_chart.append("text")
@@ -324,7 +429,7 @@ function bargraph() {
         var copy_svg_bar_chart = d3.select("#copy_barplot")
             .append("svg")
             .attr("preserveAspectRatio", "xMinYMin meet")
-            .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (430))
+            .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (560))
             .attr("width", "100%")
             .append("svg:g")
             .attr("transform", "translate(" + (m[3] + 35) + "," + (m[0] - 50) + ")");
@@ -363,17 +468,17 @@ function bargraph() {
             .attr("class", "axisWhite")
             .call(d3.axisLeft(y));
 
-        copy_svg_bar_chart.append("text")
-            .style("font-size", 16)
+        /*copy_svg_bar_chart.append("text")
+            .style("font-size", 12)
             .attr("transform",
                 "translate(" + (w / 2) + " ," +
-                (h + m[0] + 10) + ")")
+                (h + m[0] + 80) + ")")
             .style("text-anchor", "middle")
             .style("fill", "white")
-            .text("Stock");
+            .text("Stock");*/
 
         copy_svg_bar_chart.append("text")
-            .style("font-size", 16)
+            .style("font-size", 12)
             .attr("transform", "rotate(-90)")
             .attr("y", 0 - m[0])
             .attr("x", 0 - (h / 2))
@@ -678,12 +783,19 @@ function updateStockValuesText() {
 
                         if (selected_stock_options[i] === "Extended Market Index Fund" || selected_stock_options[i] === "Small Cap Index Fund") {
                             us_small_only401K += parseFloat(existing_stock_values.split(",")[i]);
+
                             var your_percent = (100 * (us_small_only401K / parseFloat(sum_stock_values))).toFixed(2);
+
+                            segmented_401k_percent_dom += parseInt(your_percent);
+
                             document.getElementById("us_small_401K_percent").innerHTML = your_percent + '%';
                             document.getElementById("us_small_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
                         } else {
                             us_small_etf += parseFloat(existing_stock_values.split(",")[i]);
                             var your_percent = (100 * (us_small_etf / parseFloat(sum_stock_values))).toFixed(2);
+
+                            segmented_brok_percent_dom += parseInt(your_percent);
+
                             document.getElementById("us_small_etf_percent").innerHTML = your_percent + '%';
                             document.getElementById("us_small_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
                         }
@@ -718,12 +830,19 @@ function updateStockValuesText() {
 
                         if (selected_stock_options[i] === "S and P 500 Index Fund" || selected_stock_options[i] === "Large Cap Index Fund" || selected_stock_options[i] === "Total Stock Market Index Fund") {
                             us_large_only401K += parseFloat(existing_stock_values.split(",")[i]);
+
                             var your_percent = (100 * (us_large_only401K / parseFloat(sum_stock_values))).toFixed(2);
+
+                            segmented_401k_percent_dom += parseInt(your_percent);
+
                             document.getElementById("us_large_401K_percent").innerHTML = your_percent + '%';
                             document.getElementById("us_large_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
                         } else {
                             us_large_etf += parseFloat(existing_stock_values.split(",")[i]);
                             var your_percent = (100 * (us_large_etf / parseFloat(sum_stock_values))).toFixed(2);
+
+                            segmented_brok_percent_dom += parseInt(your_percent);
+
                             document.getElementById("us_large_etf_percent").innerHTML = your_percent + '%';
                             document.getElementById("us_large_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
                         }
@@ -760,11 +879,17 @@ function updateStockValuesText() {
                         if (selected_stock_options[i] === "All-World ex-US Small Cap Index Fund") {
                             int_small_only401K += parseFloat(existing_stock_values.split(",")[i]);
                             var your_percent = (100 * (int_small_only401K / parseFloat(sum_stock_values))).toFixed(2);
+
+                            segmented_401k_percent_int += parseInt(your_percent);
+
                             document.getElementById("int_small_401K_percent").innerHTML = your_percent + '%';
                             document.getElementById("int_small_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
                         } else {
                             int_small_etf += parseFloat(existing_stock_values.split(",")[i]);
                             var your_percent = (100 * (int_small_etf / parseFloat(sum_stock_values))).toFixed(2);
+
+                            segmented_brok_percent_int += parseInt(your_percent);
+
                             document.getElementById("int_small_etf_percent").innerHTML = your_percent + '%';
                             document.getElementById("int_small_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
                         }
@@ -799,12 +924,20 @@ function updateStockValuesText() {
 
                         if (selected_stock_options[i] === "All-World ex-US Index Fund" || selected_stock_options[i] === "Total International Stock Index Fund") {
                             int_large_only401K += parseFloat(existing_stock_values.split(",")[i]);
+
                             var your_percent = (100 * (int_large_only401K / parseFloat(sum_stock_values))).toFixed(2);
+
+                            segmented_401k_percent_int += parseInt(your_percent);
+
                             document.getElementById("int_large_401K_percent").innerHTML = your_percent + '%';
                             document.getElementById("int_large_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
                         } else {
                             int_large_etf += parseFloat(existing_stock_values.split(",")[i]);
+
                             var your_percent = (100 * (int_large_etf / parseFloat(sum_stock_values))).toFixed(2);
+
+                            segmented_brok_percent_int += parseInt(your_percent);
+
                             document.getElementById("int_large_etf_percent").innerHTML = your_percent + '%';
                             document.getElementById("int_large_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
                         }
@@ -839,12 +972,20 @@ function updateStockValuesText() {
 
                         if (selected_stock_options[i] === "Intermediate Term Treasury Bond Index" || selected_stock_options[i] === "Total Bond Market Index") {
                             bonds_only401K += parseFloat(existing_stock_values.split(",")[i]);
+
                             var your_percent = (100 * (bonds_only401K / parseFloat(sum_stock_values))).toFixed(2);
+
+                            segmented_401k_percent_bonds += parseInt(your_percent);
+
                             document.getElementById("bonds_401K_percent").innerHTML = your_percent + '%';
                             document.getElementById("bonds_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
                         } else {
                             bonds_etf += parseFloat(existing_stock_values.split(",")[i]);
+
                             var your_percent = (100 * (bonds_etf / parseFloat(sum_stock_values))).toFixed(2);
+
+                            segmented_brok_percent_bonds += parseInt(your_percent);
+
                             document.getElementById("bonds_etf_percent").innerHTML = your_percent + '%';
                             document.getElementById("bonds_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
                         }
@@ -858,43 +999,43 @@ function updateStockValuesText() {
 function checkOverviewTable() {
     if (document.getElementById("us_small_401K_percent").innerHTML === "") {
         document.getElementById("us_small_401K_percent").innerHTML = "0%";
-        document.getElementById("us_small_401K_money").innerHTML = "0%";
+        document.getElementById("us_small_401K_money").innerHTML = "$0";
     }
     if (document.getElementById("us_small_etf_percent").innerHTML === "") {
         document.getElementById("us_small_etf_percent").innerHTML = "0%";
-        document.getElementById("us_small_etf_money").innerHTML = "0%";
+        document.getElementById("us_small_etf_money").innerHTML = "$0";
     }
     if (document.getElementById("us_large_401K_percent").innerHTML === "") {
         document.getElementById("us_large_401K_percent").innerHTML = "0%";
-        document.getElementById("us_large_401K_money").innerHTML = "0%";
+        document.getElementById("us_large_401K_money").innerHTML = "$0";
     }
     if (document.getElementById("us_large_etf_percent").innerHTML === "") {
         document.getElementById("us_large_etf_percent").innerHTML = "0%";
-        document.getElementById("us_large_etf_money").innerHTML = "0%";
+        document.getElementById("us_large_etf_money").innerHTML = "$0";
     }
     if (document.getElementById("int_small_401K_percent").innerHTML === "") {
         document.getElementById("int_small_401K_percent").innerHTML = "0%";
-        document.getElementById("int_small_401K_money").innerHTML = "0%";
+        document.getElementById("int_small_401K_money").innerHTML = "$0";
     }
     if (document.getElementById("int_small_etf_percent").innerHTML === "") {
         document.getElementById("int_small_etf_percent").innerHTML = "0%";
-        document.getElementById("int_small_etf_money").innerHTML = "0%";
+        document.getElementById("int_small_etf_money").innerHTML = "$0";
     }
     if (document.getElementById("int_large_401K_percent").innerHTML === "") {
         document.getElementById("int_large_401K_percent").innerHTML = "0%";
-        document.getElementById("int_large_401K_money").innerHTML = "0%";
+        document.getElementById("int_large_401K_money").innerHTML = "$0";
     }
     if (document.getElementById("int_large_etf_percent").innerHTML === "") {
         document.getElementById("int_large_etf_percent").innerHTML = "0%";
-        document.getElementById("int_large_etf_money").innerHTML = "0%";
+        document.getElementById("int_large_etf_money").innerHTML = "$0";
     }
     if (document.getElementById("bonds_401K_percent").innerHTML === "") {
         document.getElementById("bonds_401K_percent").innerHTML = "0%";
-        document.getElementById("bonds_401K_money").innerHTML = "0%";
+        document.getElementById("bonds_401K_money").innerHTML = "$0";
     }
     if (document.getElementById("bonds_etf_percent").innerHTML === "") {
         document.getElementById("bonds_etf_percent").innerHTML = "0%";
-        document.getElementById("bonds_etf_money").innerHTML = "0%";
+        document.getElementById("bonds_etf_money").innerHTML = "$0";
     }
     if (document.getElementById("copy_your_us_small").innerHTML === "") {
         document.getElementById("copy_your_us_small").innerHTML = "0%";
@@ -986,6 +1127,7 @@ function result() {
 
     savings_req_over_time(); //graph showing savings req over time
     networth_over_time_graph(); //graph showing networth over time
+    inside401Kversusoutside();
 
     money_over_time = [] //inflation adjusted M per year
     time = []
