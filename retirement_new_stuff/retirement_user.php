@@ -199,6 +199,24 @@ $query3 = $query2->fetch_assoc();
             });
         </script>
         <title>Retirement</title>
+
+        <style>
+            fieldset {
+                text-align: center;
+            }
+
+            #updateInfoPlease fieldset:not(:first-of-type) {
+                display: none
+            }
+
+            .form-control-inline {
+                min-width: 0;
+                width: auto;
+                display: inline;
+            }
+        </style>
+
+
     </head>
 
     <body>
@@ -206,7 +224,7 @@ $query3 = $query2->fetch_assoc();
             <div class="container">
                 <nav id="navbar_top" class="navbar navbar-dark navbar-expand-md" data-navbar-on-scroll="data-navbar-on-scroll">
                     <a class="navbar-brand" data-toggle="tab" href="#overview">
-                        <img src="logo5.png" style="width:220px" alt="">
+                        <img src="prepetibright-removebg-preview.png" style="width:220px" alt="">
                     </a>
                     <!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
@@ -221,7 +239,7 @@ $query3 = $query2->fetch_assoc();
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#overview">Overview</a>
                             </li>
-                            <li class="nav-item active">
+                            <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#portfolio">Portfolio</a>
                             </li>
                             <li class="nav-item">
@@ -252,7 +270,29 @@ $query3 = $query2->fetch_assoc();
                 </nav>
             </div>
         </section>
+
         <br><br><br><br><br><br><br>
+
+        <div class="modal fade" id="stockPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style = "padding: 20px 20px 20px 20px; top: 100px;">
+                    <div class="modal-header">
+                        <h1 class="modal-title" style = "color:black" id="exampleModalLabel">Welcome!</h1>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style = "color:black; font-size:14px">
+                        Please enter your investements information in the "investments" tab!
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary ButtonNeon" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- Header End -->
         <div class="container">
             <div class="tab-content">
@@ -912,6 +952,12 @@ $query3 = $query2->fetch_assoc();
     var int_large_percent = <?php echo json_encode($query3["int_large"]); ?>;
     var int_small_percent = <?php echo json_encode($query3["int_small"]); ?>;
     var bonds_percent = <?php echo json_encode($query3["bonds"]); ?>;
+
+    if (existing_stocks == null) {
+        $('#stockPopUp').modal('show');
+    } else {
+        $('#stockPopUp').modal('hide');
+    }
 
     document.getElementById("portfolio_description").innerText = <?php echo json_encode($query3["description"]); ?>;
 
