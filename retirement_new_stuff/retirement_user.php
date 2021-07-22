@@ -160,7 +160,6 @@ $query3 = $query2->fetch_assoc();
 <div id="wrapper" style="text-align:center;">
 
     <head>
-        <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible">
         <meta content="width=device-width, initial-scale=1, maximum-scale=5" name="viewport">
@@ -275,14 +274,14 @@ $query3 = $query2->fetch_assoc();
 
         <div class="modal fade" id="stockPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
-                <div class="modal-content" style = "padding: 20px 20px 20px 20px; top: 100px;">
+                <div class="modal-content" style="padding: 20px 20px 20px 20px; top: 100px;">
                     <div class="modal-header">
-                        <h1 class="modal-title" style = "color:black" id="exampleModalLabel">Welcome!</h1>
+                        <h1 class="modal-title" style="color:black" id="exampleModalLabel">Welcome!</h1>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" style = "color:black; font-size:14px">
+                    <div class="modal-body" style="color:black; font-size:14px">
                         Please enter your investements information in the "investments" tab!
                     </div>
                     <div class="modal-footer">
@@ -296,6 +295,7 @@ $query3 = $query2->fetch_assoc();
         <!-- Header End -->
         <div class="container">
             <div class="tab-content">
+
                 <div id="overview" class="tab-pane fade in active">
                     <nav>
                         <ol class="breadcrumb bg-transparent">
@@ -307,89 +307,30 @@ $query3 = $query2->fetch_assoc();
                     <br><br>
                     <h1>My Retirement Plan</h1>
                     <br><br>
-                    <div class="row flex-center">
-                        <div class="col-md-8">
-                            <div>
-                                <!--col-md-13-->
-                                <!--<div data-aos="fade-up" class="m-b-15">-->
-                                <!--<div style = "margin:0; padding:0;">-->
-                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
-                                    <h5 class="card-header">
-                                        <a class="collapsed" data-toggle="collapse" href="#collapse-collapsed" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
-                                            <i class="fa fa-chevron-down pull-right"></i>
-                                            <h3 class="fw-bold" style="color:white">$<?php echo strval($query["money"]); ?> Equivalent Income<br />in Retirement</h3>
-                                        </a>
-                                    </h5>
-                                    <div id="collapse-collapsed" class="collapse" aria-labelledby="heading-collapsed">
-                                        <div class="card-body">
-                                            <div id="copy_graph" class="aGraph"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
-                                    <h5 class="card-header">
-                                        <a class="collapsed d-block" data-toggle="collapse" href="#collapse-collapsed2" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
-                                            <i class="fa fa-chevron-down pull-right"></i>
-                                            <h3 class="fw-bold" style="color:white">Wealth Trajectory<br /></h3>
-                                        </a>
-                                    </h5>
-                                    <div id="collapse-collapsed2" class="collapse" aria-labelledby="heading-collapsed">
-                                        <div class="card-body">
-                                            <div id="copy_graph2" class="aGraph2"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--</div>-->
-                                <!--</div>-->
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="bg-transparent border-neon card card-body h-100 mb-3 rounded-3">
-                                <br>
-                                <h3 class="fw-bold" style="color: white;">Your Basic Financial Picture</h3>
-                                <!--<div id="summary" class="card-text summary" style = "font-size:20"></div>-->
-                                <table class="table table2Width" style="font-size: 11px;">
-                                    <tbody style="font-size: 11px">
-                                        <tr>
-                                            <th scope="row" style="font-size: 11px; font-weight: normal;">Retirement Year</th>
-                                            <td id="table_ret_year"></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" style="font-size: 11px; font-weight: normal;">Years in<br>Retirement</th>
-                                            <td id="table_distr_years"></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" style="font-size: 11px; font-weight: normal;">Annual Income</th>
-                                            <td id="table_annual_income"></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" style="font-size: 11px; font-weight: normal;">Money you need<br>per year</th>
-                                            <td id="table_money_per_year"></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" style="font-size: 11px; font-weight: normal;">Portfolio growth rate<br>prior Retirement</th>
-                                            <td id="table_r1"></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" style="font-size: 11px; font-weight: normal;">Portfolio growth rate<br>after Retirement</th>
-                                            <td id="table_r2"></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" style="font-size: 14px; font-weight: bold; color:white">Savings required<br>each year</th>
-                                            <td id="table_savings_req" style="font-size: 14px; font-weight: bold; color:white"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+
+                    <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
+                        <h5 class="card-header">
+                            <a class="collapsed d-block" data-toggle="collapse" href="#collapse-networth" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
+                                <i class="fa fa-chevron-down pull-right"></i>
+                                <h3 class="fw-bold" style="color:white">Networth over Time<br /></h3>
+                            </a>
+                        </h5>
+                        <div id="collapse-networth" class="collapse" aria-labelledby="heading-collapsed">
+                            <div class="card-body">
+                                <div id="copy_networth_time"></div>
                             </div>
                         </div>
                     </div>
-                    <br>
+
+                    <br><br>
+
                     <div class="row flex-center">
                         <div class="col-md-12">
                             <div data-aos="fade-up" class="m-b-15">
                                 <div style="margin:0; padding:0;">
                                     <div class="">
+                                        <br>
+                                        <h1>My Investments</h1>
                                         <br><br>
                                         <div class="card h-100 mb-3 noBorder bg-transparent rounded-3">
                                             <h3 class="fw-bold" style="color: white;">Are you on track for Retirement?</h3>
@@ -397,7 +338,7 @@ $query3 = $query2->fetch_assoc();
                                                 <p>We can write stuff in here about this table and yeah.</p>
                                             </div>
                                             <br>
-                                            <table class="table table2Width" style="font-size: 11px;">
+                                            <table class="table table2Width" style="font-size: 16px;">
                                                 <thead>
                                                     <tr>
                                                         <th style="font-weight: normal;" scope="col">Stock</th>
@@ -407,37 +348,37 @@ $query3 = $query2->fetch_assoc();
                                                         <th style="font-weight: normal;" scope="col">Difference ($)</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody style="font-size: 10px">
+                                                <tbody style="font-size: 14px">
                                                     <tr>
-                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">US small cap</th>
+                                                        <th scope="row" style="font-size: 14px; font-weight: normal;">US small cap</th>
                                                         <td id="copy_your_us_small"></td>
                                                         <td id="copy_rec_us_small"></td>
                                                         <td id="copy_diff_us_small"></td>
                                                         <td id="copy_diff_us_small_money"></td>
                                                     </tr>
                                                     <tr>
-                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">US large cap</th>
+                                                        <th scope="row" style="font-size: 14px; font-weight: normal;">US large cap</th>
                                                         <td id="copy_your_us_large"></td>
                                                         <td id="copy_rec_us_large"></td>
                                                         <td id="copy_diff_us_large"></td>
                                                         <td id="copy_diff_us_large_money"></td>
                                                     </tr>
                                                     <tr>
-                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">Intl small cap</th>
+                                                        <th scope="row" style="font-size: 14px; font-weight: normal;">Intl small cap</th>
                                                         <td id="copy_your_itl_small"></td>
                                                         <td id="copy_rec_itl_small"></td>
                                                         <td id="copy_diff_itl_small"></td>
                                                         <td id="copy_diff_itl_small_money"></td>
                                                     </tr>
                                                     <tr>
-                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">Intl large cap</th>
+                                                        <th scope="row" style="font-size: 14px; font-weight: normal;">Intl large cap</th>
                                                         <td id="copy_your_itl_large"></td>
                                                         <td id="copy_rec_itl_large"></td>
                                                         <td id="copy_diff_itl_large"></td>
                                                         <td id="copy_diff_itl_large_money"></td>
                                                     </tr>
                                                     <tr>
-                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">Bonds</th>
+                                                        <th scope="row" style="font-size: 14px; font-weight: normal;">Bonds</th>
                                                         <td id="copy_your_bonds"></td>
                                                         <td id="copy_rec_bonds"></td>
                                                         <td id="copy_diff_bonds"></td>
@@ -455,85 +396,20 @@ $query3 = $query2->fetch_assoc();
                     </div>
                     <br><br>
 
-                    <div class="row flex-center">
-                        <div class="col-md-12">
-                            <div data-aos="fade-up" class="m-b-15">
-                                <div style="margin:0; padding:0;">
-                                    <div class="">
-                                        <br><br>
-                                        <div class="card h-100 mb-3 noBorder bg-transparent rounded-3">
-                                            <h3 class="fw-bold" style="color: white;">Recommended Changes to your Investments</h3>
-                                            <div class="help-tip">
-                                                <p>We can write stuff in here about this table and yeah.</p>
-                                            </div>
-                                            <br>
-                                            <table class="table table2Width" style="font-size: 11px;">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="font-weight: normal;" scope="col">Investment</th>
-                                                        <th style="font-weight: normal;" scope="col">401(k) (%)</th>
-                                                        <th style="font-weight: normal;" scope="col">401(k) ($)</th>
-                                                        <th style="font-weight: normal;" scope="col">ETF (%)</th>
-                                                        <th style="font-weight: normal;" scope="col">ETF ($)</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody style="font-size: 10px">
-                                                    <tr>
-                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">US small cap</th>
-                                                        <td id="us_small_401K_percent"></td>
-                                                        <td id="us_small_401K_money"></td>
-                                                        <td id="us_small_etf_percent"></td>
-                                                        <td id="us_small_etf_money"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">US large cap</th>
-                                                        <td id="us_large_401K_percent"></td>
-                                                        <td id="us_large_401K_money"></td>
-                                                        <td id="us_large_etf_percent"></td>
-                                                        <td id="us_large_etf_money"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">Intl small cap</th>
-                                                        <td id="int_small_401K_percent"></td>
-                                                        <td id="int_small_401K_money"></td>
-                                                        <td id="int_small_etf_percent"></td>
-                                                        <td id="int_small_etf_money"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">Intl large cap</th>
-                                                        <td id="int_large_401K_percent"></td>
-                                                        <td id="int_large_401K_money"></td>
-                                                        <td id="int_large_etf_percent"></td>
-                                                        <td id="int_large_etf_money"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row" style="font-size: 10px; font-weight: normal;">Bonds</th>
-                                                        <td id="bonds_401K_percent"></td>
-                                                        <td id="bonds_401K_money"></td>
-                                                        <td id="bonds_etf_percent"></td>
-                                                        <td id="bonds_etf_money"></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <br><br>
-                                        </div>
-                                        <br>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
+                    <h1>My Portfolio</h1>
                     <br><br>
                     <div class="row flex-center">
-                        <div class="col-md-7">
+                        <div class="col-md-12">
                             <div class="col-md-12 card card-body h-100 mb-3 bg-transparent border-neon rounded-3">
                                 <br>
                                 <h3 class="fw-bold" style="color: white;">Your Investments</h3>
                                 <!--<div id="summary" class="card-text summary" style = "font-size:20"></div>-->
                             </div>
                         </div>
-                        <div class="col-md-5">
+
+                        <div class="col-md-12">
+                            <br><br><br>
                             <div>
                                 <!--col-md-12-->
                                 <div data-aos="fade-up" class="m-b-15">
@@ -565,63 +441,235 @@ $query3 = $query2->fetch_assoc();
                                                 </div>
                                             </div>
                                         </div>
+                                        <br>
+                                        <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
+                                            <h5 class="card-header">
+                                                <a class="collapsed d-block" data-toggle="collapse" href="#collapse-segment" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
+                                                    <i class="fa fa-chevron-down pull-right"></i>
+                                                    <h3 class="fw-bold" style="color:white">Investments by Account<br /></h3>
+                                                </a>
+                                            </h5>
+                                            <div id="collapse-segment" class="collapse" aria-labelledby="heading-collapsed">
+                                                <div class="card-body">
+                                                    <div id="segmentedBarGraph"></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br><br><br>
+                    <h1>Retirement Projections</h1>
+
+                    <br><br>
+                    <div class="col-md-12">
+                        <div class="bg-transparent border-neon card card-body h-100 mb-3 rounded-3">
+                            <br>
+                            <h3 class="fw-bold" style="color: white;">Your Basic Financial Picture</h3>
+                            <table class="table table2Width" style="font-size: 14px;">
+                                <tbody style="font-size: 14px">
+                                    <tr>
+                                        <th scope="row" style="font-size: 14px; font-weight: normal;">Retirement Year</th>
+                                        <td id="table_ret_year"></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" style="font-size: 14px; font-weight: normal;">Years in<br>Retirement</th>
+                                        <td id="table_distr_years"></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" style="font-size: 14px; font-weight: normal;">Annual Income</th>
+                                        <td id="table_annual_income"></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" style="font-size: 14px; font-weight: normal;">Money you need<br>per year</th>
+                                        <td id="table_money_per_year"></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" style="font-size: 14px; font-weight: normal;">Portfolio growth rate<br>prior Retirement</th>
+                                        <td id="table_r1"></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" style="font-size: 14px; font-weight: normal;">Portfolio growth rate<br>after Retirement</th>
+                                        <td id="table_r2"></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" style="font-size: 18px; font-weight: bold; color:white">Savings required<br>each year</th>
+                                        <td id="table_savings_req" style="font-size: 14px; font-weight: bold; color:white"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <br><br>
+
+                    <h3>Scenario 1</h3>
+                    <br><br>
+                    <div class="row flex-center">
+                        <div class="col-md-12">
+                            <div>
+                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
+                                    <h5 class="card-header">
+                                        <a class="collapsed" data-toggle="collapse" href="#collapse-collapsed" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
+                                            <i class="fa fa-chevron-down pull-right"></i>
+                                            <h3 class="fw-bold" style="color:white">$<?php echo strval($query["money"]); ?> Equivalent Income<br />in Retirement</h3>
+                                        </a>
+                                    </h5>
+                                    <div id="collapse-collapsed" class="collapse" aria-labelledby="heading-collapsed">
+                                        <div class="card-body">
+                                            <div id="copy_graph" class="aGraph"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
+                                    <h5 class="card-header">
+                                        <a class="collapsed d-block" data-toggle="collapse" href="#collapse-collapsed2" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
+                                            <i class="fa fa-chevron-down pull-right"></i>
+                                            <h3 class="fw-bold" style="color:white">Your Wealth Trajectory<br /></h3>
+                                        </a>
+                                    </h5>
+                                    <div id="collapse-collapsed2" class="collapse" aria-labelledby="heading-collapsed">
+                                        <div class="card-body">
+                                            <div id="copy_graph2" class="aGraph2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--</div>-->
+                                <!--</div>-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <br><br><br>
+                    <h3>Scenario 2</h3>
+                    <br><br>
+
+
+                    <br><br>
+                    <h1>Savings Required - Historical Trends</h1>
+                    <br><br>
+
+
+                    <div class="row flex-center">
+                        <div class="col-md-12">
+                            <div data-aos="fade-up" class="m-b-15">
+                                <div style="margin:0; padding:0;">
+                                    <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
+                                        <h5 class="card-header">
+                                            <a class="collapsed d-block" data-toggle="collapse" href="#collapse-savings" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
+                                                <i class="fa fa-chevron-down pull-right"></i>
+                                                <h3 class="fw-bold" style="color:white">Savings Required over Time<br /></h3>
+                                            </a>
+                                        </h5>
+                                        <div id="collapse-savings" class="collapse" aria-labelledby="heading-collapsed">
+                                            <div class="card-body">
+                                                <div id="copy_savings_req_time"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="row flex-center">
+                        <div class="col-md-12">
+
+                            <div class="card h-100 mb-3 bg-transparent border-neon rounded-3">
+
+                                <h5 class="card-header">
+                                    <h3 class="fw-bold" style="color:white">Required Savings Rate</h3>
+                                </h5>
+
+                                <div class="card-body">
+                                    <p class="card-text">The required savings rate could go up or down depending upon what the markets
+                                        do from time to time and what you set aside every year.
+                                        If the curves continue to stay where they are or perk up, that means you might have to save a
+                                        bit more to meet your goals. There is nothing big to worry about as long as you continue doing
+                                        at least the bare minimum and ideally the max required.
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <br><br><br><br><br>
+
+                    <h1>Recommendations/Next Steps</h1>
+
+
                     <div class="row flex-center">
-                        <div class="col-md-8">
-                            <div>
-                                <!-- class = "col-md-12"-->
-                                <div data-aos="fade-up" class="m-b-15">
-                                    <div style="margin:0; padding:0;">
-                                        <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
-                                            <h5 class="card-header">
-                                                <a class="collapsed d-block" data-toggle="collapse" href="#collapse-networth" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
-                                                    <i class="fa fa-chevron-down pull-right"></i>
-                                                    <h3 class="fw-bold" style="color:white">Networth over Time<br /></h3>
-                                                </a>
-                                            </h5>
-                                            <div id="collapse-networth" class="collapse" aria-labelledby="heading-collapsed">
-                                                <div class="card-body">
-                                                    <div id="copy_networth_time"></div>
-                                                </div>
+                        <div class="col-md-12">
+                            <div data-aos="fade-up" class="m-b-15">
+                                <div style="margin:0; padding:0;">
+                                    <div class="">
+                                        <br><br>
+                                        <div class="card h-100 mb-3 noBorder bg-transparent rounded-3">
+                                            <h3 class="fw-bold" style="color: white;">Recommended Changes to your Investments</h3>
+                                            <div class="help-tip">
+                                                <p>We can write stuff in here about this table and yeah.</p>
                                             </div>
+                                            <br>
+
+                                            <table class="table table2Width" style="font-size: 16px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="font-weight: normal;" scope="col">Investment</th>
+                                                        <th style="font-weight: normal;" scope="col">401(k) (%)</th>
+                                                        <th style="font-weight: normal;" scope="col">401(k) ($)</th>
+                                                        <th style="font-weight: normal;" scope="col">ETF (%)</th>
+                                                        <th style="font-weight: normal;" scope="col">ETF ($)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="font-size: 14px">
+                                                    <tr>
+                                                        <th scope="row" style="font-size: 14px; font-weight: normal;">US small cap</th>
+                                                        <td id="us_small_401K_percent"></td>
+                                                        <td id="us_small_401K_money"></td>
+                                                        <td id="us_small_etf_percent"></td>
+                                                        <td id="us_small_etf_money"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" style="font-size: 14px; font-weight: normal;">US large cap</th>
+                                                        <td id="us_large_401K_percent"></td>
+                                                        <td id="us_large_401K_money"></td>
+                                                        <td id="us_large_etf_percent"></td>
+                                                        <td id="us_large_etf_money"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" style="font-size: 14px; font-weight: normal;">Intl small cap</th>
+                                                        <td id="int_small_401K_percent"></td>
+                                                        <td id="int_small_401K_money"></td>
+                                                        <td id="int_small_etf_percent"></td>
+                                                        <td id="int_small_etf_money"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" style="font-size: 14px; font-weight: normal;">Intl large cap</th>
+                                                        <td id="int_large_401K_percent"></td>
+                                                        <td id="int_large_401K_money"></td>
+                                                        <td id="int_large_etf_percent"></td>
+                                                        <td id="int_large_etf_money"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" style="font-size: 14px; font-weight: normal;">Bonds</th>
+                                                        <td id="bonds_401K_percent"></td>
+                                                        <td id="bonds_401K_money"></td>
+                                                        <td id="bonds_etf_percent"></td>
+                                                        <td id="bonds_etf_money"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <br><br>
                                         </div>
                                         <br>
-                                        <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
-                                            <h5 class="card-header">
-                                                <a class="collapsed d-block" data-toggle="collapse" href="#collapse-savings" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
-                                                    <i class="fa fa-chevron-down pull-right"></i>
-                                                    <h3 class="fw-bold" style="color:white">Savings Required over Time<br /></h3>
-                                                </a>
-                                            </h5>
-                                            <div id="collapse-savings" class="collapse" aria-labelledby="heading-collapsed">
-                                                <div class="card-body">
-                                                    <div id="copy_savings_req_time"></div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="card card-body h-100 mb-3 bg-transparent border-neon rounded-3">
-                                <br>
-                                <h3 class="fw-bold" style="color: white;">Required Savings Rate</h3>
-                                <p class="card-text">The required savings rate could go up or down depending upon what the markets
-                                    do from time to time and what you set aside every year.
-                                    If the curves continue to stay where they are or perk up, that means you might have to save a
-                                    bit more to meet your goals. There is nothing big to worry about as long as you continue doing
-                                    at least the bare minimum and ideally the max required.
-                                </p>
-                            </div>
-                        </div>
                     </div>
-                    <br><br>
+
                     <div class="row flex-center">
                         <div class="col-md-12">
                             <div data-aos="fade-up" class="m-b-15">
@@ -637,6 +685,8 @@ $query3 = $query2->fetch_assoc();
                         </div>
                     </div>
                 </div>
+
+
                 <div id="portfolio" class="tab-pane fade">
                     <nav>
                         <ol class="breadcrumb bg-transparent">
