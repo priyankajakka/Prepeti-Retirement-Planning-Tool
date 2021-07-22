@@ -8,10 +8,22 @@ var money, income, savings, r1, bad_r1, r2, inf_rate, years, accum_years, distr_
 
 var segmented_401k_percent_dom = 0;
 var segmented_401k_percent_int = 0;
+
+var segmented_401k_percent_dom1 = 0;
+var segmented_401k_percent_int1 = 0;
+var segmented_401k_percent_dom2 = 0;
+var segmented_401k_percent_int2 = 0;
+
 var segmented_401k_percent_bonds = 0;
 
 var segmented_brok_percent_dom = 0;
 var segmented_brok_percent_int = 0;
+
+var segmented_brok_percent_dom1 = 0;
+var segmented_brok_percent_int1 = 0;
+var segmented_brok_percent_dom2 = 0;
+var segmented_brok_percent_int2 = 0;
+
 var segmented_brok_percent_bonds = 0;
 
 var selected_stock_options = [];
@@ -41,6 +53,10 @@ function inside401Kversusoutside() {
                 "translate(" + (margin.left + 35) + "," + (margin.top - 50) + ")");
 
         var subgroups = ['domestic', 'international', 'bonds'];
+        segmented_401k_percent_dom = segmented_401k_percent_dom1 + segmented_401k_percent_dom2;
+        segmented_brok_percent_dom = segmented_brok_percent_dom1 + segmented_brok_percent_dom2;
+        segmented_401k_percent_int = segmented_401k_percent_int1 + segmented_401k_percent_int2;
+        segmented_brok_percent_int = segmented_brok_percent_int1 + segmented_brok_percent_int2;
 
         var data = [{ group: "401K", domestic: segmented_401k_percent_dom, international: segmented_401k_percent_int, bonds: segmented_401k_percent_bonds },
         { group: "Brokerage", domestic: segmented_brok_percent_dom, international: segmented_brok_percent_int, bonds: segmented_brok_percent_bonds }]
@@ -786,7 +802,8 @@ function updateStockValuesText() {
 
                             var your_percent = (100 * (us_small_only401K / parseFloat(sum_stock_values))).toFixed(2);
 
-                            segmented_401k_percent_dom += parseInt(your_percent);
+                            segmented_401k_percent_dom1 = parseInt(your_percent);
+                            console.log("DOM 401K " + segmented_401k_percent_dom1 + " " + your_percent);
 
                             document.getElementById("us_small_401K_percent").innerHTML = your_percent + '%';
                             document.getElementById("us_small_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
@@ -794,7 +811,8 @@ function updateStockValuesText() {
                             us_small_etf += parseFloat(existing_stock_values.split(",")[i]);
                             var your_percent = (100 * (us_small_etf / parseFloat(sum_stock_values))).toFixed(2);
 
-                            segmented_brok_percent_dom += parseInt(your_percent);
+                            segmented_brok_percent_dom1 = parseInt(your_percent);
+                            console.log("DOM BROK " + segmented_brok_percent_dom1 + " " + your_percent);
 
                             document.getElementById("us_small_etf_percent").innerHTML = your_percent + '%';
                             document.getElementById("us_small_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
@@ -833,7 +851,8 @@ function updateStockValuesText() {
 
                             var your_percent = (100 * (us_large_only401K / parseFloat(sum_stock_values))).toFixed(2);
 
-                            segmented_401k_percent_dom += parseInt(your_percent);
+                            segmented_401k_percent_dom2 = parseInt(your_percent);
+                            console.log("DOM 401K " + segmented_401k_percent_dom2 + " " + your_percent);
 
                             document.getElementById("us_large_401K_percent").innerHTML = your_percent + '%';
                             document.getElementById("us_large_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
@@ -841,7 +860,8 @@ function updateStockValuesText() {
                             us_large_etf += parseFloat(existing_stock_values.split(",")[i]);
                             var your_percent = (100 * (us_large_etf / parseFloat(sum_stock_values))).toFixed(2);
 
-                            segmented_brok_percent_dom += parseInt(your_percent);
+                            segmented_brok_percent_dom2 = parseInt(your_percent);
+                            console.log("DOM BROK " + segmented_brok_percent_dom2 + " " + your_percent);
 
                             document.getElementById("us_large_etf_percent").innerHTML = your_percent + '%';
                             document.getElementById("us_large_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
@@ -880,7 +900,8 @@ function updateStockValuesText() {
                             int_small_only401K += parseFloat(existing_stock_values.split(",")[i]);
                             var your_percent = (100 * (int_small_only401K / parseFloat(sum_stock_values))).toFixed(2);
 
-                            segmented_401k_percent_int += parseInt(your_percent);
+                            segmented_401k_percent_int1 = parseInt(your_percent);
+                            console.log("INT 401K " + segmented_401k_percent_int1 + " " + your_percent);
 
                             document.getElementById("int_small_401K_percent").innerHTML = your_percent + '%';
                             document.getElementById("int_small_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
@@ -888,7 +909,8 @@ function updateStockValuesText() {
                             int_small_etf += parseFloat(existing_stock_values.split(",")[i]);
                             var your_percent = (100 * (int_small_etf / parseFloat(sum_stock_values))).toFixed(2);
 
-                            segmented_brok_percent_int += parseInt(your_percent);
+                            segmented_brok_percent_int1 = parseInt(your_percent);
+                            console.log("INT BROK " + segmented_brok_percent_int1 + " " + your_percent);
 
                             document.getElementById("int_small_etf_percent").innerHTML = your_percent + '%';
                             document.getElementById("int_small_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
@@ -927,7 +949,8 @@ function updateStockValuesText() {
 
                             var your_percent = (100 * (int_large_only401K / parseFloat(sum_stock_values))).toFixed(2);
 
-                            segmented_401k_percent_int += parseInt(your_percent);
+                            segmented_401k_percent_int2 = parseInt(your_percent);
+                            console.log("401K INT " + segmented_401k_percent_int2 + " " + your_percent)
 
                             document.getElementById("int_large_401K_percent").innerHTML = your_percent + '%';
                             document.getElementById("int_large_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
@@ -936,7 +959,8 @@ function updateStockValuesText() {
 
                             var your_percent = (100 * (int_large_etf / parseFloat(sum_stock_values))).toFixed(2);
 
-                            segmented_brok_percent_int += parseInt(your_percent);
+                            segmented_brok_percent_int2 = parseInt(your_percent);
+                            console.log("BROK INT " + segmented_brok_percent_int2 + " " + your_percent)
 
                             document.getElementById("int_large_etf_percent").innerHTML = your_percent + '%';
                             document.getElementById("int_large_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
@@ -975,7 +999,8 @@ function updateStockValuesText() {
 
                             var your_percent = (100 * (bonds_only401K / parseFloat(sum_stock_values))).toFixed(2);
 
-                            segmented_401k_percent_bonds += parseInt(your_percent);
+                            segmented_401k_percent_bonds = parseInt(your_percent);
+                            console.log("BONDS 401K " + segmented_401k_percent_bonds + " " + your_percent)
 
                             document.getElementById("bonds_401K_percent").innerHTML = your_percent + '%';
                             document.getElementById("bonds_401K_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
@@ -984,7 +1009,8 @@ function updateStockValuesText() {
 
                             var your_percent = (100 * (bonds_etf / parseFloat(sum_stock_values))).toFixed(2);
 
-                            segmented_brok_percent_bonds += parseInt(your_percent);
+                            segmented_brok_percent_bonds = parseInt(your_percent);
+                            console.log("BONDS BROK " + segmented_brok_percent_bonds + " " + your_percent)
 
                             document.getElementById("bonds_etf_percent").innerHTML = your_percent + '%';
                             document.getElementById("bonds_etf_money").innerHTML = "$" + (parseFloat(your_percent * sum_stock_values) / 100).toFixed(2);
