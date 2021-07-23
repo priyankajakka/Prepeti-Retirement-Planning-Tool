@@ -51,6 +51,8 @@ if (isset($_POST["submit"])) {
             $value = $result->fetch_object();
             $_SESSION['life'] = $value->life;
 
+            $_SESSION['create_account'] = FALSE;
+
             header("location: http://localhost/~sjakka/RetirementToolwUI/updateInfo.php");
             exit;
         }
@@ -97,10 +99,10 @@ if (isset($_POST["submit"])) {
                                 </div>
 
                                 <label style="float:left" for="username" class="control-label">Username</label>
-                                <input class="form-control" type="text" id="username" name="username" placeholder="Enter your username" />
+                                <input style = "color:white" class="form-control" type="text" id="username" name="username" placeholder="Enter your username" />
 
                                 <label style="float:left" for="password" class="control-label">Password</label>
-                                <input class="form-control" type="password" id="password" name="password" placeholder="............." />
+                                <input style = "color:white" class="form-control" type="password" id="password" name="password" placeholder="............." />
 
                                 <br>
                                 <div style="color:white"><?php echo $output; ?></div>
