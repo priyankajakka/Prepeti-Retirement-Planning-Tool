@@ -347,10 +347,26 @@ function bargraph() {
     if (existing_stock_values != null) {
         var dataset1 = existing_stock_values.split(",");
 
+        var selected_stock_options_duplicate = [];
+
+        for (var i = 0; i < selected_stock_options.length; ++i) {
+            selected_stock_options_duplicate[i] = selected_stock_options[i];
+        }
+
+        for (var i = 0; i < selected_stock_options_duplicate.length; ++i) {
+            if (selected_stock_options_duplicate[i] == 'Domestic Large Cap' || selected_stock_options_duplicate[i] == 'Domestic Small Cap' || selected_stock_options_duplicate[i] == 'International Large Cap' || selected_stock_options_duplicate[i] == 'International Small Cap' || selected_stock_options_duplicate[i] == 'Bonds') {
+                selected_stock_options_duplicate.splice(i, 1);
+                dataset1.splice(i, 1);
+                --i;
+            }
+        }
+
+        console.log(selected_stock_options_duplicate);
+        console.log(selected_stock_options);
+
         var currentWidth = 900;
 
         var m = [100, 0.1 * currentWidth, 100, 0.1 * currentWidth]; // margins, m[0], m[2] = top/below, m[1] = right, m[3] = left
-        //var w = currentWidth - m[1] - m[3]; // width
         var w = currentWidth / 3;
         var h = 550 - m[0] - m[2]; // height
 
@@ -358,17 +374,13 @@ function bargraph() {
             .append("svg")
             .attr("preserveAspectRatio", "xMinYMin meet")
             .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (560))
-            //.classed("svg-content", true)
-            //.attr("width", w + m[1] + m[3])
-            //.attr("height", 700)//h + m[0] + m[2]
             .attr("width", "100%")
-            //.attr("height", "100%")
             .append("svg:g")
             .attr("transform", "translate(" + (m[3] + 35) + "," + (m[0] - 50) + ")");
 
         var x = d3.scaleBand()
             .range([0, w])
-            .domain(selected_stock_options)
+            .domain(selected_stock_options_duplicate)
             .padding(0.5);
 
         var y = d3.scaleLinear()
@@ -379,10 +391,10 @@ function bargraph() {
             .data(dataset1)
             .enter()
             .append("rect")
-            .attr("x", function (d, i) { return x(selected_stock_options[i]); })
-            .attr("y", function (d) { return y(d); })
+            .attr("x", function (d, i) { return x(selected_stock_options_duplicate[i]); })
+            .attr("y", function (d, i) { return y(d); })
             .attr("width", x.bandwidth())
-            .attr("height", function (d) { return h - y(d); })
+            .attr("height", function (d, i) { return (h - y(d)); })
             .attr("fill", "#A117F2")
         // .style("opacity", .6);
 
@@ -392,9 +404,9 @@ function bargraph() {
             .style("fill", "white")
             .attr("class", "bar")
             .attr("text-anchor", "middle")
-            .attr("x", function (d, i) { return x(selected_stock_options[i]) + x.bandwidth() / 2; })
-            .attr("y", function (d) { return y(d) - 5; })
-            .text(function (d) { return d; });
+            .attr("x", function (d, i) { return (x(selected_stock_options_duplicate[i]) + x.bandwidth() / 2); })
+            .attr("y", function (d, i) { return (y(d) - 5); })
+            .text(function (d, i) { return d; });
 
         svg_bar_chart.append("g")
             .attr("transform", "translate(0," + h + ")")
@@ -409,25 +421,6 @@ function bargraph() {
             .style("font-size", 10)
             .attr("class", "axisWhite")
             .call(d3.axisLeft(y));
-
-        //title of graph
-        /*svg_bar_chart.append("text")
-            .attr("x", (w / 2))
-            .attr("y", 0 - (m[0] / 2))
-            .attr("text-anchor", "middle")
-            .style("font-size", "16px")
-            .style("text-decoration", "underline")
-            .text("Stocks")*/
-
-        //x-axis label
-        /*svg_bar_chart.append("text")
-            .style("font-size", 16)
-            .attr("transform",
-                "translate(" + (w / 2) + " ," +
-                (h + m[0] + 80) + ")")
-            .style("text-anchor", "middle")
-            .style("fill", "white")
-            .text("Stock");*/
 
         // text label for the y axis
         svg_bar_chart.append("text")
@@ -454,7 +447,7 @@ function bargraph() {
             .data(dataset1)
             .enter()
             .append("rect")
-            .attr("x", function (d, i) { return x(selected_stock_options[i]); })
+            .attr("x", function (d, i) { return x(selected_stock_options_duplicate[i]); })
             .attr("y", function (d) { return y(d); })
             .attr("width", x.bandwidth())
             .attr("height", function (d) { return h - y(d); })
@@ -466,7 +459,7 @@ function bargraph() {
             .style("fill", "white")
             .attr("class", "bar")
             .attr("text-anchor", "middle")
-            .attr("x", function (d, i) { return x(selected_stock_options[i]) + x.bandwidth() / 2; })
+            .attr("x", function (d, i) { return x(selected_stock_options_duplicate[i]) + x.bandwidth() / 2; })
             .attr("y", function (d) { return y(d) - 5; })
             .text(function (d) { return d; });
 
@@ -483,15 +476,6 @@ function bargraph() {
             .style("font-size", 10)
             .attr("class", "axisWhite")
             .call(d3.axisLeft(y));
-
-        /*copy_svg_bar_chart.append("text")
-            .style("font-size", 12)
-            .attr("transform",
-                "translate(" + (w / 2) + " ," +
-                (h + m[0] + 80) + ")")
-            .style("text-anchor", "middle")
-            .style("fill", "white")
-            .text("Stock");*/
 
         copy_svg_bar_chart.append("text")
             .style("font-size", 12)
@@ -515,84 +499,246 @@ function reset_stock_list() {
 
     for (var i = 0; i < li.length; ++i) {
         for (var j = 0; j < selected_stock_options.length; ++j) {
-            if (li[i].textContent === selected_stock_options[j]) {
+            if (li[i].childNodes[0].textContent === selected_stock_options[j]) {
                 li[i].classList.toggle('checked'); //shows list of what stock options user previously selected
                 innertext += selected_stock_options[j] + "\n"
             }
         }
     }
+
     //shows list of what stock options user previously selected
     //document.getElementById("stocks_selection").innerText = innertext;
 
     var div = document.getElementById('money_in_stocks');
     while (div.firstChild) {
+        console.log(div.firstChild.textContent);
         div.removeChild(div.firstChild);
     }
 
     //appends appropriate number of input text fields so that user can enter money in each stock
     document.getElementById("money_in_stocks").innerText += "Enter the amount of money you have in each stock: \n\n"
     for (var i = 0; i < selected_stock_options.length; i++) {
-        //document.getElementById("money_in_stocks").innerHTML += (selected_stock_options[i] + ": ");
         var input = document.createElement('input');
         input.type = "number";
         input.id = selected_stock_options[i];
         input.classList.add("form-control");
         input.style["color"] = "white";
         input.value = 0;
-        //my changes
-        var newlabel = document.createElement("Label");
-        newlabel.setAttribute("for", input.id);
-        newlabel.classList.add("control-label");
-        newlabel.innerHTML = selected_stock_options[i];
-        //
-        document.getElementById("money_in_stocks").appendChild(newlabel);
-        document.getElementById("money_in_stocks").appendChild(input);
-        document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+        input.placeholder = "$";
+
+        if (input.id == 'Domestic Large Cap' || input.id == 'Domestic Small Cap' || input.id == 'International Large Cap' || input.id == 'International Small Cap' || input.id == 'Bonds') {
+            input.classList.add("form-control-inline")
+            input.style["background"] = "transparent";
+            input.style["border"] = "none";
+            input.style["border-bottom"] = "2px solid #e8bf08";
+            input.style["-webkit-box-shadow"] = "none";
+            input.style["box-shadow"] = "none";
+            input.style["border-radius"] = "0";
+            input.style["height"] = "25px";
+            input.style['text-align'] = "center";
+            input.readOnly = true;
+            //my changes
+            var newlabel = document.createElement("Label");
+            newlabel.setAttribute("for", input.id);
+            newlabel.style['font-size'] = "15px";
+            input.style['font-size'] = "15px";
+
+            newlabel.classList.add("control-label");
+            newlabel.innerHTML = selected_stock_options[i];
+            //
+            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+            document.getElementById("money_in_stocks").appendChild(newlabel);
+            document.getElementById("money_in_stocks").appendChild(input);
+            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+
+        } else {
+            input.style["height"] = "25px";
+            //my changes
+            var newlabel = document.createElement("Label");
+            newlabel.setAttribute("for", input.id);
+            newlabel.style['font-size'] = "12px";
+            input.style['font-size'] = "12px";
+
+            newlabel.classList.add("control-label");
+            newlabel.innerHTML = selected_stock_options[i];
+            //
+            document.getElementById("money_in_stocks").appendChild(newlabel);
+            document.getElementById("money_in_stocks").appendChild(input);
+            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+        }
     }
 }
 
 //creates list with possible stock options for user to choose from
 function showAllStockOptions() {
     var counter = 0;
-    var stock_options = ['S and P 500 Index Fund', 'Large Cap Index Fund', 'Total Stock Market Index Fund',
-        'Extended Market Index Fund', 'Small Cap Index Fund',
-        'All-World ex-US Index Fund', 'Total International Stock Index Fund',
-        'All-World ex-US Small Cap Index Fund',
-        'Intermediate Term Treasury Bond Index', 'Total Bond Market Index',
-        'VTI', 'VOO', 'VV',
-        'VXF', 'VB',
-        'VEU', 'VXUS', 'IXUS',
-        'VSS',
-        'BND', 'BIV'];
+    var stock_options = [
+        'S and P 500 Index Fund', 'Large Cap Index Fund', 'Total Stock Market Index Fund', 'VTI', 'VOO', 'VV',
+        'Domestic Large Cap',
+        'Extended Market Index Fund', 'Small Cap Index Fund', 'VXF', 'VB',
+        'Domestic Small Cap',
+        'All-World ex-US Index Fund', 'Total International Stock Index Fund', 'VEU', 'VXUS', 'IXUS',
+        'International Large Cap',
+        'All-World ex-US Small Cap Index Fund', 'VSS',
+        'International Small Cap',
+        'Intermediate Term Treasury Bond Index', 'Total Bond Market Index', 'BND', 'BIV',
+        'Bonds',
+        'Other'];
+
 
     var list = document.createElement('ul');
     list.className = "stock_option";
-    stock_options.forEach(function (option) {
-        var li = document.createElement('li');
+    var help_tip_content = [
+        'You\'ll mostly find this or something similar to this in your retirement plan options at work. Check in the list of investment options for something with S&P 500 in the name or in the description.',
+        'You\'ll mostly find this or something similar to this in your retirement plan options at work. Check in the list of investment options for something with Large Cap Index in the name or in the description. The word Index is the key.',
+        'You\'ll mostly find this or something similar to this in your retirement plan options at work. Check in the list of investment options for something with Total Stock Market in the name or in the description. Make sure it is not an International fund.',
+        'This is the same as Total Stock Market Index Fund but in an ETF form. An ETF or an Exchange-Traded Fund is what you can buy like a stock in any account except in your retirement plan at work.',
+        'This is the same as S&P 500 Index Fund but in an ETF form. An ETF or an Exchange-Traded Fund is what you can buy like a stock in any account except in your retirement plan at work.',
+        'This is the same as Large Cap Index Fund but in an ETF form. An ETF or an Exchange-Traded Fund is what you can buy like a stock in any account except in your retirement plan at work.',
+        'You\'ll mostly find this or something similar to this in your retirement plan options at work. Check in the list of investment options for something with Extended Market or S&P Completion Index in the name or in the description.',
+        'You\'ll mostly find this or something similar to this in your retirement plan options at work. Check in the list of investment options for something with Russell 2000 or S&P 600 Small Cap Index or Small Cap Index in the name or in the description.',
+        'This is the same as Extended Market Index Fund but in an ETF form. An ETF or an Exchange-Traded Fund is what you can buy like a stock in any account except in your retirement plan at work.',
+        'This is the same as Small Cap Index Fund but in an ETF form. An ETF or an Exchange-Traded Fund is what you can buy like a stock in any account except in your retirement plan at work.'
+    ]
 
-        if (counter < 10) {
-            li.className = "li_stock bg-light-green";
-        } else {
+    stock_options.forEach(function (option) {
+
+        var li = document.createElement('li');
+        li.textContent = option;
+
+        if (option == 'Domestic Large Cap' || option == 'Domestic Small Cap' || option == 'International Large Cap' || option == 'International Small Cap' || option == 'Bonds') {
+            li.className = "li_stock hide";
+            --counter;
+        } else if (option == 'VTI' || option == 'VOO' || option == 'VV' || option == 'VXF' || option == 'VB' || option == 'VEU' || option == 'VXUS' || option == 'IXUS' || option == 'VSS' || option == 'BND' || option == 'BIV') {
             li.className = "li_stock bg-light-purple";
+            var help_tip = document.createElement('div');
+            help_tip.classList.add("help-tip")
+            var help_tip_text = document.createElement('p');
+            if (counter < 10) {
+                var text = document.createTextNode(help_tip_content[counter]);
+            } else {
+                var text = document.createTextNode("to be filled");
+            }
+            help_tip_text.appendChild(text);
+            help_tip.appendChild(help_tip_text)
+            li.appendChild(help_tip);
+        } else {
+            li.className = "li_stock bg-light-green";
+            var help_tip = document.createElement('div');
+            help_tip.classList.add("help-tip")
+            var help_tip_text = document.createElement('p');
+            if (counter < 10) {
+                var text = document.createTextNode(help_tip_content[counter]);
+            } else {
+                var text = document.createTextNode("to be filled");
+            }
+            help_tip_text.appendChild(text);
+            help_tip.appendChild(help_tip_text)
+            li.appendChild(help_tip);
         }
 
-        li.textContent = option;
         document.getElementById("stock_option").appendChild(li);
         ++counter;
     });
 
-    console.log("COUNTER : " + counter);
-
     //var list = document.querySelector('ul');
     var list = document.getElementById("stock_option")
+
     list.addEventListener('click', function (stock) { //this means user has clicked on a list element (stock option)
+
+        var ul = document.getElementById("stock_option");
+        var li = ul.getElementsByClassName("li_stock");
+        var dom_large_selected = 0;
+        var dom_small_selected = 0;
+        var int_large_selected = 0;
+        var int_small_selected = 0;
+        var bonds_selected = 0;
+
         if (stock.target.tagName === 'LI') {
+            console.log("TARGET " + stock.target.textContent);
             stock.target.classList.toggle('checked');
+
+            for (var i = 0; i < li.length; ++i) {
+                if (li[i].childNodes[0].textContent == 'S and P 500 Index Fund' || li[i].childNodes[0].textContent == 'Large Cap Index Fund' || li[i].childNodes[0].textContent == 'Total Stock Market Index Fund' || li[i].childNodes[0].textContent == 'VTI' || li[i].childNodes[0].textContent == 'VOO' || li[i].childNodes[0].textContent == 'VV') {
+                    if (li[i].classList.contains("checked")) {
+                        ++dom_large_selected;
+                    }
+                } else if (li[i].childNodes[0].textContent == 'Domestic Large Cap') {
+                    if (dom_large_selected > 0) {
+                        if (!li[i].classList.contains('checked')) {
+                            li[i].classList.add('checked');
+                        }
+                    } else {
+                        if (li[i].classList.contains('checked')) {
+                            li[i].classList.remove('checked');
+                        }
+                    }
+                } else if (li[i].childNodes[0].textContent == 'Extended Market Index Fund' || li[i].childNodes[0].textContent == 'Small Cap Index Fund' || li[i].childNodes[0].textContent == 'VXF' || li[i].childNodes[0].textContent == 'VB') {
+                    if (li[i].classList.contains("checked")) {
+                        ++dom_small_selected;
+                    }
+                } else if (li[i].childNodes[0].textContent == 'Domestic Small Cap') {
+                    if (dom_small_selected > 0) {
+                        if (!li[i].classList.contains('checked')) {
+                            li[i].classList.add('checked');
+                        }
+                    } else {
+                        if (li[i].classList.contains('checked')) {
+                            li[i].classList.remove('checked');
+                        }
+                    }
+                } else if (li[i].childNodes[0].textContent == 'All-World ex-US Index Fund' || li[i].childNodes[0].textContent == 'Total International Stock Index Fund' || li[i].childNodes[0].textContent == 'VEU' || li[i].childNodes[0].textContent == 'VXUS' || li[i].childNodes[0].textContent == 'IXUS') {
+                    if (li[i].classList.contains("checked")) {
+                        ++int_large_selected;
+                    }
+                } else if (li[i].childNodes[0].textContent == 'International Large Cap') {
+                    if (int_large_selected > 0) {
+                        if (!li[i].classList.contains('checked')) {
+                            li[i].classList.add('checked');
+                        }
+                    } else {
+                        if (li[i].classList.contains('checked')) {
+                            li[i].classList.remove('checked');
+                        }
+                    }
+                } else if (li[i].childNodes[0].textContent == 'All-World ex-US Small Cap Index Fund' || li[i].childNodes[0].textContent == 'VSS') {
+                    if (li[i].classList.contains("checked")) {
+                        ++int_small_selected;
+                    }
+                } else if (li[i].childNodes[0].textContent == 'International Small Cap') {
+                    if (int_small_selected > 0) {
+                        if (!li[i].classList.contains('checked')) {
+                            li[i].classList.add('checked');
+                        }
+                    } else {
+                        if (li[i].classList.contains('checked')) {
+                            li[i].classList.remove('checked');
+                        }
+                    }
+                } else if (li[i].childNodes[0].textContent == 'Intermediate Term Treasury Bond Index' || li[i].childNodes[0].textContent == 'Total Bond Market Index' || li[i].childNodes[0].textContent == 'BND' || li[i].childNodes[0].textContent == 'BIV') {
+                    if (li[i].classList.contains("checked")) {
+                        ++bonds_selected;
+                    }
+                } else if (li[i].childNodes[0].textContent == 'Bonds') {
+                    if (bonds_selected > 0) {
+                        if (!li[i].classList.contains('checked')) {
+                            li[i].classList.add('checked');
+                        }
+                    } else {
+                        if (li[i].classList.contains('checked')) {
+                            li[i].classList.remove('checked');
+                        }
+                    }
+                }
+            }
+
             showSelection(); //update stocks_selection list
         }
         confirmStocks(); //updates list of input text fields for user to enter money in each stock
     }, false);
-    //stock_options = [];
 }
 
 //shows stock optons selected by user
@@ -600,59 +746,127 @@ function showSelection() {
     selected_stock_options = [];
     stock_selection_values = [];
     var ul = document.getElementById("stock_option");
-    //var li = ul.getElementsByTagName("li");
     var li = ul.getElementsByClassName("li_stock");
-    var innertext = "You selected: \n"
     for (var i = 0; i < li.length; i++) {
         if (li[i].classList.contains("checked")) {
-            innertext += li[i].innerHTML + "\n"
-            selected_stock_options.push(li[i].innerHTML)
+            selected_stock_options.push(li[i].childNodes[0].textContent)
+            console.log(li[i]);
         }
     }
-    //document.getElementById("stocks_selection").innerText = innertext;
 }
 
 //updates number of text fields to take user input (money in each stock)
 function confirmStocks() {
     var div = document.getElementById('money_in_stocks');
     while (div.firstChild) {
+        console.log(div.firstChild.textContent);
         div.removeChild(div.firstChild);
     }
     document.getElementById("money_in_stocks").innerText += "Enter the amount of money you have in each stock: \n\n"
 
     for (var i = 0; i < selected_stock_options.length; i++) {
-        //document.getElementById("money_in_stocks").innerHTML += (selected_stock_options[i] + ": ");
         var input = document.createElement('input');
         input.type = "number";
         input.id = selected_stock_options[i];
         input.classList.add("form-control");
         input.style["color"] = "white";
         input.value = 0;
-        //my changes
-        var newlabel = document.createElement("Label");
-        newlabel.setAttribute("for", input.id);
-        newlabel.classList.add("control-label");
-        newlabel.innerHTML = selected_stock_options[i];
-        //
-        document.getElementById("money_in_stocks").appendChild(newlabel);
-        document.getElementById("money_in_stocks").appendChild(input);
-        document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+        input.placeholder = "$";
+
+        if (input.id == 'Domestic Large Cap' || input.id == 'Domestic Small Cap' || input.id == 'International Large Cap' || input.id == 'International Small Cap' || input.id == 'Bonds') {
+            input.classList.add("form-control-inline")
+            input.style["background"] = "transparent";
+            input.style["border"] = "none";
+            input.style["border-bottom"] = "2px solid #e8bf08";
+            input.style["-webkit-box-shadow"] = "none";
+            input.style["box-shadow"] = "none";
+            input.style["border-radius"] = "0";
+            input.style["height"] = "25px";
+            input.style['font-size'] = "15px";
+            input.style['text-align'] = "center";
+
+            input.readOnly = true;
+            //my changes
+            var newlabel = document.createElement("Label");
+            newlabel.setAttribute("for", input.id);
+            newlabel.style['font-size'] = "15px";
+
+            newlabel.classList.add("control-label");
+            newlabel.innerHTML = selected_stock_options[i];
+            //
+            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+            document.getElementById("money_in_stocks").appendChild(newlabel);
+            document.getElementById("money_in_stocks").appendChild(input);
+            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+
+        } else {
+            input.style["height"] = "25px";
+            //my changes
+            var newlabel = document.createElement("Label");
+            newlabel.setAttribute("for", input.id);
+            newlabel.style['font-size'] = "12px";
+            input.style['font-size'] = "12px";
+
+            newlabel.classList.add("control-label");
+            newlabel.innerHTML = selected_stock_options[i];
+            //
+            document.getElementById("money_in_stocks").appendChild(newlabel);
+            document.getElementById("money_in_stocks").appendChild(input);
+            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+        }
+
     }
 }
 
 //called when user confirms the stocks + values (when they click on btn)
 //necessary so that we can save the data in our db
 function confirmStockValues() {
+    var domestic_large_value = 0;
+    var domestic_small_value = 0;
+    var int_large_value = 0;
+    var int_small_value = 0;
+    var bonds_value = 0;
+
     networth = parseInt(savings);
     for (var i = 0; i < selected_stock_options.length; i++) {
         console.log(document.getElementById(selected_stock_options[i]).value);
-        if (document.getElementById(selected_stock_options[i]).value.length == 0) {
-            stock_selection_values.push(0);
+
+        if (selected_stock_options[i] == 'Domestic Large Cap') {
+            stock_selection_values.push(domestic_large_value);
+        } else if (selected_stock_options[i] == 'Domestic Small Cap') {
+            stock_selection_values.push(domestic_small_value);
+        } else if (selected_stock_options[i] == 'International Large Cap') {
+            stock_selection_values.push(int_large_value);
+        } else if (selected_stock_options[i] == 'International Small Cap') {
+            stock_selection_values.push(int_small_value);
+        } else if (selected_stock_options[i] == 'Bonds') {
+            stock_selection_values.push(bonds_value);
         } else {
-            stock_selection_values.push(document.getElementById(selected_stock_options[i]).value);
-            networth += parseInt(document.getElementById(selected_stock_options[i]).value);
+            if (document.getElementById(selected_stock_options[i]).value.length == 0) {
+                stock_selection_values.push(0);
+            } else {
+                stock_selection_values.push(document.getElementById(selected_stock_options[i]).value);
+                networth += parseInt(document.getElementById(selected_stock_options[i]).value);
+
+                if (selected_stock_options[i] == 'S and P 500 Index Fund' || selected_stock_options[i] == 'Large Cap Index Fund' || selected_stock_options[i] == 'Total Stock Market Index Fund' || selected_stock_options[i] == 'VTI' || selected_stock_options[i] == 'VOO' || selected_stock_options[i] == 'VV') {
+                    domestic_large_value += parseInt(document.getElementById(selected_stock_options[i]).value);
+                } else if (selected_stock_options[i] == 'Extended Market Index Fund' || selected_stock_options[i] == 'Small Cap Index Fund' || selected_stock_options[i] == 'VXF' || selected_stock_options[i] == 'VB') {
+                    domestic_small_value += parseInt(document.getElementById(selected_stock_options[i]).value);
+                } else if (selected_stock_options[i] == 'All-World ex-US Index Fund' || selected_stock_options[i] == 'Total International Stock Index Fund' || selected_stock_options[i] == 'VEU' || selected_stock_options[i] == 'VXUS' || selected_stock_options[i] == 'IXUS') {
+                    int_large_value += parseInt(document.getElementById(selected_stock_options[i]).value);
+                } else if (selected_stock_options[i] == 'All-World ex-US Small Cap Index Fund' || selected_stock_options[i] == 'VSS') {
+                    int_small_value += parseInt(document.getElementById(selected_stock_options[i]).value);
+                } else if (selected_stock_options[i] == 'Intermediate Term Treasury Bond Index' || selected_stock_options[i] == 'Total Bond Market Index' || selected_stock_options[i] == 'BND' || selected_stock_options[i] == 'BIV') {
+                    bonds_value += parseInt(document.getElementById(selected_stock_options[i]).value);
+                }
+            }
+
         }
     }
+
     var stock = selected_stock_options.join();
     document.Form.stocks_list.value = stock;
 
@@ -691,7 +905,7 @@ function SearchThroughStocks() {
     //li = ul.getElementsByTagName("li");
     li = ul.getElementsByClassName("li_stock");
     for (i = 0; i < li.length; i++) {
-        txtValue = li[i].textContent;
+        txtValue = li[i].childNodes[0].textContent;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
             li[i].style.display = "";
         } else {
@@ -726,6 +940,7 @@ function updateStockValuesText() {
             document.getElementById("your_itl_small").innerHTML = 0 + '%';
             document.getElementById("your_itl_large").innerHTML = 0 + '%';
             document.getElementById("your_bonds").innerHTML = 0 + '%';
+            document.getElementById("your_bonds").innerHTML = 0 + '%';
 
             document.getElementById("diff_us_small").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + Math.abs(dom_small_percent).toFixed(2) + '%';
             document.getElementById("diff_us_large").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + Math.abs(dom_large_percent).toFixed(2) + '%';
@@ -738,6 +953,7 @@ function updateStockValuesText() {
             document.getElementById("copy_your_itl_small").innerHTML = 0 + '%';
             document.getElementById("copy_your_itl_large").innerHTML = 0 + '%';
             document.getElementById("copy_your_bonds").innerHTML = 0 + '%';
+            document.getElementById("copy_your_other").innerHTML = 0 + '%';
 
             document.getElementById("copy_diff_us_small").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + Math.abs(dom_small_percent).toFixed(2) + '%';
             document.getElementById("copy_diff_us_large").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + Math.abs(dom_large_percent).toFixed(2) + '%';
@@ -764,12 +980,27 @@ function updateStockValuesText() {
             var int_large_etf = 0;
             var bonds_etf = 0;
 
+            for (var i = 0; i < selected_stock_options.length; ++i) {
+                if (selected_stock_options[i] == 'Domestic Large Cap' || selected_stock_options[i] == 'Domestic Small Cap' || selected_stock_options[i] == 'International Large Cap' || selected_stock_options[i] == 'International Small Cap' || selected_stock_options[i] == 'Bonds') {
+                    sum_stock_values -= parseFloat(existing_stock_values.split(",")[i]);
+                }
+            }
 
             for (var i = 0; i < selected_stock_options.length; ++i) {
                 if (document.getElementById(selected_stock_options[i]) !== null) {
                     document.getElementById(selected_stock_options[i]).value = existing_stock_values.split(",")[i];
 
-                    if (selected_stock_options[i] === "Extended Market Index Fund" || selected_stock_options[i] === "Small Cap Index Fund" || selected_stock_options[i] === "VXF" || selected_stock_options[i] === "VB") {
+                    if (selected_stock_options[i] === 'Other') {
+                        var your_percent = (100 * (parseFloat(existing_stock_values.split(",")[i]) / parseFloat(sum_stock_values))).toFixed(2);
+                        document.getElementById("copy_your_other").innerHTML = your_percent + '%';
+                        document.getElementById("copy_diff_other").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + Math.abs(0 - your_percent).toFixed(2) + '%';
+                        document.getElementById("copy_diff_other_money").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + "$" + (parseFloat((your_percent) * sum_stock_values) / 100).toFixed(2);
+
+                        document.getElementById("your_other").innerHTML = your_percent + '%';
+                        document.getElementById("diff_other").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + Math.abs(0 - your_percent).toFixed(2) + '%';
+                        document.getElementById("diff_other_money").innerHTML = "<span class='glyphicon glyphicon-chevron-down' style='color:red'></span>" + "$" + (parseFloat((your_percent) * sum_stock_values) / 100).toFixed(2);
+
+                    } else if (selected_stock_options[i] === "Extended Market Index Fund" || selected_stock_options[i] === "Small Cap Index Fund" || selected_stock_options[i] === "VXF" || selected_stock_options[i] === "VB") {
                         us_small_cap_percent += parseFloat(existing_stock_values.split(",")[i]);
                         var your_percent = (100 * (us_small_cap_percent / parseFloat(sum_stock_values))).toFixed(2);
                         document.getElementById("your_us_small").innerHTML = your_percent + '%';
@@ -1062,6 +1293,14 @@ function checkOverviewTable() {
     if (document.getElementById("bonds_etf_percent").innerHTML === "") {
         document.getElementById("bonds_etf_percent").innerHTML = "0%";
         document.getElementById("bonds_etf_money").innerHTML = "$0";
+    }
+    if (document.getElementById("copy_your_other").innerHTML === "") {
+        document.getElementById("copy_your_other").innerHTML = "0%";
+        document.getElementById("copy_diff_other").innerHTML = "0%";
+        document.getElementById("your_other").innerHTML = "0%";
+        document.getElementById("diff_other").innerHTML = "0%";
+        document.getElementById("copy_diff_other_money").innerHTML = "$0";
+        document.getElementById("diff_other_money").innerHTML = "$0";
     }
     if (document.getElementById("copy_your_us_small").innerHTML === "") {
         document.getElementById("copy_your_us_small").innerHTML = "0%";
