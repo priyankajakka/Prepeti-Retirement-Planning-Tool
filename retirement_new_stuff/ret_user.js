@@ -41,12 +41,12 @@ function inside401Kversusoutside() {
 
         var margin = { top: 0.1 * currentWidth, right: 100, bottom: 0.1 * currentWidth, left: 100 },
             width = currentWidth / 3,
-            height = 550 - margin.top - margin.bottom;
+            height = 400 - margin.top - margin.bottom;
 
         var svg = d3.select("#segmentedBarGraph")
             .append("svg")
             .attr("preserveAspectRatio", "xMinYMin meet")
-            .attr("viewBox", "0 0 " + (width + margin.right + margin.left) + " " + (500))
+            .attr("viewBox", "0 0 " + (width + margin.right + margin.left) + " " + (360))
             .attr("width", "100%")
             .append("g")
             .attr("transform",
@@ -438,10 +438,14 @@ function bargraph() {
         var copy_svg_bar_chart = d3.select("#copy_barplot")
             .append("svg")
             .attr("preserveAspectRatio", "xMinYMin meet")
-            .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (560))
+            .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (400))
             .attr("width", "100%")
             .append("svg:g")
             .attr("transform", "translate(" + (m[3] + 35) + "," + (m[0] - 50) + ")");
+
+        y = d3.scaleLinear()
+            .domain([0, Math.max.apply(Math, dataset1)])
+            .range([h/2, 0]);
 
         copy_svg_bar_chart.selectAll()
             .data(dataset1)
@@ -450,7 +454,7 @@ function bargraph() {
             .attr("x", function (d, i) { return x(selected_stock_options_duplicate[i]); })
             .attr("y", function (d) { return y(d); })
             .attr("width", x.bandwidth())
-            .attr("height", function (d) { return h - y(d); })
+            .attr("height", function (d) { return h/2 - y(d); })
             .attr("fill", "#A117F2")
 
         copy_svg_bar_chart.selectAll("text.bar")
@@ -464,7 +468,7 @@ function bargraph() {
             .text(function (d) { return d; });
 
         copy_svg_bar_chart.append("g")
-            .attr("transform", "translate(0," + h + ")")
+            .attr("transform", "translate(0," + h/2 + ")")
             .attr("class", "axisWhite")
             .call(d3.axisBottom(x))
             .selectAll("text")
@@ -481,7 +485,7 @@ function bargraph() {
             .style("font-size", 12)
             .attr("transform", "rotate(-90)")
             .attr("y", 0 - m[0])
-            .attr("x", 0 - (h / 2))
+            .attr("x", 0 - (h / 4))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .style("fill", "white")
@@ -516,7 +520,7 @@ function reset_stock_list() {
     }
 
     //appends appropriate number of input text fields so that user can enter money in each stock
-    document.getElementById("money_in_stocks").innerText += "Enter the amount of money you have in each stock: \n\n"
+    document.getElementById("money_in_stocks").innerText += "Enter the amount of money you have in each investment: \n\n"
     for (var i = 0; i < selected_stock_options.length; i++) {
         var input = document.createElement('input');
         input.type = "number";
@@ -530,7 +534,7 @@ function reset_stock_list() {
             input.classList.add("form-control-inline")
             input.style["background"] = "transparent";
             input.style["border"] = "none";
-            input.style["border-bottom"] = "2px solid #e8bf08";
+            input.style["border-bottom"] = "2px solid #FF8FCF";
             input.style["-webkit-box-shadow"] = "none";
             input.style["box-shadow"] = "none";
             input.style["border-radius"] = "0";
@@ -540,27 +544,25 @@ function reset_stock_list() {
             //my changes
             var newlabel = document.createElement("Label");
             newlabel.setAttribute("for", input.id);
-            newlabel.style['font-size'] = "15px";
-            input.style['font-size'] = "15px";
+            newlabel.style['font-size'] = "16px";
+            input.style['font-size'] = "16px";
 
             newlabel.classList.add("control-label");
             newlabel.innerHTML = selected_stock_options[i];
             //
-            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
-            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
             document.getElementById("money_in_stocks").appendChild(newlabel);
             document.getElementById("money_in_stocks").appendChild(input);
             document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
             document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
-            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+
 
         } else {
             input.style["height"] = "25px";
             //my changes
             var newlabel = document.createElement("Label");
             newlabel.setAttribute("for", input.id);
-            newlabel.style['font-size'] = "12px";
-            input.style['font-size'] = "12px";
+            newlabel.style['font-size'] = "15px";
+            input.style['font-size'] = "15px";
 
             newlabel.classList.add("control-label");
             newlabel.innerHTML = selected_stock_options[i];
@@ -586,7 +588,7 @@ function showAllStockOptions() {
         'International Small Cap',
         'Intermediate Term Treasury Bond Index', 'Total Bond Market Index', 'BND', 'BIV',
         'Bonds',
-        'Other'];
+        'Other', '---------- END OF LIST ---------'];
 
 
     var list = document.createElement('ul');
@@ -625,7 +627,7 @@ function showAllStockOptions() {
             help_tip_text.appendChild(text);
             help_tip.appendChild(help_tip_text)
             li.appendChild(help_tip);
-        } else {
+        } else if(option != '---------- END OF LIST ---------'){
             li.className = "li_stock bg-light-green";
             var help_tip = document.createElement('div');
             help_tip.classList.add("help-tip")
@@ -644,7 +646,6 @@ function showAllStockOptions() {
         ++counter;
     });
 
-    //var list = document.querySelector('ul');
     var list = document.getElementById("stock_option")
 
     list.addEventListener('click', function (stock) { //this means user has clicked on a list element (stock option)
@@ -762,7 +763,7 @@ function confirmStocks() {
         console.log(div.firstChild.textContent);
         div.removeChild(div.firstChild);
     }
-    document.getElementById("money_in_stocks").innerText += "Enter the amount of money you have in each stock: \n\n"
+    document.getElementById("money_in_stocks").innerText += "Enter the amount of money you have in each investment: \n\n"
 
     for (var i = 0; i < selected_stock_options.length; i++) {
         var input = document.createElement('input');
@@ -777,38 +778,36 @@ function confirmStocks() {
             input.classList.add("form-control-inline")
             input.style["background"] = "transparent";
             input.style["border"] = "none";
-            input.style["border-bottom"] = "2px solid #e8bf08";
+            input.style["border-bottom"] = "2px solid #ff8fcf";
             input.style["-webkit-box-shadow"] = "none";
             input.style["box-shadow"] = "none";
             input.style["border-radius"] = "0";
             input.style["height"] = "25px";
-            input.style['font-size'] = "15px";
+            input.style['font-size'] = "16px";
             input.style['text-align'] = "center";
 
             input.readOnly = true;
             //my changes
             var newlabel = document.createElement("Label");
             newlabel.setAttribute("for", input.id);
-            newlabel.style['font-size'] = "15px";
+            newlabel.style['font-size'] = "16px";
 
             newlabel.classList.add("control-label");
             newlabel.innerHTML = selected_stock_options[i];
             //
-            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
-            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
             document.getElementById("money_in_stocks").appendChild(newlabel);
             document.getElementById("money_in_stocks").appendChild(input);
             document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
             document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
-            document.getElementById("money_in_stocks").appendChild(document.createElement("br"));
+
 
         } else {
             input.style["height"] = "25px";
             //my changes
             var newlabel = document.createElement("Label");
             newlabel.setAttribute("for", input.id);
-            newlabel.style['font-size'] = "12px";
-            input.style['font-size'] = "12px";
+            newlabel.style['font-size'] = "15px";
+            input.style['font-size'] = "15px";
 
             newlabel.classList.add("control-label");
             newlabel.innerHTML = selected_stock_options[i];
