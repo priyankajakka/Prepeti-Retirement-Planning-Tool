@@ -49,9 +49,9 @@ body{
 
 .help-tip{
   position: absolute;
-  top: 0px;
-  right: 0px;
-  z-index: 990;
+  z-index:100;
+  top: 10px;
+  right: 10px;
   text-align: center;
   background-color: #af39e6;
   border-radius: 50%;
@@ -67,13 +67,13 @@ body{
 .help-tip:before{
   content:'?';
   font-weight: bold;
-  color:#fff;
-  
+  color:white;
 }
 
 .help-tip:hover p{
+  z-index:100;
+
   display:block;
-  z-index: 900;
   transform-origin: 100% 0%;
 
   -webkit-animation: fadeIn 0.3s ease-in-out;
@@ -82,6 +82,7 @@ body{
 }
 
 .help-tip p{    /* The tooltip */
+  z-index:500;
   display: none;
   text-align: left;
   background-color: black;
@@ -89,7 +90,8 @@ body{
   width: 300px;
   position: absolute;
   border-radius: 3px;
-  right: -7px;
+  /*right: -7px;*/
+  right: 130%;
   color: #FFF;
   font-size: 13px;
   line-height: 1.4;
@@ -97,14 +99,15 @@ body{
 }
 
 .help-tip p:before{ /* The pointer of the tooltip */
-  position: absolute;
+  /*position: absolute;
   content: '';
   width:0;
   height: 0;
   border:6px solid transparent;
   border-bottom-color:black;
   right:10px;
-  top:-12px;
+  right: 130%;
+  top:-12px;*/
 }
 
 .help-tip p:after{ /* Prevents the tooltip from being hidden */
@@ -112,8 +115,10 @@ body{
   height:40px;
   content:'';
   position: absolute;
-  top:-40px;
-  left:0;
+  /*top:-40px;
+  left:0;*/
+  top: 50%;
+  right: 100%;
 }
 
 /* CSS animation */
@@ -192,7 +197,7 @@ body{
 }
 
 div.tab-content { 
-  width: 80%;
+  width: 90%;
   margin:auto;
 }
   
@@ -319,6 +324,10 @@ ul.stock_option li.checked::before {
   transform: rotate(45deg);
   height: 15px;
   width: 7px;
+}
+
+.hide{
+  display:none;  
 }
 
 path.slice{
@@ -488,6 +497,13 @@ polyline{
 .bg-purple-bold{
   background:#b529ff;
   /*box-shadow: 0 0 7px #b529ff, 0 0 20px #b529ff, 0 0 7px #b529ff;*/
+}
+
+.unselectable{
+  -webkit-user-select: none; /* Safari */        
+-moz-user-select: none; /* Firefox */
+-ms-user-select: none; /* IE10+/Edge */
+user-select: none; /* Standard */
 }
 
 input[id="curr_age"],
@@ -943,6 +959,23 @@ select.form-control {
 }
 
 input[id="BIV"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[id="Other"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #e108e8;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[id="Other"]:focus,
 select.form-control:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
