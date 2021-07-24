@@ -53,20 +53,21 @@ body{
   top: 10px;
   right: 10px;
   text-align: center;
-  background-color: #af39e6;
+  background-color: #188bc0;
   border-radius: 50%;
   width: 17px;
   height: 17px;
   font-size: 10px;
   line-height: 17px;
   cursor: default;
-  box-shadow: 0 0 7px #BF00FF, 0 0 20px #BF00FF, 0 0 7px #BF00FF;
+  box-shadow: 0 0 7px #188bc0, 0 0 20px #188bc0, 0 0 7px #188bc0;
 
 }
 
 .help-tip:before{
   content:'?';
   font-weight: bold;
+  font-size:14px;
   color:white;
 }
 
@@ -169,7 +170,7 @@ body{
 }
 
 .tableWidth{
-  width: 80%;
+  width: 100%;
 }
 
 .table2Width {
@@ -197,7 +198,7 @@ body{
 }
 
 div.tab-content { 
-  width: 90%;
+  width: 100%;
   margin:auto;
 }
   
