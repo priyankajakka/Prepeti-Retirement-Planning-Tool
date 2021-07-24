@@ -282,7 +282,7 @@ $query3 = $query2->fetch_assoc();
                         </button>
                     </div>
                     <div class="modal-body" style="color:black; font-size:14px">
-                        Please enter your investements information in the "investments" tab!
+                        Please enter your investments information in the "investments" tab!
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary ButtonNeon" data-dismiss="modal">Close</button>
@@ -305,14 +305,14 @@ $query3 = $query2->fetch_assoc();
                         </ol>
                     </nav>
                     <br><br>
-                    <h1>My Retirement Plan</h1>
+                    <h1 style = "font-size:35px">My Retirement Plan</h1>
                     <br><br>
 
-                    <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
+                    <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-3">
                         <h5 class="card-header">
                             <a class="collapsed d-block" data-toggle="collapse" href="#collapse-networth" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
                                 <i class="fa fa-chevron-down pull-right"></i>
-                                <h3 class="fw-bold" style="color:white">Networth over Time<br /></h3>
+                                <h3 class="fw-bold" style="color:white; font-size:22px">Networth over Time<br /></h3>
                             </a>
                         </h5>
                         <div id="collapse-networth" class="collapse" aria-labelledby="heading-collapsed">
@@ -323,17 +323,17 @@ $query3 = $query2->fetch_assoc();
                     </div>
 
                     <br><br><br><br><br>
-                    <h1>My Portfolio</h1>
+                    <h1 style = "font-size:30px">My Portfolio</h1>
                     <br><br>
 
                     <div class="row flex-center">
                         <div class="col-md-12">
                             <div style="margin:0; padding:0;">
-                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
+                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-3">
                                     <h5 class="card-header">
                                         <a class="collapsed d-block" data-toggle="collapse" href="#collapse-pie-chart" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
                                             <i class="fa fa-chevron-down pull-right"></i>
-                                            <h3 class="fw-bold" style="color:white">Your Portfolio<br /></h3>
+                                            <h3 class="fw-bold" style="color:white; font-size:22px">Your Portfolio<br /></h3>
                                         </a>
                                     </h5>
                                     <div id="collapse-pie-chart" class="collapse" aria-labelledby="heading-collapsed">
@@ -351,11 +351,11 @@ $query3 = $query2->fetch_assoc();
                     <div class="row flex-center">
                         <div class="col-md-12">
                             <div style="margin:0; padding:0;">
-                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
+                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-3">
                                     <h5 class="card-header">
                                         <a class="collapsed d-block" data-toggle="collapse" href="#collapse-stocks" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
                                             <i class="fa fa-chevron-down pull-right"></i>
-                                            <h3 class="fw-bold" style="color:white">Your Investments<br /></h3>
+                                            <h3 class="fw-bold" style="color:white; font-size:22px">Your Investments<br /></h3>
                                         </a>
                                     </h5>
                                     <div id="collapse-stocks" class="collapse" aria-labelledby="heading-collapsed">
@@ -376,7 +376,7 @@ $query3 = $query2->fetch_assoc();
                                 <div style="margin:0; padding:0;">
                                     <div class="">
                                         <div class="card h-100 mb-3 noBorder bg-transparent rounded-3">
-                                            <h3 class="fw-bold" style="color: white;">Portfolio Breakdown</h3>
+                                            <h3 class="fw-bold" style="color: white; font-size:22px">Portfolio Breakdown</h3>
                                             <div class="help-tip">
                                                 <p>We can write stuff in here about this table and yeah.</p>
                                             </div>
@@ -445,11 +445,11 @@ $query3 = $query2->fetch_assoc();
                         <div class="col-md-12">
                             <div style="margin:0; padding:0;">
 
-                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
+                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-3">
                                     <h5 class="card-header">
                                         <a class="collapsed d-block" data-toggle="collapse" href="#collapse-segment" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
                                             <i class="fa fa-chevron-down pull-right"></i>
-                                            <h3 class="fw-bold" style="color:white">Investments by Account<br /></h3>
+                                            <h3 class="fw-bold" style="color:white; font-size:22px">Investments by Account<br /></h3>
                                         </a>
                                     </h5>
                                     <div id="collapse-segment" class="collapse" aria-labelledby="heading-collapsed">
@@ -463,14 +463,14 @@ $query3 = $query2->fetch_assoc();
                     </div>
 
                     <br><br><br><br><br>
-                    <h1>Retirement Projections</h1>
+                    <h1 style = "font-size:30px">Retirement Projections</h1>
                     <br><br>
 
                     <div class="row flex-center">
                         <div class="col-md-12">
-                            <div class="bg-transparent border-neon card card-body h-100 mb-3 rounded-3">
+                            <div class="bg-transparent card card-body h-100 mb-3 rounded-3"><!--border-neon-->
                                 <br>
-                                <h3 class="fw-bold" style="color: white;">Your Basic Financial Picture</h3>
+                                <h3 class="fw-bold" style="color: white; font-size:22px">Your Basic Financial Picture</h3>
                                 <table class="table table2Width" style="font-size: 14px;">
                                     <tbody style="font-size: 14px">
                                         <tr>
@@ -511,11 +511,11 @@ $query3 = $query2->fetch_assoc();
                     <div class="row flex-center">
                         <div class="col-md-12">
                             <div>
-                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
+                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-3">
                                     <h5 class="card-header">
                                         <a class="collapsed" data-toggle="collapse" href="#collapse-collapsed" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
                                             <i class="fa fa-chevron-down pull-right"></i>
-                                            <h3 class="fw-bold" style="color:white">$<?php echo strval($query["money"]); ?> Equivalent Income<br />in Retirement</h3>
+                                            <h3 class="fw-bold" style="color:white; font-size:22px">$<?php echo strval($query["money"]); ?> Equivalent Income<br />in Retirement</h3>
                                         </a>
                                     </h5>
                                     <div id="collapse-collapsed" class="collapse" aria-labelledby="heading-collapsed">
@@ -525,11 +525,11 @@ $query3 = $query2->fetch_assoc();
                                     </div>
                                 </div>
                                 <br><br>
-                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
+                                <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-3">
                                     <h5 class="card-header">
                                         <a class="collapsed d-block" data-toggle="collapse" href="#collapse-collapsed2" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
                                             <i class="fa fa-chevron-down pull-right"></i>
-                                            <h3 class="fw-bold" style="color:white">Your Wealth Trajectory<br /></h3>
+                                            <h3 class="fw-bold" style="color:white; font-size:22px">Your Wealth Trajectory<br /></h3>
                                         </a>
                                     </h5>
                                     <div id="collapse-collapsed2" class="collapse" aria-labelledby="heading-collapsed">
@@ -545,18 +545,18 @@ $query3 = $query2->fetch_assoc();
                     </div>
 
                     <br><br><br><br><br>
-                    <h1>Savings Required - Historical Trends</h1>
+                    <h1 style = "font-size: 30px">Savings Required - Historical Trends</h1>
                     <br><br>
 
                     <div class="row flex-center">
                         <div class="col-md-12">
                             <div data-aos="fade-up" class="m-b-15">
                                 <div style="margin:0; padding:0;">
-                                    <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-1">
+                                    <div class="shadow-lg p-3 card h-100 mb-3 blueBorder bg-transparent rounded-3">
                                         <h5 class="card-header">
                                             <a class="collapsed d-block" data-toggle="collapse" href="#collapse-savings" aria-expanded="true" aria-controls="collapse-collapsed" id="heading-collapsed">
                                                 <i class="fa fa-chevron-down pull-right"></i>
-                                                <h3 class="fw-bold" style="color:white">Savings Required over Time<br /></h3>
+                                                <h3 class="fw-bold" style="color:white; font-size:22px">Savings Required over Time<br /></h3>
                                             </a>
                                         </h5>
                                         <div id="collapse-savings" class="collapse" aria-labelledby="heading-collapsed">
@@ -575,14 +575,14 @@ $query3 = $query2->fetch_assoc();
                     <div class="row flex-center">
                         <div class="col-md-12">
 
-                            <div class="card h-100 mb-3 bg-transparent border-neon rounded-3">
+                            <div class="card h-100 mb-3 bg-transparent rounded-3"><!--border-neon-->
 
                                 <h5 class="card-header">
-                                    <h3 class="fw-bold" style="color:white">Required Savings Rate</h3>
+                                    <h3 class="fw-bold" style="color:white; font-size:22px">Required Savings Rate</h3>
                                 </h5>
-
+                                <br>
                                 <div class="card-body">
-                                    <p class="card-text">The required savings rate could go up or down depending upon what the markets
+                                    <p class="card-text" style = "font-size: 20px">The required savings rate could go up or down depending upon what the markets
                                         do from time to time and what you set aside every year.
                                         If the curves continue to stay where they are or perk up, that means you might have to save a
                                         bit more to meet your goals. There is nothing big to worry about as long as you continue doing
@@ -594,7 +594,7 @@ $query3 = $query2->fetch_assoc();
                     </div>
 
                     <br><br><br><br><br>
-                    <h1>Recommendations</h1>
+                    <h1 style = "font-size:30px">Recommendations</h1>
                     <br>
 
                     <div class="row flex-center">
@@ -604,7 +604,7 @@ $query3 = $query2->fetch_assoc();
 
                                     <br><br>
                                     <div class="card h-100 mb-3 noBorder bg-transparent rounded-3">
-                                        <h3 class="fw-bold" style="color: white;">Are you on track for Retirement?</h3>
+                                        <h3 class="fw-bold" style="color: white; font-size:22px">Are you on track for Retirement?</h3>
                                         <div class="help-tip">
                                             <p>We can write stuff in here about this table and yeah.</p>
                                         </div>
@@ -675,25 +675,25 @@ $query3 = $query2->fetch_assoc();
 
                     <div class="row flex-center">
                         <div class="col-md-12">
-                            <div class="col-md-12 card card-body h-100 mb-3 bg-transparent border-neon rounded-3">
+                            <div class="col-md-12 card card-body h-100 mb-3 bg-transparent rounded-3">
                                 <br>
-                                <h3 class="fw-bold" style="color: white;">Recommended Changes to your Investments</h3>
+                                <h3 class="fw-bold" style="color: white; font-size:22px">Recommended Changes to your Investments</h3>
                                 <!--<div id="summary" class="card-text summary" style = "font-size:20"></div>-->
                             </div>
                         </div>
                     </div>
 
                     <br><br><br><br><br>
-                    <!--<h1>Recommendations/Next Steps</h1>-->
 
                     <div class="row flex-center">
                         <div class="col-md-12">
                             <div data-aos="fade-up" class="m-b-15">
                                 <div style="margin:0; padding:0;">
-                                    <div class="card card-body h-100 mb-3 bg-transparent purpleBorder rounded-3">
+                                    <div class="card card-body h-100 mb-3 bg-transparent border-neon rounded-3"><!--purpleBorder-->
                                         <br>
-                                        <h3 class="fw-bold" style="color: white;">Summary</h3>
-                                        <p id="finalSummary" class="card-text summary" style="font-size:20"></p>
+                                        <h3 class="fw-bold" style="color: white; font-size:22px">Summary</h3>
+                                        <br>
+                                        <p id="finalSummary" class="card-text summary" style="font-size:20px"></p>
                                     </div>
                                 </div>
                             </div>
@@ -717,18 +717,18 @@ $query3 = $query2->fetch_assoc();
 
                     <div class="row flex-center">
                         <div class="col-md-12">
-                            <div class="card h-100 blueBorder mb-3 bg-transparent rounded-3">
+                            <div class="card h-100 mb-3 bg-transparent rounded-3">
                                 <div id="pie-chart" style="color:white;"></div>
                             </div>
                         </div>
                     </div>
                     <br><br>
-                    <div class="card h-100 border-neon mb-3 bg-transparent rounded-3">
+                    <div class="card h-100 mb-3 bg-transparent border-neon rounded-3">
                         <div class="card-body my-auto">
                             <br>
-                            <h3 class="fw-bold" style="color: white;">Why this portfolio</h3>
+                            <h3 class="fw-bold" style="color: white; font-size:22px">Why this portfolio</h3>
                             <br>
-                            <p id="portfolio_description"></p>
+                            <p id="portfolio_description" style = "font-size:20px"></p>
                             <br>
                         </div>
                     </div>
@@ -750,21 +750,21 @@ $query3 = $query2->fetch_assoc();
                             <div class="col-md-6">
                                 <div data-aos="fade-up">
                                     <br>
-                                    <h2 class="text-white" data-aos="fade-up" data-aos-delay="100"><b>Update your information</b></h2>
+                                    <h2 style = "font-size:24px" class="text-white" data-aos="fade-up" data-aos-delay="100"><b>Update your information</b></h2><br>
                                     <form name="Formnum1" form method="POST" onsubmit="return updateOverTime()">
                                         <div class="form-group">
-                                            <label for="income" class="control-label">What is your income?</label>
-                                            <input class="form-control" style="color: white;" type="number" name="income" id="income" value=<?php echo strval($query["income"]); ?> onkeyup="result()" style="text-align: center"></input>
+                                            <label for="income" class="control-label" style = "font-size:17px" >What is your income?</label>
+                                            <input class="form-control" style="color: white; font-size:15px" type="number" name="income" id="income" value=<?php echo strval($query["income"]); ?> onkeyup="result()" style="text-align: center"></input>
                                         </div>
                                         <br>
                                         <div class="form-group">
-                                            <label for="money" class="control-label">How much money do you need per year?</label>
-                                            <input class="form-control" style="color: white;" type="number" name="money" id="money" value=<?php echo strval($query["money"]); ?> onkeyup="result()" style="text-align: center"></input>
+                                            <label for="money" class="control-label" style = "font-size:17px" >How much money do you need per year?</label>
+                                            <input class="form-control" style="color: white; font-size:15px" type="number" name="money" id="money" value=<?php echo strval($query["money"]); ?> onkeyup="result()" style="text-align: center"></input>
                                         </div>
                                         <br>
                                         <div class="form-group">
-                                            <label for="savings" class="control-label">How much money do you have saved?</label>
-                                            <input class="form-control" style="color: white;" type="number" name="savings" id="savings" value=<?php echo strval($query["savings"]); ?> onkeyup="result()" style="text-align: center"></input>
+                                            <label for="savings" class="control-label" style = "font-size:17px" >How much money do you have saved?</label>
+                                            <input class="form-control" style="color: white; font-size:15px" type="number" name="savings" id="savings" value=<?php echo strval($query["savings"]); ?> onkeyup="result()" style="text-align: center"></input>
                                         </div>
                                         <input name='networth_over_time' type=hidden></input>
                                         <input name='dates_networth_over_time' type=hidden></input>
@@ -777,7 +777,7 @@ $query3 = $query2->fetch_assoc();
                                         <!--</div>-->
                                         <br>
                                     </form>
-                                    <div style="color:white"><?php echo $savings_output; ?></div>
+                                    <div style="color:white; font-size:15px"><?php echo $savings_output; ?></div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -820,7 +820,7 @@ $query3 = $query2->fetch_assoc();
                                 <div style="margin:0; padding:0;">
                                     <div class="card h-100 mb-3 blueBorder bg-transparent rounded-3">
                                         <br>
-                                        <h3 class="fw-bold" id="stock_options_header" style="margin:5px">Update your investments</h3>
+                                        <h3 class="fw-bold" id="stock_options_header" style="margin:5px; font-size:22px">Update your investments</h3>
                                         <br>
                                         <input type="text" style="color:black" id="searchbar" onkeyup="SearchThroughStocks()" placeholder="Search for investment options.."></input>
                                         <nav>
@@ -845,7 +845,7 @@ $query3 = $query2->fetch_assoc();
                                             <p id="stocks_selection"></p>
                                             <br>
                                             <br>
-                                            <div id="money_in_stocks"></div>
+                                            <div style = "font-size: 22px" id="money_in_stocks"></div>
                                             <br>
                                             <form name="Form" method="post" onsubmit="return confirmStockValues()">
                                                 <input name='stocks_list' type=hidden></input>
@@ -864,7 +864,7 @@ $query3 = $query2->fetch_assoc();
                             </div>
                         </div>
                         <div class="col-md-7">
-                            <div class="card h-100 purpleBorder mb-3 bg-transparent rounded-3">
+                            <div class="card h-100 mb-3 border-neon bg-transparent rounded-3">
                                 <br>
                                 <h3 class="fw-bold" style="color: white;">Your Investments</h3>
                                 <div id="barplot"></div>
@@ -875,11 +875,11 @@ $query3 = $query2->fetch_assoc();
                     <div class="row flex-center">
                         <div class="col-md-12">
                             <div data-aos="fade-up">
-                                <div class="card h-100 border-neon mb-3 bg-transparent rounded-3">
+                                <div class="card h-100 mb-3 bg-transparent rounded-3">
                                     <br><br>
                                     <h3 class="fw-bold" style="color: white;">Are you on track for Retirement?</h3>
                                     <br>
-                                    <table class="table tableWidth" style="font-size: 11px;">
+                                    <table class="table tableWidth" style="font-size: 16px;">
                                         <thead>
                                             <tr>
                                                 <th style="font-weight: normal;" scope="col">Stock</th>
@@ -889,44 +889,44 @@ $query3 = $query2->fetch_assoc();
                                                 <th style="font-weight: normal;" scope="col">Difference ($)</th>
                                             </tr>
                                         </thead>
-                                        <tbody style="font-size: 10px">
+                                        <tbody style="font-size: 14px">
                                             <tr>
-                                                <th scope="row" style="font-size: 10px; font-weight: normal;">US small cap</th>
+                                                <th scope="row" style="font-size: 14px; font-weight: normal;">US small cap</th>
                                                 <td id="your_us_small"></td>
                                                 <td id="rec_us_small"></td>
                                                 <td id="diff_us_small"></td>
                                                 <td id="diff_us_small_money"></td>
                                             </tr>
                                             <tr>
-                                                <th scope="row" style="font-size: 10px; font-weight: normal;">US large cap</th>
+                                                <th scope="row" style="font-size: 14px; font-weight: normal;">US large cap</th>
                                                 <td id="your_us_large"></td>
                                                 <td id="rec_us_large"></td>
                                                 <td id="diff_us_large"></td>
                                                 <td id="diff_us_large_money"></td>
                                             </tr>
                                             <tr>
-                                                <th scope="row" style="font-size: 10px; font-weight: normal;">Intl small cap</th>
+                                                <th scope="row" style="font-size: 14px; font-weight: normal;">Intl small cap</th>
                                                 <td id="your_itl_small"></td>
                                                 <td id="rec_itl_small"></td>
                                                 <td id="diff_itl_small"></td>
                                                 <td id="diff_itl_small_money"></td>
                                             </tr>
                                             <tr>
-                                                <th scope="row" style="font-size: 10px; font-weight: normal;">Intl large cap</th>
+                                                <th scope="row" style="font-size: 14px; font-weight: normal;">Intl large cap</th>
                                                 <td id="your_itl_large"></td>
                                                 <td id="rec_itl_large"></td>
                                                 <td id="diff_itl_large"></td>
                                                 <td id="diff_itl_large_money"></td>
                                             </tr>
                                             <tr>
-                                                <th scope="row" style="font-size: 10px; font-weight: normal;">Bonds</th>
+                                                <th scope="row" style="font-size: 14px; font-weight: normal;">Bonds</th>
                                                 <td id="your_bonds"></td>
                                                 <td id="rec_bonds"></td>
                                                 <td id="diff_bonds"></td>
                                                 <td id="diff_bonds_money"></td>
                                             </tr>
                                             <tr>
-                                                <th scope="row" style="font-size: 10px; font-weight: normal;">Other</th>
+                                                <th scope="row" style="font-size: 14px; font-weight: normal;">Other</th>
                                                 <td id="your_other"></td>
                                                 <td id="rec_other"></td>
                                                 <td id="diff_other"></td>
