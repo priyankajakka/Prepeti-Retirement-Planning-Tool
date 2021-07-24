@@ -44,36 +44,27 @@ if (isset($_POST["submit"])) {
     $networth = (int) $_POST['networth'];
     $reg_date = $_POST['reg_date'];
     $user_portfolio = $_POST['portfolio'];
-    //print($reg_date);
 
-    if (
-        empty($username) || empty($password) || empty($full_name) || empty($email)
-        || empty($curr_age) || empty($ret_age) || empty($life) || empty($income)
-        || empty($money) || empty($savings)
-    ) {
-        $output = "Please enter all fields.";
+    $username = $mysqli->real_escape_string($username);
+    $password = $mysqli->real_escape_string($password);
+    $full_name = $mysqli->real_escape_string($full_name);
+    $email = $mysqli->real_escape_string($email);
+    $birthday = $mysqli->real_escape_string($birthday);
+    $reg_date = $mysqli->real_escape_string($reg_date);
+    $user_portfolio = $mysqli->real_escape_string($user_portfolio);
+
+    $query = $mysqli->query("SELECT id FROM Login_info WHERE email = '$email'");
+    $query2 = $mysqli->query("SELECT id FROM Login_info WHERE username = '$username'");
+
+    if ($query->num_rows == 1) {
+        $output = "Looks like an account is already registered with this email address. Try logging in.";
+    } else if ($query2->num_rows == 1) {
+        $output = "Username is already in use! Enter another username.";
     } else {
+        $sql = "INSERT INTO Login_info (username, password, full_name, email) VALUES ('$username', '$password', '$full_name', '$email')";
+        mysqli_query($mysqli, $sql);
 
-        $username = $mysqli->real_escape_string($username);
-        $password = $mysqli->real_escape_string($password);
-        $full_name = $mysqli->real_escape_string($full_name);
-        $email = $mysqli->real_escape_string($email);
-        $birthday = $mysqli->real_escape_string($birthday);
-        $reg_date = $mysqli->real_escape_string($reg_date);
-        $user_portfolio = $mysqli->real_escape_string($user_portfolio);
-
-        $query = $mysqli->query("SELECT id FROM Login_info WHERE email = '$email'");
-        $query2 = $mysqli->query("SELECT id FROM Login_info WHERE username = '$username'");
-
-        if ($query->num_rows == 1) {
-            $output = "Looks like an account is already registered with this email address. Try logging in.";
-        } else if ($query2->num_rows == 1) {
-            $output = "Username is already in use! Enter another username.";
-        } else {
-            $sql = "INSERT INTO Login_info (username, password, full_name, email) VALUES ('$username', '$password', '$full_name', '$email')";
-            mysqli_query($mysqli, $sql);
-
-            $sql = "UPDATE Login_info SET
+        $sql = "UPDATE Login_info SET
                 curr_age=$curr_age,
                 ret_age=$ret_age ,
                 life=$life,
@@ -89,21 +80,19 @@ if (isset($_POST["submit"])) {
                 birthday = '$birthday'
                 WHERE username='$username'";
 
-            mysqli_query($mysqli, $sql);
+        mysqli_query($mysqli, $sql);
 
-            $_SESSION['loggedin'] = TRUE;
-            $_SESSION['user'] = $username;
-            $_SESSION['curr_age'] = $curr_age;
-            $_SESSION['ret_age'] = $ret_age;
-            $_SESSION['life'] = $life;
+        $_SESSION['loggedin'] = TRUE;
+        $_SESSION['create_account'] = TRUE;
+        $_SESSION['user'] = $username;
+        $_SESSION['curr_age'] = $curr_age;
+        $_SESSION['ret_age'] = $ret_age;
+        $_SESSION['life'] = $life;
 
-            header("location: http://localhost/~sjakka/RetirementToolwUI/retirement_user.php");
-            exit;
-        }
+        header("location: http://localhost/~sjakka/RetirementToolwUI/retirement_user.php");
+        exit;
     }
 }
-
-
 
 ?>
 
@@ -348,10 +337,10 @@ if (isset($_POST["submit"])) {
                                 </div>
 
                                 <label style="float:left" for="full_name" class="control-label">Full Name</label>
-                                <input class="form-control" type="text" id="full_name" name="full_name" placeholder="Enter your name" />
+                                <input style="color: white; text-align:left" class="form-control" type="text" id="full_name" name="full_name" placeholder="Enter your name" />
 
                                 <label style="float:left" for="email" class="control-label">Email address</label>
-                                <input class="form-control" type="email" id="email" name="email" placeholder="xyz@email.com" />
+                                <input style="color: white; text-align:left" class="form-control" type="email" id="email" name="email" placeholder="xyz@email.com" />
                                 <br>
                                 <p id="page1output"></p>
 
@@ -368,13 +357,13 @@ if (isset($_POST["submit"])) {
                                 <h2 class="fs-title">Keep going</h2>
 
                                 <label style="float:left" for="username" class="control-label">Username</label>
-                                <input class="form-control" type="text" id="username" name="username" placeholder="Username" />
+                                <input style="color: white; text-align:left" class="form-control" type="text" id="username" name="username" placeholder="Username" />
 
                                 <label style="float:left" for="password" class="control-label">Password</label>
-                                <input class="form-control" type="password" id="password" name="password" placeholder="..........." />
+                                <input style="color: white; text-align:left" class="form-control" type="password" id="password" name="password" placeholder="..........." />
 
                                 <label style="float:left" for="cpwd" class="control-label">Confirm Password</label>
-                                <input class="form-control" type="password" id="cpwd" name="cpwd" placeholder="..........." />
+                                <input style="color: white; text-align:left" class="form-control" type="password" id="cpwd" name="cpwd" placeholder="..........." />
                                 <br>
                                 <p id="page2output"></p>
 
@@ -390,18 +379,18 @@ if (isset($_POST["submit"])) {
                                 <h2 class="fs-title">Almost there</h2>
 
                                 <label style="float:left" for="birthday" class="control-label">Birthday</label>
-                                <input class="form-control" type="date" name="birthday" id="birthday" onkeyup="updateSavingsReq()" style="text-align: left; font-size:12px">
+                                <input class="form-control" type="date" name="birthday" id="birthday" onkeyup="updateSavingsReq()" style="color: white; text-align: left; font-size:12px">
 
                                 <div class="form-group required">
                                     <label class="control-label">Gender</label>
                                     <div class="">
                                         <label class="checkstyle">Male
-                                            <input class="form-control" type="radio" name="gender" value="Male" checked>
+                                            <input class="form-control" type="radio" name="gender" value="Male">
                                             <span class="checkmark"></span>
                                         </label>
 
                                         <label class="checkstyle">Female
-                                            <input class="form-control" type="radio" name="gender" value="Female">
+                                            <input class="form-control" type="radio" name="gender" value="Female" checked>
                                             <span class="checkmark"></span>
                                         </label>
 
@@ -415,7 +404,7 @@ if (isset($_POST["submit"])) {
 
 
                                 <label style="float:left" for="ret_age" class="control-label">Retirement Age</label>
-                                <input class="form-control" type="number" name="ret_age" id="ret_age" placeholder="When do you plan to retire" onkeyup="updateSavingsReq()" />
+                                <input style="color:white; text-align:left" class="form-control" type="number" name="ret_age" id="ret_age" placeholder="When do you plan to retire" onkeyup="updateSavingsReq()" />
 
                                 <br>
                                 <p id="page3output"></p>
@@ -431,13 +420,13 @@ if (isset($_POST["submit"])) {
                                 <h2 class="fs-title">Last step</h2>
 
                                 <label style="float:left" for="income" class="control-label">Income</label>
-                                <input class="form-control" type="number" name="income" id="income" onkeyup="updateSavingsReq()" placeholder="Enter your annual income" />
+                                <input style="color:white; text-align:left" class="form-control" type="number" name="income" id="income" onkeyup="updateSavingsReq()" placeholder="Enter your annual income" />
 
                                 <label style="float:left" for="money" class="control-label">Annual Expenditure</label>
-                                <input class="form-control" type="number" name="money" id="money" placeholder="Enter your annual expenditure" onkeyup="updateSavingsReq()" />
+                                <input style="color:white; text-align:left" class="form-control" type="number" name="money" id="money" placeholder="Enter your annual expenditure" onkeyup="updateSavingsReq()" />
 
                                 <label style="float:left" for="savings" class="control-label">Savings</label>
-                                <input class="form-control" type="number" name="savings" id="savings" placeholder="How much money do you have saved" onkeyup="updateSavingsReq()" />
+                                <input style="color:white; text-align:left" class="form-control" type="number" name="savings" id="savings" placeholder="How much money do you have saved" onkeyup="updateSavingsReq()" />
                                 <br>
                                 <p id="page4output"></p>
 
