@@ -1,0 +1,304 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    color:white;
+    font-size:14px;
+}
+  
+  body {
+    background:linear-gradient(45deg,#19114b,#000000); 
+    justify-content: center;
+  }
+  
+  .cont {
+    border-radius: 2rem;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    position: relative;
+    width: 800px;
+    height: 600px;
+    margin: 50px auto 500px;
+    background: #161933;
+    /*box-shadow: 0 0 20px  #2cdddd, 0 0 20px  #2cdddd, 0 0 7px  #2cdddd;*/
+  }
+
+  .form {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    padding: 5px 25px 0;
+  }
+
+  .sub-cont {
+    overflow-y: hidden;
+    overflow-x: hidden;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    padding-left: 50%;
+    background: linear-gradient(#72E9A5, #4CD0E4);
+  }
+
+  .sub-cont2 {
+    overflow-y: hidden;
+    overflow-x: hidden;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    padding-left: 50%;
+    background: linear-gradient(#ee89c1, #8f49df);
+  }
+  
+  button {
+    display: block;
+    margin: 0 auto;
+    border-radius: 30px;
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  
+  h2 {
+    width: 100%;
+    font-size: 26px;
+    text-align: center;
+  }
+  
+  label {
+    display: block;
+    margin: 25px auto 0;
+    text-align: center;
+  }
+  
+  input {
+    display: inline-block;
+    /*width: 100%;*/
+    margin-top: 1px;
+    padding-bottom: 2px;
+    font-size: 16px;
+    text-align: center;
+    color: white;
+  }
+
+  .ButtonNeon{
+    background: linear-gradient(90deg,#2afafa,#0b9add);
+    border: none;
+    border-radius: 0.5rem;
+    color: rgb(5, 56, 150);
+    padding: 4px 12px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    transition:0.2s;
+  }
+  
+  .ButtonNeon:hover{
+    box-shadow: 0 0 7px  #2cdddd, 0 0 20px  #2cdddd, 0 0 7px  #2cdddd;
+  }
+  
+  .submit {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    background: #d4af7a;
+    text-transform: uppercase;
+  }
+
+#msform {
+    text-align: center;
+    position: relative;
+    margin-top: 0px;
+}
+
+#msform fieldset {
+  margin-top: 0px;
+    background: transparent;
+    border: 0 none;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    width: 100%;
+    /*margin: 0;*/
+    padding-bottom: 20px;
+    position: relative
+}
+  
+#msform fieldset:not(:first-of-type) {
+    display: none
+}
+
+input[type="email"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[type="email"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[type="text"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[type="text"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+
+input[type="password"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[type="password"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[type="date"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[type="date"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[type="number"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #08E8DE;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+input[type="number"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+#msform .checkstyle {
+  display: inline-flex;
+  position: relative;
+  width: auto;
+  padding-left: 35px;
+  padding-right: 25px;
+  margin-bottom: 1px;
+  cursor: pointer;
+  font-size: 16px;
+  
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+ 
+/* Hide the browser's default checkbox */
+#msform .checkstyle input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+ 
+/* Create a custom checkbox */
+#msform .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 0.5rem;
+}
+ 
+/* On mouse-over, add a grey background color */
+#msform .checkstyle:hover input ~ .checkmark {
+  background-color: rgb(166, 212, 226);
+}
+ 
+/* When the checkbox is checked, add a blue background */
+#msform .checkstyle input:checked ~ .checkmark {
+  background-color: #21dbf3;
+}
+ 
+/* Create the checkmark/indicator (hidden when not checked) */
+#msform .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+ 
+/* Show the checkmark when checked */
+#msform .checkstyle input:checked ~ .checkmark:after {
+  display: block;
+}
+ 
+/* Style the checkmark/indicator */
+#msform .checkstyle .checkmark:after {
+  left: 11px;
+  top: 7px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+input::placeholder { 
+  text-align: left;
+  font-size:12px;
+}
+
