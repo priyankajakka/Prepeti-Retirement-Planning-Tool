@@ -6,24 +6,12 @@ var wealth = []
 
 function result() {
 
-    // document.getElementById("age_slider").value = document.getElementById("curr_age").value
-    // document.getElementById("ret_age_slider").value = document.getElementById("ret_age").value
-    // document.getElementById("money_slider").value = document.getElementById("money").value
-    // document.getElementById("savings_slider").value = document.getElementById("savings").value
-    // document.getElementById("life_slider").value = document.getElementById("life").value
-    // document.getElementById("income_slider").value = document.getElementById("income").value
-    //document.getElementById("r1_slider").value = document.getElementById("r1").value
-    //document.getElementById("r2_slider").value = document.getElementById("r2").value
-
     var currentWidth = 1500;
 
     var money = document.getElementById('money').value;
-    var income = document.getElementById('income').value;
     var savings = document.getElementById('savings').value;
     var age = document.getElementById('curr_age').value; //current age
     var life = document.getElementById('life').value; //life expectancy
-    //var r1 = parseFloat(document.getElementById('r1').value) / 100; //r1
-    //var r2 = parseFloat(document.getElementById('r2').value) / 100; //r2
     var r1 = 0.07;
     var r2 = 0.04;
     var inf_rate = 0.03; //inflation rate
@@ -73,53 +61,25 @@ function result() {
     var w = currentWidth - m[1] - m[3]; // width
     var h = 400 - m[0] - m[2]; // height
 
-    //graph for inflation adjusted M
-    /*var graph = d3.select("#graph")
-        .append("svg")
-        .attr("width", w + m[1] + m[3])
-        .attr("height", h + m[0] + m[2])
-        .append("svg:g")
-        .attr("transform", "translate(" + m[3] + "," + m[0] + ")");*/
 
     //graph for inflation adjusted M
     var graph = d3.select("#graph")
         .append("svg")
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (h + m[0] + m[2]))
-        //.classed("svg-content", true)
-        //.attr("width", w + m[1] + m[3])
-        //.attr("height", h + m[0] + m[2])
         .attr("width", "100%")
-        // .attr("height", "100%")
         .append("svg:g")
         .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-    /*var x = d3.scale.linear().domain([1, money_over_time.length]).range([0, w]);
-    var y = d3.scale.linear().domain([0, d3.max(money_over_time)]).range([h, 0]);*/
     var x = d3.scaleLinear().domain([1, money_over_time.length]).range([0, w]);
     var y = d3.scaleLinear().domain([0, Math.max.apply(Math, money_over_time)]).range([h, 0]);
-
-    /*var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true).tickFormat(function (d) { return (d + curr_year - 1); });;*/
     var xAxis = d3.axisBottom(x).tickSize(-h).tickFormat(function (d) { return (d + curr_year - 1); });//.tickSubdivide(true)
-
-
-    /*graph.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + h + ")")
-        .call(xAxis);*/
 
     graph.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + h + ")")
         .style("font-size", 16)
         .call(xAxis);
-
-    /*graph.append("text")
-        .attr("transform",
-            "translate(" + (w / 2) + " ," +
-            (h + m[0]) + ")")
-        .style("text-anchor", "middle")
-        .text("Year");*/
 
     graph.append("text")
         .style("fill", "white")
@@ -138,16 +98,10 @@ function result() {
         .attr("x", 0 - (h / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("M");
+        .text("$");
 
-    /*var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");*/
+
     var yAxisLeft = d3.axisLeft(y).ticks(4)
-
-    /* graph.append("g")
-         .attr("class", "y axis")
-         .attr("transform", "translate(-25,0)")
-         .call(yAxisLeft);*/
-
 
     graph.append("g")
         .attr("class", "y axis")
@@ -166,14 +120,6 @@ function result() {
 
 
     //shading
-    /* graph
-         .datum(money_over_time)
-         .append("path")
-         .attr("d", area)
-         .style("stroke-width", 2)
-         .style("fill", "blue")
-         .style("stroke", "blue")
-         .style("opacity", .6)*/
 
     graph
         .datum(money_over_time)
@@ -182,23 +128,6 @@ function result() {
         .style("stroke-width", 2)
         .style("fill", "#00B2EE") //blue
         .style("stroke", "#00B2EE")
-
-    /*graph
-        .datum(money_over_time)
-        .append("path")
-        .attr("d", line)
-        .style("stroke-width", 2)
-        .style("fill", "none")*/
-
-    //highlight retirement year in graph 1 (inflation adjusted M)
-    /*if (document.getElementById("curr_age").value.length != 0 && document.getElementById("ret_age").value.length != 0) {
-        graph
-            .append("circle")
-            .attr("cx", x(accum_years + 1))
-            .attr("cy", y(money_over_time[accum_years]))
-            .attr("r", 5)
-            .attr("fill", "red")
-    }*/
 
     graph
         .append("circle")
@@ -223,40 +152,18 @@ function result() {
     var wealth2 = wealth.slice(accum_years, wealth.length)
 
     //graph for wealth per year
-    /*var graph2 = d3.select("#graph2")
-        .append("svg")
-        .attr("width", w + m[1] + m[3])
-        .attr("height", h + m[0] + m[2])
-        .append("svg:g")
-        .attr("transform", "translate(" + m[3] + "," + m[0] + ")");*/
     var graph2 = d3.select("#graph2")
         .append("svg")
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + (w + m[1] + m[3]) + " " + (h + m[0] + m[2]))
-        //.classed("svg-content", true)
-        //.attr("width", w + m[1] + m[3])
-        //.attr("height", h + m[0] + m[2])
         .attr("width", "100%")
-        //.attr("height", "100%")
         .append("svg:g")
         .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
-
-    /*graph2.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + h + ")")
-        .call(xAxis);*/
     graph2.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + h + ")")
         .style("font-size", 16)
         .call(xAxis);
-
-    /*graph2.append("text")
-        .attr("transform",
-            "translate(" + (w / 2) + " ," +
-            (h + m[0]) + ")")
-        .style("text-anchor", "middle")
-        .text("Year");*/
     graph2.append("text")
         .style("fill", "white")
         .style("font-size", 20)
@@ -274,12 +181,9 @@ function result() {
         .attr("x", 0 - (h / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Wealth");
+        .text("$");
 
-    /*var y2 = d3.scale.linear().domain([0, d3.max(wealth)]).range([h, 0]);
-    var yAxisLeft2 = d3.svg.axis().scale(y2).ticks(4).orient("left");*/
     var y2 = d3.scaleLinear().domain([0, Math.max.apply(Math, wealth)]).range([h, 0]);
-    //d3.max(wealth)
     var yAxisLeft2 = d3.axisLeft(y2).ticks(4)
 
 
@@ -288,11 +192,6 @@ function result() {
         .attr("transform", "translate(-25,0)")
         .style("font-size", 14)
         .call(yAxisLeft2);
-
-    /*graph2.append("g")
-        .attr("class", "y axis")
-        .attr("transform", "translate(-25,0)")
-        .call(yAxisLeft2);*/
 
     var area2 = d3.area()
         .x(function (d, i) {
@@ -313,16 +212,6 @@ function result() {
         })
         .y0(y2(0));
 
-
-    /*graph2 //before retirement
-        .datum(wealth1)
-        .append("path")
-        .attr("d", area2)
-        .style("stroke-width", 2)
-        .style("fill", "orange")
-        .style("stroke", "orange")
-        .style("opacity", .6)*/
-
     graph2 //before retirement
         .datum(wealth1)
         .append("path")
@@ -331,16 +220,6 @@ function result() {
         .style("fill", "#6EE7A2 ")//orange //#1DA237 6EE7A2 
         .style("stroke", "#6EE7A2 ")
     //.style("opacity", .8)
-
-
-    /*graph2 // after retirement graph
-        .datum(wealth2)
-        .append("path")
-        .attr("d", areaRetire)
-        .style("stroke-width", 2)
-        .style("fill", "purple")
-        .style("stroke", "purple")
-        .style("opacity", .6)*/
 
     graph2 // after retirement graph
         .datum(wealth2)
@@ -370,12 +249,6 @@ function result() {
         .attr("dx", ".71em")
         .attr("dy", ".35em")
         .text((accum_years + curr_year) + " - $" + parseInt(wealth2[0]))
-    /*graph2
-        .datum(wealth)
-        .append("path")
-        .attr("d", line2)
-        .style("stroke-width", 2)
-        .style("fill", "none")*/
 
     //circle moving along line for graph 1 (inflation adjusted M)
     var focus = graph
@@ -409,6 +282,7 @@ function result() {
     function mouseover() {
         focus.style("opacity", 1)
         focusText.style("opacity", 1)
+        focusText.style("font-size", "30px")
     }
 
     function mousemove() {
@@ -419,9 +293,10 @@ function result() {
             .attr("cx", x(i))
             .attr("cy", y(selectedData))
         focusText
-            .html("Year:" + (curr_year + i - 1) + "  ,  " + "M:" + parseInt(selectedData))
+            .html("Year: " + (curr_year + i - 1) + "  ,  " + "$: " + parseInt(selectedData))
             .attr("x", x(i) + 15)
             .attr("y", y(selectedData) - 35)
+
     }
     function mouseout() {
         focus.style("opacity", 0)
@@ -460,6 +335,7 @@ function result() {
     function mouseover2() {
         focus2.style("opacity", 1)
         focusText2.style("opacity", 1)
+        focusText2.style("font-size", "30px")
     }
 
     function mousemove2() {
@@ -470,7 +346,7 @@ function result() {
             .attr("cx", x(i))
             .attr("cy", y2(selectedData))
         focusText2
-            .html("Year:" + (curr_year + i - 1) + "  ,  " + "M:" + parseInt(selectedData))
+            .html("Year:" + (curr_year + i - 1) + "  ,  " + "$:" + parseInt(selectedData))
             .attr("x", x(i) + 15)
             .attr("y", y2(selectedData) - 35)
     }
@@ -485,7 +361,6 @@ function result() {
     var text = "";
     text += "Retirement Year = " + (curr_year + accum_years) + "\n"
     text += "Years in Retirement = " + (distr_years) + "\n"
-    text += "Annual Income = " + (income) + "\n"
     text += "Money you need per year = " + (money) + "\n"
     text += "Portfolio Growth Rate (Accumulation Years) = " + parseInt(r1 * 100) + "%\n"
     text += "Portfolio Growth Rate (Distribution Years) = " + parseInt(r2 * 100) + "%\n"
@@ -497,52 +372,16 @@ function result() {
 
     document.getElementById('table_ret_year').innerText = curr_year + accum_years;
     document.getElementById('table_distr_years').innerText = distr_years;
-    document.getElementById('table_annual_income').innerText = "$" + income;
     document.getElementById('table_money_per_year').innerText = "$" + money;
     document.getElementById('table_r1').innerText = parseInt(r1 * 100) + "%";
     document.getElementById('table_r2').innerText = parseInt(r2 * 100) + "%";
     document.getElementById('table_savings_req').innerText = "$" + parseInt(savings_per_year);
-    document.getElementById('x_value').innerText = "$" + parseInt(income) + " Equivalent Income in Retirement";
 }
 
-// var age_slider = document.getElementById("age_slider")
-// var ret_age_slider = document.getElementById("ret_age_slider")
-// var money_slider = document.getElementById("money_slider")
-// var savings_slider = document.getElementById("savings_slider")
-// var life_slider = document.getElementById("life_slider")
-// var income_slider = document.getElementById("income_slider")
-//var r1_slider = document.getElementById("r1_slider")
-//var r2_slider = document.getElementById("r2_slider")
 
 var rangeValue = function () {
-    // var newAge = age_slider.value;
-    // var newRetAge = ret_age_slider.value;
-    // var newMoney = money_slider.value;
-    // var newSavings = savings_slider.value;
-    // var newLife = life_slider.value;
-    // var newIncome = income_slider.value;
-    // var newR1 = r1_slider.value;
-    // var newR2 = r2_slider.value;
-
-    // document.getElementById("curr_age").value = newAge;
-    // document.getElementById("ret_age").value = newRetAge;
-    // document.getElementById("money").value = newMoney;
-    // document.getElementById("savings").value = newSavings;
-    // document.getElementById("life").value = newLife;
-    // document.getElementById("income").value = newIncome;
-    //document.getElementById("r1").value = newR1;
-    //document.getElementById("r2").value = newR2;
     result()
 }
-
-// age_slider.addEventListener("input", rangeValue);
-// ret_age_slider.addEventListener("input", rangeValue);
-// money_slider.addEventListener("input", rangeValue);
-// savings_slider.addEventListener("input", rangeValue);
-// life_slider.addEventListener("input", rangeValue);
-// income_slider.addEventListener("input", rangeValue);
-//r1_slider.addEventListener("input", rangeValue);
-//r2_slider.addEventListener("input", rangeValue);
 
 result()
 
